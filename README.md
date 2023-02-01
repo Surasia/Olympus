@@ -10,10 +10,12 @@ Research and Code for BSPs: [PlasteredCrab](https://github.com/PlasteredCrab)
 [HaloInfiniteResearch](https://github.com/urium1186/HaloInfiniteResearch/tree/develop) for coating importing.
 
 ## General
+### Initial Set-Up
+Set the "Asset Root" in addon preferences to your Halo Infinite unpack folder. Make sure to use forward slashes (/) and have the path end with it too.
+### Models
 To import models, make sure all related chunk files are in the same folder and import the .render_model file. 
-Importing Textures/Coating requires the texture2ddecoder and pymmh3 modules to be installed for blender.
 
-## Installing texture2ddecoder
+## Installing texture2ddecoder/pymmh3
 To install python modules for blender, they have to be installed into blenders python environment, not the system environment. To do this, go to the python console in blender (for example in the scripting workspace) and enter
 ```
 import ensurepip
