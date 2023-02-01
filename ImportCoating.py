@@ -64,7 +64,8 @@ class ImportCoating(bpy.types.Operator):
                                        description = "Path To Use For .material",
                                        default = "M:\\")
     
-    use_damage: bpy.props.BoolProperty(default=False, name= "Use Damage Layer", description= "Enables or Disables Zone 7")
+    use_crosscore: bpy.props.BoolProperty(default=False, name= "Cross Core", description= 'Removes style requirement to enable "cross core" coatings')
+    selected_only: bpy.props.BoolProperty(default=False, name= "Selected Objects Only", description= 'Only imports coatings to objects selected.')
 
 
     def execute(self, context):
@@ -264,6 +265,12 @@ class ImportCoating(bpy.types.Operator):
             math_012_2.inputs[2].default_value = 0.050
             math_012_2.operation = 'MULTIPLY_ADD'
             math_012_2.use_clamp = False
+            
+            coreclamp = node_tree3.nodes.new('ShaderNodeClamp')
+            coreclamp.location = (60, -300)
+            coreclamp.inputs[1].default_value = 0
+            coreclamp.inputs[2].default_value = 1
+            coreclamp.operation = 'MULTIPLY_ADD'
 
             math_011_2 = node_tree3.nodes.new('ShaderNodeMath')
             math_011_2.location = (57, 201)
@@ -291,7 +298,8 @@ class ImportCoating(bpy.types.Operator):
             node_tree3.links.new(group_input_2.outputs[0], mix_2.inputs[0])
             node_tree3.links.new(math_011_2.outputs[0], mix_2.inputs[2])
             node_tree3.links.new(math_012_2.outputs[0], mix_2.inputs[3])
-            node_tree3.links.new(mix_2.outputs[0], group_output_2.inputs[0])
+            node_tree3.links.new(mix_2.outputs[0], coreclamp.inputs[0])
+            node_tree3.links.new(coreclamp.outputs[0], group_output_2.inputs[0])
         roughnessmath()
         def HIMS():
             node_tree4 = bpy.data.node_groups.new('HIMS 2.8 by Average Goat Enthusiast', 'ShaderNodeTree')
@@ -35804,280 +35812,278 @@ class ImportCoating(bpy.types.Operator):
                                                     ColorGradientMap = coatingJSON.get('swatches')[item].get('colorGradientMap')
                                                     swatchID = coatingJSON.get('swatches')[item].get('swatchId')
                                                     def createSwatch(isGrime):
-                                                        swatchinput = bpy.data.node_groups.get(swatchID)
-                                                        if not swatchinput:
-                                                            node_tree1 = bpy.data.node_groups.new(swatchID, 'ShaderNodeTree')
-                                                                
-                                                            # Swatch Inputs
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Base-Scale_X')
-                                                            input.name = 'Base-Scale_X'
+                                                        node_tree1 = bpy.data.node_groups.new(swatchID, 'ShaderNodeTree')
                                                             
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Base-Scale_Y')
-                                                            input.name = 'Base-Scale_Y'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Gradient-Scale_X')
-                                                            input.name = 'Gradient-Scale_X'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Gradient-Scale_Y')
-                                                            input.name = 'Gradient-Scale_Y'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Normal-Scale_X')
-                                                            input.name = 'Normal-Scale_X'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Normal-Scale_Y')
-                                                            input.name = 'Normal-Scale_Y'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Material Transform X')
-                                                            input.name = 'Material Transform X'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Material Transform Y')
-                                                            input.name = 'Material Transform Y'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Roughness')
-                                                            input.name = 'Roughness'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Roughness Black')
-                                                            input.name = 'Roughness Black'
-                                                            
-                                                            input = node_tree1.inputs.new('NodeSocketFloat', 'Roughness White')
-                                                            input.name = 'Roughness White'
-                                                            
-                                                            # Swatch Outputs
-                                                            output = node_tree1.outputs.new('NodeSocketFloat', 'Gradient Out')
-                                                            output.name = 'Gradient Out'
-                                                            
-                                                            output = node_tree1.outputs.new('NodeSocketFloat', 'Rough Out')
-                                                            output.name = 'Rough Out'
-                                                            
-                                                            output = node_tree1.outputs.new('NodeSocketColor', 'Norm Out')
-                                                            output.name = 'Norm Out'
+                                                        # Swatch Inputs
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Base-Scale_X')
+                                                        input.name = 'Base-Scale_X'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Base-Scale_Y')
+                                                        input.name = 'Base-Scale_Y'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Gradient-Scale_X')
+                                                        input.name = 'Gradient-Scale_X'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Gradient-Scale_Y')
+                                                        input.name = 'Gradient-Scale_Y'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Normal-Scale_X')
+                                                        input.name = 'Normal-Scale_X'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Normal-Scale_Y')
+                                                        input.name = 'Normal-Scale_Y'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Material Transform X')
+                                                        input.name = 'Material Transform X'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Material Transform Y')
+                                                        input.name = 'Material Transform Y'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Roughness')
+                                                        input.name = 'Roughness'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Roughness Black')
+                                                        input.name = 'Roughness Black'
+                                                        
+                                                        input = node_tree1.inputs.new('NodeSocketFloat', 'Roughness White')
+                                                        input.name = 'Roughness White'
+                                                        
+                                                        # Swatch Outputs
+                                                        output = node_tree1.outputs.new('NodeSocketFloat', 'Gradient Out')
+                                                        output.name = 'Gradient Out'
+                                                        
+                                                        output = node_tree1.outputs.new('NodeSocketFloat', 'Rough Out')
+                                                        output.name = 'Rough Out'
+                                                        
+                                                        output = node_tree1.outputs.new('NodeSocketColor', 'Norm Out')
+                                                        output.name = 'Norm Out'
 
-                                                            # Swatch Values
-                                                            group_002_0 = node_tree0.nodes.new('ShaderNodeGroup')
-                                                            group_002_0.node_tree = bpy.data.node_groups.get(swatchID)
-                                                            group_002_0.color = (MidColor[0],MidColor[1],MidColor[2])
-                                                            group_002_0.hide = True
-                                                            locationX = -150
-                                                            locationY = -252 + -352*int(swatches)
-                                                            if isGrime == True:
-                                                                locationY = -2695
-                                                            group_002_0.location = (locationX, locationY)
-                                                            group_002_0.name = swatchID
-                                                            group_002_0.use_custom_color = True
-                                                            group_002_0.width = 250
+                                                        # Swatch Values
+                                                        group_002_0 = node_tree0.nodes.new('ShaderNodeGroup')
+                                                        group_002_0.node_tree = bpy.data.node_groups.get(swatchID)
+                                                        group_002_0.color = (MidColor[0],MidColor[1],MidColor[2])
+                                                        group_002_0.hide = True
+                                                        locationX = -150
+                                                        locationY = -252 + -352*int(swatches)
+                                                        if isGrime == True:
+                                                            locationY = -2695
+                                                        group_002_0.location = (locationX, locationY)
+                                                        group_002_0.name = swatchID
+                                                        group_002_0.use_custom_color = True
+                                                        group_002_0.width = 250
 
-                                                            
-                                                            group_002_0.inputs[0].default_value = BaseScaleX
-                                                            group_002_0.inputs[0].name = 'Base-Scale_X'
+                                                        
+                                                        group_002_0.inputs[0].default_value = BaseScaleX
+                                                        group_002_0.inputs[0].name = 'Base-Scale_X'
 
-                                                            
-                                                            group_002_0.inputs[1].default_value = BaseScaleY
-                                                            group_002_0.inputs[1].name = 'Base-Scale_Y'
-                                                            
-                                                            group_002_0.inputs[2].default_value = ColorGradientScale[0]
-                                                            group_002_0.inputs[2].name = 'Gradient-Scale_X'
+                                                        
+                                                        group_002_0.inputs[1].default_value = BaseScaleY
+                                                        group_002_0.inputs[1].name = 'Base-Scale_Y'
+                                                        
+                                                        group_002_0.inputs[2].default_value = ColorGradientScale[0]
+                                                        group_002_0.inputs[2].name = 'Gradient-Scale_X'
 
-                                                            
-                                                            group_002_0.inputs[3].default_value = ColorGradientScale[1]
-                                                            group_002_0.inputs[3].name = 'Gradient-Scale_Y'
+                                                        
+                                                        group_002_0.inputs[3].default_value = ColorGradientScale[1]
+                                                        group_002_0.inputs[3].name = 'Gradient-Scale_Y'
 
-                                                            
-                                                            group_002_0.inputs[4].default_value = NormalScale[0]
-                                                            group_002_0.inputs[4].name = 'Normal-Scale_X'
+                                                        
+                                                        group_002_0.inputs[4].default_value = NormalScale[0]
+                                                        group_002_0.inputs[4].name = 'Normal-Scale_X'
 
-                                                            
-                                                            group_002_0.inputs[5].default_value = NormalScale[1]
-                                                            group_002_0.inputs[5].name = 'Normal-Scale_Y'
+                                                        
+                                                        group_002_0.inputs[5].default_value = NormalScale[1]
+                                                        group_002_0.inputs[5].name = 'Normal-Scale_Y'
 
-                                                            group_002_0.inputs[6].default_value = MaterialTransformX
-                                                            group_002_0.inputs[6].name = 'Material Transform X'
+                                                        group_002_0.inputs[6].default_value = MaterialTransformX
+                                                        group_002_0.inputs[6].name = 'Material Transform X'
 
-                                                            
-                                                            group_002_0.inputs[7].default_value = MaterialTransformY
-                                                            group_002_0.inputs[7].name = 'Material Transform Y'
-                                                            
+                                                        
+                                                        group_002_0.inputs[7].default_value = MaterialTransformY
+                                                        group_002_0.inputs[7].name = 'Material Transform Y'
+                                                        
 
-                                                            group_002_0.inputs[8].default_value = Roughness
-                                                            group_002_0.inputs[8].name = 'Roughness'
+                                                        group_002_0.inputs[8].default_value = Roughness
+                                                        group_002_0.inputs[8].name = 'Roughness'
 
-                                                            
-                                                            group_002_0.inputs[9].default_value = RoughnessBlack
-                                                            group_002_0.inputs[9].name = 'Roughness Black'
-                                                            
-                                                            group_002_0.inputs[10].default_value = RoughnessWhite
-                                                            group_002_0.inputs[10].name = 'Roughness White'
-                                                            
-                                                            group_002_0.outputs[0].default_value = 1.0
-                                                            group_002_0.outputs[0].name = 'Gradient Out'
+                                                        
+                                                        group_002_0.inputs[9].default_value = RoughnessBlack
+                                                        group_002_0.inputs[9].name = 'Roughness Black'
+                                                        
+                                                        group_002_0.inputs[10].default_value = RoughnessWhite
+                                                        group_002_0.inputs[10].name = 'Roughness White'
+                                                        
+                                                        group_002_0.outputs[0].default_value = 1.0
+                                                        group_002_0.outputs[0].name = 'Gradient Out'
 
-                                                            group_002_0.outputs[1].default_value = 0.0
-                                                            group_002_0.outputs[1].name = 'Rough Out'
-                                                            
-                                                            group_002_0.outputs[2].default_value = (0.5, 0.5, 1.0, 1.0)
-                                                            group_002_0.outputs[2].name = 'Norm Out'
+                                                        group_002_0.outputs[1].default_value = 0.0
+                                                        group_002_0.outputs[1].name = 'Rough Out'
+                                                        
+                                                        group_002_0.outputs[2].default_value = (0.5, 0.5, 1.0, 1.0)
+                                                        group_002_0.outputs[2].name = 'Norm Out'
 
-                                            # The nodes inside the Swatch Group
-                                                            
-                                                            group_input_1 = node_tree1.nodes.new('NodeGroupInput')
-                                                            group_input_1.location = (-1000, -0.0)
+                                        # The nodes inside the Swatch Group
+                                                        
+                                                        group_input_1 = node_tree1.nodes.new('NodeGroupInput')
+                                                        group_input_1.location = (-1000, -0.0)
 
-                                                            group_output_1 = node_tree1.nodes.new('NodeGroupOutput')
-                                                            group_output_1.location = (1000, 0.0)
+                                                        group_output_1 = node_tree1.nodes.new('NodeGroupOutput')
+                                                        group_output_1.location = (1000, 0.0)
 
-                                                            swatch_normal = node_tree1.nodes.new('ShaderNodeTexImage')
-                                                            swatch_normal.location = (0.0, 0.0)
-                                                            texturepath = NormalPath
-                                                            swatch_normal.image = readTexture(texturepath)
-                                                            swatch_normal.image.colorspace_settings.name = 'Non-Color'
-                                                            swatch_normal.label = 'Swatch Normal'
+                                                        swatch_normal = node_tree1.nodes.new('ShaderNodeTexImage')
+                                                        swatch_normal.location = (0.0, 0.0)
+                                                        texturepath = NormalPath
+                                                        swatch_normal.image = readTexture(texturepath)
+                                                        swatch_normal.image.colorspace_settings.name = 'Non-Color'
+                                                        swatch_normal.label = 'Swatch Normal'
 
-                                                            swatch_gradient = node_tree1.nodes.new('ShaderNodeTexImage')
-                                                            swatch_gradient.location = (0.0, 300.0)
-                                                            texturepath = ColorGradientMap
-                                                            swatch_gradient.image = readTexture(texturepath)
-                                                            swatch_gradient.image.colorspace_settings.name = 'Non-Color'
-                                                            swatch_gradient.label = 'Swatch Gradient'
+                                                        swatch_gradient = node_tree1.nodes.new('ShaderNodeTexImage')
+                                                        swatch_gradient.location = (0.0, 300.0)
+                                                        texturepath = ColorGradientMap
+                                                        swatch_gradient.image = readTexture(texturepath)
+                                                        swatch_gradient.image.colorspace_settings.name = 'Non-Color'
+                                                        swatch_gradient.label = 'Swatch Gradient'
 
 
 
-                                                            # Better UV Scaling for Gradient
-                                                            group_002_1 = node_tree1.nodes.new('ShaderNodeGroup')
-                                                            group_002_1.node_tree = bpy.data.node_groups.get('BetterUVScaling')
-                                                            group_002_1.location = (-375, -9)
-                                                            group_002_1.name = 'Better UV Scaling'
-                                                            group_002_1.width = 200
+                                                        # Better UV Scaling for Gradient
+                                                        group_002_1 = node_tree1.nodes.new('ShaderNodeGroup')
+                                                        group_002_1.node_tree = bpy.data.node_groups.get('BetterUVScaling')
+                                                        group_002_1.location = (-375, -9)
+                                                        group_002_1.name = 'Better UV Scaling'
+                                                        group_002_1.width = 200
 
-                                                            group_002_1.inputs[0].name = 'Base_Scale_X'
-                                                            group_002_1.inputs[1].name = 'Base_Scale_Y'
-                                                            group_002_1.inputs[2].name = 'Detail_Scale_X'
-                                                            group_002_1.inputs[3].name = 'Detail_Scale_Y'
-                                                            group_002_1.inputs[4].name = 'Alternative Transform X'
-                                                            group_002_1.inputs[5].name = 'Alternative Transform Y'
-                                                            group_002_1.outputs[0].name = 'Finalized Scale'
+                                                        group_002_1.inputs[0].name = 'Base_Scale_X'
+                                                        group_002_1.inputs[1].name = 'Base_Scale_Y'
+                                                        group_002_1.inputs[2].name = 'Detail_Scale_X'
+                                                        group_002_1.inputs[3].name = 'Detail_Scale_Y'
+                                                        group_002_1.inputs[4].name = 'Alternative Transform X'
+                                                        group_002_1.inputs[5].name = 'Alternative Transform Y'
+                                                        group_002_1.outputs[0].name = 'Finalized Scale'
 
-                                                            node_tree1.links.new(group_input_1.outputs[0], group_002_1.inputs[0])
-                                                            node_tree1.links.new(group_input_1.outputs[1], group_002_1.inputs[1])
-                                                            node_tree1.links.new(group_input_1.outputs[2], group_002_1.inputs[2])
-                                                            node_tree1.links.new(group_input_1.outputs[3], group_002_1.inputs[3])
-                                                            node_tree1.links.new(group_input_1.outputs[6], group_002_1.inputs[4])
-                                                            node_tree1.links.new(group_input_1.outputs[7], group_002_1.inputs[5])
-                                                            node_tree1.links.new(group_002_1.outputs[0], swatch_gradient.inputs[0])
+                                                        node_tree1.links.new(group_input_1.outputs[0], group_002_1.inputs[0])
+                                                        node_tree1.links.new(group_input_1.outputs[1], group_002_1.inputs[1])
+                                                        node_tree1.links.new(group_input_1.outputs[2], group_002_1.inputs[2])
+                                                        node_tree1.links.new(group_input_1.outputs[3], group_002_1.inputs[3])
+                                                        node_tree1.links.new(group_input_1.outputs[6], group_002_1.inputs[4])
+                                                        node_tree1.links.new(group_input_1.outputs[7], group_002_1.inputs[5])
+                                                        node_tree1.links.new(group_002_1.outputs[0], swatch_gradient.inputs[0])
 
-                                                            # Better UV Scaling for Normal
-                                                            group_002_2 = node_tree1.nodes.new('ShaderNodeGroup')
-                                                            group_002_2.node_tree = bpy.data.node_groups.get('BetterUVScaling')
-                                                            group_002_2.location = (-375, -300)
-                                                            group_002_2.name = 'Better UV Scaling'
-                                                            group_002_2.width = 200
+                                                        # Better UV Scaling for Normal
+                                                        group_002_2 = node_tree1.nodes.new('ShaderNodeGroup')
+                                                        group_002_2.node_tree = bpy.data.node_groups.get('BetterUVScaling')
+                                                        group_002_2.location = (-375, -300)
+                                                        group_002_2.name = 'Better UV Scaling'
+                                                        group_002_2.width = 200
 
-                                                            group_002_2.inputs[0].name = 'Base_Scale_X'
-                                                            group_002_2.inputs[1].name = 'Base_Scale_Y'
-                                                            group_002_2.inputs[2].name = 'Detail_Scale_X'
-                                                            group_002_2.inputs[3].name = 'Detail_Scale_Y'
-                                                            group_002_2.inputs[4].name = 'Alternative Transform X'
-                                                            group_002_2.inputs[5].name = 'Alternative Transform Y'
-                                                            group_002_2.outputs[0].name = 'Finalized Scale'
+                                                        group_002_2.inputs[0].name = 'Base_Scale_X'
+                                                        group_002_2.inputs[1].name = 'Base_Scale_Y'
+                                                        group_002_2.inputs[2].name = 'Detail_Scale_X'
+                                                        group_002_2.inputs[3].name = 'Detail_Scale_Y'
+                                                        group_002_2.inputs[4].name = 'Alternative Transform X'
+                                                        group_002_2.inputs[5].name = 'Alternative Transform Y'
+                                                        group_002_2.outputs[0].name = 'Finalized Scale'
 
-                                                            node_tree1.links.new(group_input_1.outputs[0], group_002_2.inputs[0])
-                                                            node_tree1.links.new(group_input_1.outputs[1], group_002_2.inputs[1])
-                                                            node_tree1.links.new(group_input_1.outputs[4], group_002_2.inputs[2])
-                                                            node_tree1.links.new(group_input_1.outputs[5], group_002_2.inputs[3])
-                                                            node_tree1.links.new(group_input_1.outputs[6], group_002_2.inputs[4])
-                                                            node_tree1.links.new(group_input_1.outputs[7], group_002_2.inputs[5])
-                                                            node_tree1.links.new(group_002_2.outputs[0], swatch_normal.inputs[0])
+                                                        node_tree1.links.new(group_input_1.outputs[0], group_002_2.inputs[0])
+                                                        node_tree1.links.new(group_input_1.outputs[1], group_002_2.inputs[1])
+                                                        node_tree1.links.new(group_input_1.outputs[4], group_002_2.inputs[2])
+                                                        node_tree1.links.new(group_input_1.outputs[5], group_002_2.inputs[3])
+                                                        node_tree1.links.new(group_input_1.outputs[6], group_002_2.inputs[4])
+                                                        node_tree1.links.new(group_input_1.outputs[7], group_002_2.inputs[5])
+                                                        node_tree1.links.new(group_002_2.outputs[0], swatch_normal.inputs[0])
 
-                                                            # Separate Gradient and link to Output
+                                                        # Separate Gradient and link to Output
 
-                                                            separate_rgb_1 = node_tree1.nodes.new('ShaderNodeSeparateColor')
-                                                            separate_rgb_1.mode = 'RGB'
-                                                            separate_rgb_1.location = (418, 294)
+                                                        separate_rgb_1 = node_tree1.nodes.new('ShaderNodeSeparateColor')
+                                                        separate_rgb_1.mode = 'RGB'
+                                                        separate_rgb_1.location = (418, 294)
 
-                                                            node_tree1.links.new(swatch_gradient.outputs[0], separate_rgb_1.inputs[0])
-                                                            node_tree1.links.new(separate_rgb_1.outputs[0], group_output_1.inputs[0])
-                                                            node_tree1.links.new(swatch_normal.outputs[0], group_output_1.inputs[2])
+                                                        node_tree1.links.new(swatch_gradient.outputs[0], separate_rgb_1.inputs[0])
+                                                        node_tree1.links.new(separate_rgb_1.outputs[0], group_output_1.inputs[0])
+                                                        node_tree1.links.new(swatch_normal.outputs[0], group_output_1.inputs[2])
 
-                                                            # Roughness Math Instance
+                                                        # Roughness Math Instance
 
-                                                            group_1 = node_tree1.nodes.new('ShaderNodeGroup')
-                                                            group_1.node_tree = bpy.data.node_groups.get('Roughness Math')
-                                                            group_1.location = (772, -157)
-                                                            group_1.name = 'Group'
-                                                            group_1.width = 140.0
-                                                            
-                                                            group_1.inputs[0].name = 'Base'
-                                                            group_1.inputs[1].name = 'Exponent'
-                                                            group_1.inputs[2].name = 'Roughness Black'
-                                                            group_1.inputs[3].name = 'Roughness White'
-                                                            group_1.outputs[0].name = 'Color'
+                                                        group_1 = node_tree1.nodes.new('ShaderNodeGroup')
+                                                        group_1.node_tree = bpy.data.node_groups.get('Roughness Math')
+                                                        group_1.location = (772, -157)
+                                                        group_1.name = 'Group'
+                                                        group_1.width = 140.0
+                                                        
+                                                        group_1.inputs[0].name = 'Base'
+                                                        group_1.inputs[1].name = 'Exponent'
+                                                        group_1.inputs[2].name = 'Roughness Black'
+                                                        group_1.inputs[3].name = 'Roughness White'
+                                                        group_1.outputs[0].name = 'Color'
 
-                                                            # Roughness Math Links
+                                                        # Roughness Math Links
 
-                                                            node_tree1.links.new(separate_rgb_1.outputs[2], group_1.inputs[0])
-                                                            node_tree1.links.new(group_input_1.outputs[8], group_1.inputs[1])
-                                                            node_tree1.links.new(group_input_1.outputs[9], group_1.inputs[2])
-                                                            node_tree1.links.new(group_input_1.outputs[10], group_1.inputs[3])
-                                                            node_tree1.links.new(group_1.outputs[0], group_output_1.inputs[1])
-                                                            
-                                                            if isGrime == False:
-                                                                inputnuminit = 8+16*int(swatches)
-                                                                inputnum = 9+16*int(swatches)
-                                                                inputnum1 = 10+16*int(swatches)
-                                                                inputnum2 = 11+16*int(swatches)
-                                                                inputnum3 = 12+16*int(swatches)
-                                                                inputnum4 = 13+16*int(swatches)
-                                                                inputnum5 = 14+16*int(swatches)
-                                                                inputnum6 = 15+16*int(swatches)
-                                                                inputnum7 = 16+16*int(swatches)
-                                                                inputnum8 = 17+16*int(swatches)
-                                                                inputnum9 = 18+16*int(swatches)
-                                                                inputnum10 = 19+16*int(swatches)
-                                                                inputnum11 = 20+16*int(swatches)
-                                                                inputnum12 = 21+16*int(swatches)
-                                                                inputnum13 = 22+16*int(swatches)
-                                                                inputnum14 = 23+16*int(swatches)
-                                                            
-                                                                node_tree0.links.new(group_002_0.outputs[0], infiniteshader.inputs[inputnum])
-                                                                node_tree0.links.new(group_002_0.outputs[1], infiniteshader.inputs[inputnum1])
-                                                                node_tree0.links.new(group_002_0.outputs[2], infiniteshader.inputs[inputnum2])
-                                                                infiniteshader.inputs[inputnum3].default_value = scratchAmount
-                                                                infiniteshader.inputs[inputnum4].default_value = ScratchRoughness
-                                                                infiniteshader.inputs[inputnum5].default_value = ScratchMetallic
-                                                                infiniteshader.inputs[inputnum6].default_value = Metallic
-                                                                infiniteshader.inputs[inputnum7].default_value = 0
-                                                                infiniteshader.inputs[inputnum8].default_value = 0
-                                                                infiniteshader.inputs[inputnum9].default_value = EmissiveAmount*10
-                                                                infiniteshader.inputs[inputnum10].default_value = (TopColor[0],TopColor[1],TopColor[2],1.0)
-                                                                infiniteshader.inputs[inputnum11].default_value = (MidColor[0],MidColor[1],MidColor[2],1.0)
-                                                                infiniteshader.inputs[inputnum12].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0)
-                                                                infiniteshader.inputs[inputnum13].default_value = (ScratchColor[0],ScratchColor[1],ScratchColor[2],1.0)
-                                                                infiniteshader.inputs[inputnum14].default_value = (ScratchColor[0],ScratchColor[1],ScratchColor[2],1.0)
-                                                            
-                                                                if swatches > 0:
-                                                                    infiniteshader.inputs[inputnuminit].default_value = 1
-                                                                if swatches == 6:
-                                                                    infiniteshader.inputs[inputnuminit].default_value = 0
-                                                            if isGrime == True:
-                                                                node_tree0.links.new(group_002_0.outputs[0], infiniteshader.inputs[120])
-                                                                node_tree0.links.new(group_002_0.outputs[1], infiniteshader.inputs[121])
-                                                                node_tree0.links.new(group_002_0.outputs[2], infiniteshader.inputs[122])
-                                                                infiniteshader.inputs[123].default_value = Metallic
-                                                                infiniteshader.inputs[124].default_value = 0
-                                                                infiniteshader.inputs[125].default_value = 0
-                                                                infiniteshader.inputs[126].default_value = EmissiveAmount
-                                                                infiniteshader.inputs[127].default_value = (TopColor[0],TopColor[1],TopColor[2],1.0)
-                                                                infiniteshader.inputs[128].default_value = (MidColor[0],MidColor[1],MidColor[2],1.0)
-                                                                infiniteshader.inputs[129].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0)
-                                                                infiniteshader.inputs[130].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0) 
-                                                        else:
-                                                            node_tree1 = swatchinput
-                                                        if swatchnum == swatchID:
-                                                            isGrime = False
+                                                        node_tree1.links.new(separate_rgb_1.outputs[2], group_1.inputs[0])
+                                                        node_tree1.links.new(group_input_1.outputs[8], group_1.inputs[1])
+                                                        node_tree1.links.new(group_input_1.outputs[9], group_1.inputs[2])
+                                                        node_tree1.links.new(group_input_1.outputs[10], group_1.inputs[3])
+                                                        node_tree1.links.new(group_1.outputs[0], group_output_1.inputs[1])
+                                                        
+                                                        if isGrime == False:
+                                                            inputnuminit = 8+16*int(swatches)
+                                                            inputnum = 9+16*int(swatches)
+                                                            inputnum1 = 10+16*int(swatches)
+                                                            inputnum2 = 11+16*int(swatches)
+                                                            inputnum3 = 12+16*int(swatches)
+                                                            inputnum4 = 13+16*int(swatches)
+                                                            inputnum5 = 14+16*int(swatches)
+                                                            inputnum6 = 15+16*int(swatches)
+                                                            inputnum7 = 16+16*int(swatches)
+                                                            inputnum8 = 17+16*int(swatches)
+                                                            inputnum9 = 18+16*int(swatches)
+                                                            inputnum10 = 19+16*int(swatches)
+                                                            inputnum11 = 20+16*int(swatches)
+                                                            inputnum12 = 21+16*int(swatches)
+                                                            inputnum13 = 22+16*int(swatches)
+                                                            inputnum14 = 23+16*int(swatches)
+                                                        
+                                                            node_tree0.links.new(group_002_0.outputs[0], infiniteshader.inputs[inputnum])
+                                                            node_tree0.links.new(group_002_0.outputs[1], infiniteshader.inputs[inputnum1])
+                                                            node_tree0.links.new(group_002_0.outputs[2], infiniteshader.inputs[inputnum2])
+                                                            infiniteshader.inputs[inputnum3].default_value = scratchAmount
+                                                            infiniteshader.inputs[inputnum4].default_value = ScratchRoughness
+                                                            infiniteshader.inputs[inputnum5].default_value = ScratchMetallic
+                                                            infiniteshader.inputs[inputnum6].default_value = Metallic
+                                                            infiniteshader.inputs[inputnum7].default_value = 0
+                                                            infiniteshader.inputs[inputnum8].default_value = 0
+                                                            infiniteshader.inputs[inputnum9].default_value = EmissiveAmount*10
+                                                            infiniteshader.inputs[inputnum10].default_value = (TopColor[0],TopColor[1],TopColor[2],1.0)
+                                                            infiniteshader.inputs[inputnum11].default_value = (MidColor[0],MidColor[1],MidColor[2],1.0)
+                                                            infiniteshader.inputs[inputnum12].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0)
+                                                            infiniteshader.inputs[inputnum13].default_value = (ScratchColor[0],ScratchColor[1],ScratchColor[2],1.0)
+                                                            infiniteshader.inputs[inputnum14].default_value = (ScratchColor[0],ScratchColor[1],ScratchColor[2],1.0)
+                                                        
+                                                            if swatches > 0:
+                                                                infiniteshader.inputs[inputnuminit].default_value = 1
+                                                            if swatches == 6:
+                                                                infiniteshader.inputs[inputnuminit].default_value = 0
+                                                        if isGrime == True:
+                                                            node_tree0.links.new(group_002_0.outputs[0], infiniteshader.inputs[120])
+                                                            node_tree0.links.new(group_002_0.outputs[1], infiniteshader.inputs[121])
+                                                            node_tree0.links.new(group_002_0.outputs[2], infiniteshader.inputs[122])
+                                                            infiniteshader.inputs[123].default_value = Metallic
+                                                            infiniteshader.inputs[124].default_value = 0
+                                                            infiniteshader.inputs[125].default_value = 0
+                                                            infiniteshader.inputs[126].default_value = EmissiveAmount
+                                                            infiniteshader.inputs[127].default_value = (TopColor[0],TopColor[1],TopColor[2],1.0)
+                                                            infiniteshader.inputs[128].default_value = (MidColor[0],MidColor[1],MidColor[2],1.0)
+                                                            infiniteshader.inputs[129].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0)
+                                                            infiniteshader.inputs[130].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0) 
+                                                    else:
+                                                        node_tree1 = swatchinput
+                                                    if swatchnum == swatchID:
+                                                        isGrime = False
+                                                        createSwatch(isGrime)
+                                                    if swatchID == grimeSwatch:
+                                                        if isGrimeDone == False:
+                                                            isGrime = True
                                                             createSwatch(isGrime)
-                                                        if swatchID == grimeSwatch:
-                                                            if isGrimeDone == False:
-                                                                isGrime = True
-                                                                createSwatch(isGrime)
-                                                                isGrimeDone = True
+                                                            isGrimeDone = True
                                                         
                 print('''                                      .,:clooxkO00KK0OOxol:^.              
                                   ^:lllccc;,,,^,,,;;cldOKXKOdc^           
