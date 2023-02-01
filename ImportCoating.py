@@ -40,6 +40,8 @@ class ImportCoating(bpy.types.Operator):
         description="import texures with a signed format as signed",
         default=False
     )
+    
+    
 
     def grabcoatingnames(self, context):
         parse_mwsy_name = ReaderFactory.create_reader(self.filepath)
@@ -64,11 +66,15 @@ class ImportCoating(bpy.types.Operator):
                                        description = "Path To Use For .material",
                                        default = "M:\\")
     
+    
+    
     use_crosscore: bpy.props.BoolProperty(default=False, name= "Cross Core", description= 'Removes style requirement to enable "cross core" coatings')
+    
     selected_only: bpy.props.BoolProperty(default=False, name= "Selected Objects Only", description= 'Only imports coatings to objects selected.')
-
-
     def execute(self, context):
+        datasource = bpy.data.objects
+        if self.selected_only:
+            datasource = bpy.context.selected_objects
         addon_prefs = context.preferences.addons[__package__].preferences
         parse_mwsy = ReaderFactory.create_reader(self.filepath)
         parse_mwsy.load()
@@ -270,8 +276,7 @@ class ImportCoating(bpy.types.Operator):
             coreclamp.location = (60, -300)
             coreclamp.inputs[1].default_value = 0
             coreclamp.inputs[2].default_value = 1
-            coreclamp.operation = 'MULTIPLY_ADD'
-
+            
             math_011_2 = node_tree3.nodes.new('ShaderNodeMath')
             math_011_2.location = (57, 201)
             math_011_2.operation = 'MULTIPLY'
@@ -35631,7 +35636,7 @@ class ImportCoating(bpy.types.Operator):
                 grimeSwatch = coatingJSON.get('grimeSwatch')
                 grimeAmount = coatingJSON.get('grimeAmount')
                 scratchAmount = coatingJSON.get('scratchAmount')
-                for ob in bpy.data.objects:
+                for ob in datasource:
                     if ob.type == "MESH":
                         for mat_slot in ob.material_slots:
                             if mat_slot.material.node_tree:
@@ -36074,8 +36079,6 @@ class ImportCoating(bpy.types.Operator):
                                                             infiniteshader.inputs[128].default_value = (MidColor[0],MidColor[1],MidColor[2],1.0)
                                                             infiniteshader.inputs[129].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0)
                                                             infiniteshader.inputs[130].default_value = (BotColor[0],BotColor[1],BotColor[2],1.0) 
-                                                    else:
-                                                        node_tree1 = swatchinput
                                                     if swatchnum == swatchID:
                                                         isGrime = False
                                                         createSwatch(isGrime)
