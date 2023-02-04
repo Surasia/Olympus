@@ -64,11 +64,12 @@ class ImportCoating(bpy.types.Operator):
     materialuserpath: bpy.props.StringProperty( 
                                        name = "Material Path",  
                                        description = "Path To Use For .material",
-                                       default = "M:\\")
+                                       default = "M:\\objects\\")
     
     
     
     use_crosscore: bpy.props.BoolProperty(default=False, name= "Cross Core", description= 'Removes style requirement to enable "cross core" coatings')
+    use_damage: bpy.props.BoolProperty(default=False, name= "Zone 7 (Damage)", description= 'Enables Zone 7, used mostly for Damage/Dirt.')
     
     selected_only: bpy.props.BoolProperty(default=False, name= "Selected Objects Only", description= 'Only imports coatings to objects selected.')
     def execute(self, context):
@@ -27230,9 +27231,9 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(output, 'show_expanded'):
                     output.show_expanded = False
 
-            node_tree2 = bpy.data.node_groups.get('Detail Normals')
+            node_tree2 = bpy.data.node_groups.get('Detail Normals (Chroma Mod)')
             if not node_tree2:
-                node_tree2 = bpy.data.node_groups.new('Detail Normals', 'ShaderNodeTree')
+                node_tree2 = bpy.data.node_groups.new('Detail Normals (Chroma Mod)', 'ShaderNodeTree')
                 for node in node_tree2.nodes:
                     node_tree2.nodes.remove(node)
                 # INPUTS
@@ -27267,7 +27268,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(input, 'attribute_domain'):
                     input.attribute_domain = 'POINT'
                 if hasattr(input, 'default_value'):
-                    input.default_value = (0.5, 0.5, 0.5, 1.0)
+                    input.default_value = (0.5, 0.5, 1.0, 1.0)
                 if hasattr(input, 'hide_value'):
                     input.hide_value = False
                 if hasattr(input, 'name'):
@@ -27344,6 +27345,19 @@ class ImportCoating(bpy.types.Operator):
                     input.hide_value = False
                 if hasattr(input, 'name'):
                     input.name = 'Dust'
+                input = node_tree2.inputs.new('NodeSocketFloat', 'Scratch Amount')
+                if hasattr(input, 'attribute_domain'):
+                    input.attribute_domain = 'POINT'
+                if hasattr(input, 'default_value'):
+                    input.default_value = 1.0
+                if hasattr(input, 'hide_value'):
+                    input.hide_value = False
+                if hasattr(input, 'max_value'):
+                    input.max_value = 10000.0
+                if hasattr(input, 'min_value'):
+                    input.min_value = -10000.0
+                if hasattr(input, 'name'):
+                    input.name = 'Scratch Amount'
                 input = node_tree2.inputs.new('NodeSocketFloat', 'Grime Amount')
                 if hasattr(input, 'attribute_domain'):
                     input.attribute_domain = 'POINT'
@@ -27370,6 +27384,19 @@ class ImportCoating(bpy.types.Operator):
                     input.min_value = 0.0
                 if hasattr(input, 'name'):
                     input.name = 'Dust Amount'
+                input = node_tree2.inputs.new('NodeSocketFloatFactor', 'Detail Normal Toggle')
+                if hasattr(input, 'attribute_domain'):
+                    input.attribute_domain = 'POINT'
+                if hasattr(input, 'default_value'):
+                    input.default_value = 1.0
+                if hasattr(input, 'hide_value'):
+                    input.hide_value = False
+                if hasattr(input, 'max_value'):
+                    input.max_value = 1.0
+                if hasattr(input, 'min_value'):
+                    input.min_value = 0.0
+                if hasattr(input, 'name'):
+                    input.name = 'Detail Normal Toggle'
                 # OUTPUTS
                 output = node_tree2.outputs.new('NodeSocketColor', 'Normal')
                 if hasattr(output, 'attribute_domain'):
@@ -27381,6 +27408,344 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(output, 'name'):
                     output.name = 'Normal'
                 # NODES
+                math_012_2 = node_tree2.nodes.new('ShaderNodeMath')
+                if hasattr(math_012_2, 'color'):
+                    math_012_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(math_012_2, 'hide'):
+                    math_012_2.hide = False
+                if hasattr(math_012_2, 'location'):
+                    math_012_2.location = (-400.928466796875, 1083.747802734375)
+                if hasattr(math_012_2, 'mute'):
+                    math_012_2.mute = False
+                if hasattr(math_012_2, 'name'):
+                    math_012_2.name = 'Math.012'
+                if hasattr(math_012_2, 'operation'):
+                    math_012_2.operation = 'SUBTRACT'
+                if hasattr(math_012_2, 'use_clamp'):
+                    math_012_2.use_clamp = False
+                if hasattr(math_012_2, 'use_custom_color'):
+                    math_012_2.use_custom_color = False
+                if hasattr(math_012_2, 'width'):
+                    math_012_2.width = 140.0
+                input_ = next((input_ for input_ in math_012_2.inputs if input_.identifier=='Value'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_012_2.inputs if input_.identifier=='Value_001'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 1.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_012_2.inputs if input_.identifier=='Value_002'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in math_012_2.outputs if output.identifier=='Value'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Value'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                math_011_2 = node_tree2.nodes.new('ShaderNodeMath')
+                if hasattr(math_011_2, 'color'):
+                    math_011_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(math_011_2, 'hide'):
+                    math_011_2.hide = False
+                if hasattr(math_011_2, 'location'):
+                    math_011_2.location = (-400.09942626953125, 1266.162109375)
+                if hasattr(math_011_2, 'mute'):
+                    math_011_2.mute = False
+                if hasattr(math_011_2, 'name'):
+                    math_011_2.name = 'Math.011'
+                if hasattr(math_011_2, 'operation'):
+                    math_011_2.operation = 'SUBTRACT'
+                if hasattr(math_011_2, 'use_clamp'):
+                    math_011_2.use_clamp = False
+                if hasattr(math_011_2, 'use_custom_color'):
+                    math_011_2.use_custom_color = False
+                if hasattr(math_011_2, 'width'):
+                    math_011_2.width = 140.0
+                input_ = next((input_ for input_ in math_011_2.inputs if input_.identifier=='Value'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_011_2.inputs if input_.identifier=='Value_001'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 1.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_011_2.inputs if input_.identifier=='Value_002'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in math_011_2.outputs if output.identifier=='Value'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Value'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                math_009_2 = node_tree2.nodes.new('ShaderNodeMath')
+                if hasattr(math_009_2, 'color'):
+                    math_009_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(math_009_2, 'hide'):
+                    math_009_2.hide = False
+                if hasattr(math_009_2, 'label'):
+                    math_009_2.label = 'Scratch'
+                if hasattr(math_009_2, 'location'):
+                    math_009_2.location = (-69.90155029296875, 1276.46826171875)
+                if hasattr(math_009_2, 'mute'):
+                    math_009_2.mute = False
+                if hasattr(math_009_2, 'name'):
+                    math_009_2.name = 'Math.009'
+                if hasattr(math_009_2, 'operation'):
+                    math_009_2.operation = 'ADD'
+                if hasattr(math_009_2, 'use_clamp'):
+                    math_009_2.use_clamp = True
+                if hasattr(math_009_2, 'use_custom_color'):
+                    math_009_2.use_custom_color = False
+                if hasattr(math_009_2, 'width'):
+                    math_009_2.width = 140.0
+                input_ = next((input_ for input_ in math_009_2.inputs if input_.identifier=='Value'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_009_2.inputs if input_.identifier=='Value_001'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 1.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_009_2.inputs if input_.identifier=='Value_002'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in math_009_2.outputs if output.identifier=='Value'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Value'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                math_010_2 = node_tree2.nodes.new('ShaderNodeMath')
+                if hasattr(math_010_2, 'color'):
+                    math_010_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(math_010_2, 'hide'):
+                    math_010_2.hide = False
+                if hasattr(math_010_2, 'location'):
+                    math_010_2.location = (-380.75628662109375, 896.3024291992188)
+                if hasattr(math_010_2, 'mute'):
+                    math_010_2.mute = False
+                if hasattr(math_010_2, 'name'):
+                    math_010_2.name = 'Math.010'
+                if hasattr(math_010_2, 'operation'):
+                    math_010_2.operation = 'SUBTRACT'
+                if hasattr(math_010_2, 'use_clamp'):
+                    math_010_2.use_clamp = False
+                if hasattr(math_010_2, 'use_custom_color'):
+                    math_010_2.use_custom_color = False
+                if hasattr(math_010_2, 'width'):
+                    math_010_2.width = 140.0
+                input_ = next((input_ for input_ in math_010_2.inputs if input_.identifier=='Value'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_010_2.inputs if input_.identifier=='Value_001'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 1.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_010_2.inputs if input_.identifier=='Value_002'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in math_010_2.outputs if output.identifier=='Value'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Value'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
                 mix_001_2 = node_tree2.nodes.new('ShaderNodeMix')
                 if hasattr(mix_001_2, 'blend_type'):
                     mix_001_2.blend_type = 'MIX'
@@ -27396,10 +27761,8 @@ class ImportCoating(bpy.types.Operator):
                     mix_001_2.factor_mode = 'UNIFORM'
                 if hasattr(mix_001_2, 'hide'):
                     mix_001_2.hide = False
-                if hasattr(mix_001_2, 'label'):
-                    mix_001_2.label = 'Slot 3'
                 if hasattr(mix_001_2, 'location'):
-                    mix_001_2.location = (-1920.0, 0.0)
+                    mix_001_2.location = (-670.0137939453125, 367.50067138671875)
                 if hasattr(mix_001_2, 'mute'):
                     mix_001_2.mute = False
                 if hasattr(mix_001_2, 'name'):
@@ -27600,10 +27963,8 @@ class ImportCoating(bpy.types.Operator):
                     mix_002_2.factor_mode = 'UNIFORM'
                 if hasattr(mix_002_2, 'hide'):
                     mix_002_2.hide = False
-                if hasattr(mix_002_2, 'label'):
-                    mix_002_2.label = 'Slot 4'
                 if hasattr(mix_002_2, 'location'):
-                    mix_002_2.location = (-1680.0, -169.0)
+                    mix_002_2.location = (-473.63037109375, 363.4728698730469)
                 if hasattr(mix_002_2, 'mute'):
                     mix_002_2.mute = False
                 if hasattr(mix_002_2, 'name'):
@@ -27804,10 +28165,8 @@ class ImportCoating(bpy.types.Operator):
                     mix_003_2.factor_mode = 'UNIFORM'
                 if hasattr(mix_003_2, 'hide'):
                     mix_003_2.hide = False
-                if hasattr(mix_003_2, 'label'):
-                    mix_003_2.label = 'Slot 5'
                 if hasattr(mix_003_2, 'location'):
-                    mix_003_2.location = (-1440.0, -174.0)
+                    mix_003_2.location = (-301.7841796875, 365.82666015625)
                 if hasattr(mix_003_2, 'mute'):
                     mix_003_2.mute = False
                 if hasattr(mix_003_2, 'name'):
@@ -27993,792 +28352,6 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(output, 'show_expanded'):
                         output.show_expanded = False
 
-                separate_rgb_001_2 = node_tree2.nodes.new('ShaderNodeSeparateColor')
-                if hasattr(separate_rgb_001_2, 'mode'):
-                    separate_rgb_001_2.mode = 'RGB'
-                if hasattr(separate_rgb_001_2, 'color'):
-                    separate_rgb_001_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(separate_rgb_001_2, 'hide'):
-                    separate_rgb_001_2.hide = False
-                if hasattr(separate_rgb_001_2, 'location'):
-                    separate_rgb_001_2.location = (-1680.0, 0.0)
-                if hasattr(separate_rgb_001_2, 'mute'):
-                    separate_rgb_001_2.mute = False
-                if hasattr(separate_rgb_001_2, 'name'):
-                    separate_rgb_001_2.name = 'Separate RGB.001'
-                if hasattr(separate_rgb_001_2, 'use_custom_color'):
-                    separate_rgb_001_2.use_custom_color = False
-                if hasattr(separate_rgb_001_2, 'width'):
-                    separate_rgb_001_2.width = 140.0
-                input_ = next((input_ for input_ in separate_rgb_001_2.inputs if input_.identifier=='Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Color'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in separate_rgb_001_2.outputs if output.identifier=='Red'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Red'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in separate_rgb_001_2.outputs if output.identifier=='Green'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Green'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in separate_rgb_001_2.outputs if output.identifier=='Blue'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Blue'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                separate_rgb_2 = node_tree2.nodes.new('ShaderNodeSeparateColor')
-                if hasattr(separate_rgb_2, 'mode'):
-                    separate_rgb_2.mode = 'RGB'
-                if hasattr(separate_rgb_2, 'color'):
-                    separate_rgb_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(separate_rgb_2, 'hide'):
-                    separate_rgb_2.hide = False
-                if hasattr(separate_rgb_2, 'location'):
-                    separate_rgb_2.location = (-2400.0, 0.0)
-                if hasattr(separate_rgb_2, 'mute'):
-                    separate_rgb_2.mute = False
-                if hasattr(separate_rgb_2, 'name'):
-                    separate_rgb_2.name = 'Separate RGB'
-                if hasattr(separate_rgb_2, 'use_custom_color'):
-                    separate_rgb_2.use_custom_color = False
-                if hasattr(separate_rgb_2, 'width'):
-                    separate_rgb_2.width = 140.0
-                input_ = next((input_ for input_ in separate_rgb_2.inputs if input_.identifier=='Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Color'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in separate_rgb_2.outputs if output.identifier=='Red'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Red'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in separate_rgb_2.outputs if output.identifier=='Green'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Green'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in separate_rgb_2.outputs if output.identifier=='Blue'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Blue'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                math_2 = node_tree2.nodes.new('ShaderNodeMath')
-                if hasattr(math_2, 'color'):
-                    math_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(math_2, 'hide'):
-                    math_2.hide = False
-                if hasattr(math_2, 'location'):
-                    math_2.location = (-1200.0, -169.0)
-                if hasattr(math_2, 'mute'):
-                    math_2.mute = False
-                if hasattr(math_2, 'name'):
-                    math_2.name = 'Math'
-                if hasattr(math_2, 'operation'):
-                    math_2.operation = 'SUBTRACT'
-                if hasattr(math_2, 'use_clamp'):
-                    math_2.use_clamp = False
-                if hasattr(math_2, 'use_custom_color'):
-                    math_2.use_custom_color = False
-                if hasattr(math_2, 'width'):
-                    math_2.width = 140.0
-                input_ = next((input_ for input_ in math_2.inputs if input_.identifier=='Value'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_2.inputs if input_.identifier=='Value_001'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 1.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_2.inputs if input_.identifier=='Value_002'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in math_2.outputs if output.identifier=='Value'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Value'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                math_001_2 = node_tree2.nodes.new('ShaderNodeMath')
-                if hasattr(math_001_2, 'color'):
-                    math_001_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(math_001_2, 'hide'):
-                    math_001_2.hide = False
-                if hasattr(math_001_2, 'location'):
-                    math_001_2.location = (-960.0, 0.0)
-                if hasattr(math_001_2, 'mute'):
-                    math_001_2.mute = False
-                if hasattr(math_001_2, 'name'):
-                    math_001_2.name = 'Math.001'
-                if hasattr(math_001_2, 'operation'):
-                    math_001_2.operation = 'ADD'
-                if hasattr(math_001_2, 'use_clamp'):
-                    math_001_2.use_clamp = False
-                if hasattr(math_001_2, 'use_custom_color'):
-                    math_001_2.use_custom_color = False
-                if hasattr(math_001_2, 'width'):
-                    math_001_2.width = 140.0
-                input_ = next((input_ for input_ in math_001_2.inputs if input_.identifier=='Value'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_001_2.inputs if input_.identifier=='Value_001'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_001_2.inputs if input_.identifier=='Value_002'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in math_001_2.outputs if output.identifier=='Value'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Value'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                separate_rgb_002_2 = node_tree2.nodes.new('ShaderNodeSeparateColor')
-                if hasattr(separate_rgb_002_2, 'mode'):
-                    separate_rgb_002_2.mode = 'RGB'
-                if hasattr(separate_rgb_002_2, 'color'):
-                    separate_rgb_002_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(separate_rgb_002_2, 'hide'):
-                    separate_rgb_002_2.hide = False
-                if hasattr(separate_rgb_002_2, 'location'):
-                    separate_rgb_002_2.location = (-1200.0, 0.0)
-                if hasattr(separate_rgb_002_2, 'mute'):
-                    separate_rgb_002_2.mute = False
-                if hasattr(separate_rgb_002_2, 'name'):
-                    separate_rgb_002_2.name = 'Separate RGB.002'
-                if hasattr(separate_rgb_002_2, 'use_custom_color'):
-                    separate_rgb_002_2.use_custom_color = False
-                if hasattr(separate_rgb_002_2, 'width'):
-                    separate_rgb_002_2.width = 140.0
-                input_ = next((input_ for input_ in separate_rgb_002_2.inputs if input_.identifier=='Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Color'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in separate_rgb_002_2.outputs if output.identifier=='Red'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Red'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in separate_rgb_002_2.outputs if output.identifier=='Green'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Green'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in separate_rgb_002_2.outputs if output.identifier=='Blue'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Blue'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                math_002_2 = node_tree2.nodes.new('ShaderNodeMath')
-                if hasattr(math_002_2, 'color'):
-                    math_002_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(math_002_2, 'hide'):
-                    math_002_2.hide = False
-                if hasattr(math_002_2, 'location'):
-                    math_002_2.location = (-1440.0, 0.0)
-                if hasattr(math_002_2, 'mute'):
-                    math_002_2.mute = False
-                if hasattr(math_002_2, 'name'):
-                    math_002_2.name = 'Math.002'
-                if hasattr(math_002_2, 'operation'):
-                    math_002_2.operation = 'SUBTRACT'
-                if hasattr(math_002_2, 'use_clamp'):
-                    math_002_2.use_clamp = False
-                if hasattr(math_002_2, 'use_custom_color'):
-                    math_002_2.use_custom_color = False
-                if hasattr(math_002_2, 'width'):
-                    math_002_2.width = 140.0
-                input_ = next((input_ for input_ in math_002_2.inputs if input_.identifier=='Value'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_002_2.inputs if input_.identifier=='Value_001'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 1.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_002_2.inputs if input_.identifier=='Value_002'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in math_002_2.outputs if output.identifier=='Value'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Value'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                math_003_2 = node_tree2.nodes.new('ShaderNodeMath')
-                if hasattr(math_003_2, 'color'):
-                    math_003_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(math_003_2, 'hide'):
-                    math_003_2.hide = False
-                if hasattr(math_003_2, 'location'):
-                    math_003_2.location = (-1200.0, -343.0)
-                if hasattr(math_003_2, 'mute'):
-                    math_003_2.mute = False
-                if hasattr(math_003_2, 'name'):
-                    math_003_2.name = 'Math.003'
-                if hasattr(math_003_2, 'operation'):
-                    math_003_2.operation = 'ADD'
-                if hasattr(math_003_2, 'use_clamp'):
-                    math_003_2.use_clamp = False
-                if hasattr(math_003_2, 'use_custom_color'):
-                    math_003_2.use_custom_color = False
-                if hasattr(math_003_2, 'width'):
-                    math_003_2.width = 140.0
-                input_ = next((input_ for input_ in math_003_2.inputs if input_.identifier=='Value'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_003_2.inputs if input_.identifier=='Value_001'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in math_003_2.inputs if input_.identifier=='Value_002'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Value'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in math_003_2.outputs if output.identifier=='Value'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Value'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
-                mix_007_2 = node_tree2.nodes.new('ShaderNodeMix')
-                if hasattr(mix_007_2, 'blend_type'):
-                    mix_007_2.blend_type = 'MIX'
-                if hasattr(mix_007_2, 'clamp_factor'):
-                    mix_007_2.clamp_factor = True
-                if hasattr(mix_007_2, 'clamp_result'):
-                    mix_007_2.clamp_result = False
-                if hasattr(mix_007_2, 'color'):
-                    mix_007_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(mix_007_2, 'data_type'):
-                    mix_007_2.data_type = 'RGBA'
-                if hasattr(mix_007_2, 'factor_mode'):
-                    mix_007_2.factor_mode = 'UNIFORM'
-                if hasattr(mix_007_2, 'hide'):
-                    mix_007_2.hide = False
-                if hasattr(mix_007_2, 'label'):
-                    mix_007_2.label = 'Dust'
-                if hasattr(mix_007_2, 'location'):
-                    mix_007_2.location = (-960.0, -174.0)
-                if hasattr(mix_007_2, 'mute'):
-                    mix_007_2.mute = False
-                if hasattr(mix_007_2, 'name'):
-                    mix_007_2.name = 'Mix.007'
-                if hasattr(mix_007_2, 'use_custom_color'):
-                    mix_007_2.use_custom_color = False
-                if hasattr(mix_007_2, 'width'):
-                    mix_007_2.width = 140.0
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='Factor_Float'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Factor'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='Factor_Vector'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Factor'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='A_Float'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'A'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='B_Float'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'B'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='A_Vector'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.0, 0.0, 0.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'A'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='B_Vector'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.0, 0.0, 0.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'B'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='A_Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'A'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='B_Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'B'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in mix_007_2.outputs if output.identifier=='Result_Float'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = False
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Result'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in mix_007_2.outputs if output.identifier=='Result_Vector'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = (0.0, 0.0, 0.0)
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = False
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Result'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in mix_007_2.outputs if output.identifier=='Result_Color'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = (0.0, 0.0, 0.0, 0.0)
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Result'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-
                 mix_004_2 = node_tree2.nodes.new('ShaderNodeMix')
                 if hasattr(mix_004_2, 'blend_type'):
                     mix_004_2.blend_type = 'MIX'
@@ -28794,10 +28367,8 @@ class ImportCoating(bpy.types.Operator):
                     mix_004_2.factor_mode = 'UNIFORM'
                 if hasattr(mix_004_2, 'hide'):
                     mix_004_2.hide = False
-                if hasattr(mix_004_2, 'label'):
-                    mix_004_2.label = 'Slot 6'
                 if hasattr(mix_004_2, 'location'):
-                    mix_004_2.location = (-1200.0, -517.0)
+                    mix_004_2.location = (-127.23150634765625, 365.34185791015625)
                 if hasattr(mix_004_2, 'mute'):
                     mix_004_2.mute = False
                 if hasattr(mix_004_2, 'name'):
@@ -28983,6 +28554,1036 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(output, 'show_expanded'):
                         output.show_expanded = False
 
+                math_007_2 = node_tree2.nodes.new('ShaderNodeMath')
+                if hasattr(math_007_2, 'color'):
+                    math_007_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(math_007_2, 'hide'):
+                    math_007_2.hide = False
+                if hasattr(math_007_2, 'label'):
+                    math_007_2.label = 'Dust'
+                if hasattr(math_007_2, 'location'):
+                    math_007_2.location = (-53.42236328125, 909.1626586914062)
+                if hasattr(math_007_2, 'mute'):
+                    math_007_2.mute = False
+                if hasattr(math_007_2, 'name'):
+                    math_007_2.name = 'Math.007'
+                if hasattr(math_007_2, 'operation'):
+                    math_007_2.operation = 'ADD'
+                if hasattr(math_007_2, 'use_clamp'):
+                    math_007_2.use_clamp = True
+                if hasattr(math_007_2, 'use_custom_color'):
+                    math_007_2.use_custom_color = False
+                if hasattr(math_007_2, 'width'):
+                    math_007_2.width = 140.0
+                input_ = next((input_ for input_ in math_007_2.inputs if input_.identifier=='Value'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_007_2.inputs if input_.identifier=='Value_001'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_007_2.inputs if input_.identifier=='Value_002'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in math_007_2.outputs if output.identifier=='Value'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Value'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                mix_005_2 = node_tree2.nodes.new('ShaderNodeMix')
+                if hasattr(mix_005_2, 'blend_type'):
+                    mix_005_2.blend_type = 'MIX'
+                if hasattr(mix_005_2, 'clamp_factor'):
+                    mix_005_2.clamp_factor = True
+                if hasattr(mix_005_2, 'clamp_result'):
+                    mix_005_2.clamp_result = False
+                if hasattr(mix_005_2, 'color'):
+                    mix_005_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(mix_005_2, 'data_type'):
+                    mix_005_2.data_type = 'RGBA'
+                if hasattr(mix_005_2, 'factor_mode'):
+                    mix_005_2.factor_mode = 'UNIFORM'
+                if hasattr(mix_005_2, 'hide'):
+                    mix_005_2.hide = False
+                if hasattr(mix_005_2, 'label'):
+                    mix_005_2.label = 'Dust'
+                if hasattr(mix_005_2, 'location'):
+                    mix_005_2.location = (62.10284423828125, 379.3305969238281)
+                if hasattr(mix_005_2, 'mute'):
+                    mix_005_2.mute = False
+                if hasattr(mix_005_2, 'name'):
+                    mix_005_2.name = 'Mix.005'
+                if hasattr(mix_005_2, 'use_custom_color'):
+                    mix_005_2.use_custom_color = False
+                if hasattr(mix_005_2, 'width'):
+                    mix_005_2.width = 140.0
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='Factor_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Factor'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='Factor_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Factor'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='A_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='B_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='A_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='B_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='A_Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='B_Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in mix_005_2.outputs if output.identifier=='Result_Float'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = False
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in mix_005_2.outputs if output.identifier=='Result_Vector'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = False
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in mix_005_2.outputs if output.identifier=='Result_Color'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                mix_006_2 = node_tree2.nodes.new('ShaderNodeMix')
+                if hasattr(mix_006_2, 'blend_type'):
+                    mix_006_2.blend_type = 'MIX'
+                if hasattr(mix_006_2, 'clamp_factor'):
+                    mix_006_2.clamp_factor = True
+                if hasattr(mix_006_2, 'clamp_result'):
+                    mix_006_2.clamp_result = False
+                if hasattr(mix_006_2, 'color'):
+                    mix_006_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(mix_006_2, 'data_type'):
+                    mix_006_2.data_type = 'RGBA'
+                if hasattr(mix_006_2, 'factor_mode'):
+                    mix_006_2.factor_mode = 'UNIFORM'
+                if hasattr(mix_006_2, 'hide'):
+                    mix_006_2.hide = False
+                if hasattr(mix_006_2, 'label'):
+                    mix_006_2.label = 'Scratch'
+                if hasattr(mix_006_2, 'location'):
+                    mix_006_2.location = (225.16224670410156, 384.31658935546875)
+                if hasattr(mix_006_2, 'mute'):
+                    mix_006_2.mute = False
+                if hasattr(mix_006_2, 'name'):
+                    mix_006_2.name = 'Mix.006'
+                if hasattr(mix_006_2, 'use_custom_color'):
+                    mix_006_2.use_custom_color = False
+                if hasattr(mix_006_2, 'width'):
+                    mix_006_2.width = 140.0
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='Factor_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Factor'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='Factor_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Factor'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='A_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='B_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='A_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='B_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='A_Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_006_2.inputs if input_.identifier=='B_Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in mix_006_2.outputs if output.identifier=='Result_Float'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = False
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in mix_006_2.outputs if output.identifier=='Result_Vector'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = False
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in mix_006_2.outputs if output.identifier=='Result_Color'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                mix_007_2 = node_tree2.nodes.new('ShaderNodeMix')
+                if hasattr(mix_007_2, 'blend_type'):
+                    mix_007_2.blend_type = 'MIX'
+                if hasattr(mix_007_2, 'clamp_factor'):
+                    mix_007_2.clamp_factor = True
+                if hasattr(mix_007_2, 'clamp_result'):
+                    mix_007_2.clamp_result = False
+                if hasattr(mix_007_2, 'color'):
+                    mix_007_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(mix_007_2, 'data_type'):
+                    mix_007_2.data_type = 'RGBA'
+                if hasattr(mix_007_2, 'factor_mode'):
+                    mix_007_2.factor_mode = 'UNIFORM'
+                if hasattr(mix_007_2, 'hide'):
+                    mix_007_2.hide = False
+                if hasattr(mix_007_2, 'label'):
+                    mix_007_2.label = 'Grime'
+                if hasattr(mix_007_2, 'location'):
+                    mix_007_2.location = (400.3974914550781, 378.2747497558594)
+                if hasattr(mix_007_2, 'mute'):
+                    mix_007_2.mute = False
+                if hasattr(mix_007_2, 'name'):
+                    mix_007_2.name = 'Mix.007'
+                if hasattr(mix_007_2, 'use_custom_color'):
+                    mix_007_2.use_custom_color = False
+                if hasattr(mix_007_2, 'width'):
+                    mix_007_2.width = 140.0
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='Factor_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Factor'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='Factor_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Factor'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='A_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='B_Float'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='A_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='B_Vector'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='A_Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'A'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in mix_007_2.inputs if input_.identifier=='B_Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'B'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in mix_007_2.outputs if output.identifier=='Result_Float'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = False
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in mix_007_2.outputs if output.identifier=='Result_Vector'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = False
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in mix_007_2.outputs if output.identifier=='Result_Color'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Result'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                math_008_2 = node_tree2.nodes.new('ShaderNodeMath')
+                if hasattr(math_008_2, 'color'):
+                    math_008_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(math_008_2, 'hide'):
+                    math_008_2.hide = False
+                if hasattr(math_008_2, 'label'):
+                    math_008_2.label = 'Grime'
+                if hasattr(math_008_2, 'location'):
+                    math_008_2.location = (-61.094482421875, 1105.439453125)
+                if hasattr(math_008_2, 'mute'):
+                    math_008_2.mute = False
+                if hasattr(math_008_2, 'name'):
+                    math_008_2.name = 'Math.008'
+                if hasattr(math_008_2, 'operation'):
+                    math_008_2.operation = 'ADD'
+                if hasattr(math_008_2, 'use_clamp'):
+                    math_008_2.use_clamp = False
+                if hasattr(math_008_2, 'use_custom_color'):
+                    math_008_2.use_custom_color = False
+                if hasattr(math_008_2, 'width'):
+                    math_008_2.width = 140.0
+                input_ = next((input_ for input_ in math_008_2.inputs if input_.identifier=='Value'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_008_2.inputs if input_.identifier=='Value_001'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 1.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in math_008_2.inputs if input_.identifier=='Value_002'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.5
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = False
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Value'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in math_008_2.outputs if output.identifier=='Value'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Value'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                separate_rgb_002_2 = node_tree2.nodes.new('ShaderNodeSeparateColor')
+                if hasattr(separate_rgb_002_2, 'mode'):
+                    separate_rgb_002_2.mode = 'RGB'
+                if hasattr(separate_rgb_002_2, 'color'):
+                    separate_rgb_002_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(separate_rgb_002_2, 'hide'):
+                    separate_rgb_002_2.hide = False
+                if hasattr(separate_rgb_002_2, 'location'):
+                    separate_rgb_002_2.location = (-861.2234497070312, 1125.5433349609375)
+                if hasattr(separate_rgb_002_2, 'mute'):
+                    separate_rgb_002_2.mute = False
+                if hasattr(separate_rgb_002_2, 'name'):
+                    separate_rgb_002_2.name = 'Separate RGB.002'
+                if hasattr(separate_rgb_002_2, 'use_custom_color'):
+                    separate_rgb_002_2.use_custom_color = False
+                if hasattr(separate_rgb_002_2, 'width'):
+                    separate_rgb_002_2.width = 140.0
+                input_ = next((input_ for input_ in separate_rgb_002_2.inputs if input_.identifier=='Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Color'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in separate_rgb_002_2.outputs if output.identifier=='Red'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Red'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in separate_rgb_002_2.outputs if output.identifier=='Green'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Green'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in separate_rgb_002_2.outputs if output.identifier=='Blue'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Blue'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                separate_rgb_2 = node_tree2.nodes.new('ShaderNodeSeparateColor')
+                if hasattr(separate_rgb_2, 'mode'):
+                    separate_rgb_2.mode = 'RGB'
+                if hasattr(separate_rgb_2, 'color'):
+                    separate_rgb_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(separate_rgb_2, 'hide'):
+                    separate_rgb_2.hide = False
+                if hasattr(separate_rgb_2, 'location'):
+                    separate_rgb_2.location = (-895.7147216796875, 964.1780395507812)
+                if hasattr(separate_rgb_2, 'mute'):
+                    separate_rgb_2.mute = False
+                if hasattr(separate_rgb_2, 'name'):
+                    separate_rgb_2.name = 'Separate RGB'
+                if hasattr(separate_rgb_2, 'use_custom_color'):
+                    separate_rgb_2.use_custom_color = False
+                if hasattr(separate_rgb_2, 'width'):
+                    separate_rgb_2.width = 140.0
+                input_ = next((input_ for input_ in separate_rgb_2.inputs if input_.identifier=='Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Color'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in separate_rgb_2.outputs if output.identifier=='Red'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Red'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in separate_rgb_2.outputs if output.identifier=='Green'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Green'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in separate_rgb_2.outputs if output.identifier=='Blue'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Blue'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
+                separate_rgb_001_2 = node_tree2.nodes.new('ShaderNodeSeparateColor')
+                if hasattr(separate_rgb_001_2, 'mode'):
+                    separate_rgb_001_2.mode = 'RGB'
+                if hasattr(separate_rgb_001_2, 'color'):
+                    separate_rgb_001_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(separate_rgb_001_2, 'hide'):
+                    separate_rgb_001_2.hide = False
+                if hasattr(separate_rgb_001_2, 'location'):
+                    separate_rgb_001_2.location = (-892.9122314453125, 757.7520141601562)
+                if hasattr(separate_rgb_001_2, 'mute'):
+                    separate_rgb_001_2.mute = False
+                if hasattr(separate_rgb_001_2, 'name'):
+                    separate_rgb_001_2.name = 'Separate RGB.001'
+                if hasattr(separate_rgb_001_2, 'use_custom_color'):
+                    separate_rgb_001_2.use_custom_color = False
+                if hasattr(separate_rgb_001_2, 'width'):
+                    separate_rgb_001_2.width = 140.0
+                input_ = next((input_ for input_ in separate_rgb_001_2.inputs if input_.identifier=='Color'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Color'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in separate_rgb_001_2.outputs if output.identifier=='Red'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Red'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in separate_rgb_001_2.outputs if output.identifier=='Green'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Green'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+                output = next((output for output in separate_rgb_001_2.outputs if output.identifier=='Blue'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = 0.0
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Blue'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
+
                 mix_2 = node_tree2.nodes.new('ShaderNodeMix')
                 if hasattr(mix_2, 'blend_type'):
                     mix_2.blend_type = 'MIX'
@@ -28998,10 +29599,8 @@ class ImportCoating(bpy.types.Operator):
                     mix_2.factor_mode = 'UNIFORM'
                 if hasattr(mix_2, 'hide'):
                     mix_2.hide = False
-                if hasattr(mix_2, 'label'):
-                    mix_2.label = 'Slot 1 and 2'
                 if hasattr(mix_2, 'location'):
-                    mix_2.location = (-2160.0, 0.0)
+                    mix_2.location = (-878.5439453125, 354.57696533203125)
                 if hasattr(mix_2, 'mute'):
                     mix_2.mute = False
                 if hasattr(mix_2, 'name'):
@@ -29109,7 +29708,7 @@ class ImportCoating(bpy.types.Operator):
                 input_ = next((input_ for input_ in mix_2.inputs if input_.identifier=='A_Color'), None)
                 if input_:
                     if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                        input_.default_value = (1.0, 0.0, 0.0, 1.0)
                     if hasattr(input_, 'display_shape'):
                         input_.display_shape = 'CIRCLE'
                     if hasattr(input_, 'enabled'):
@@ -29125,7 +29724,7 @@ class ImportCoating(bpy.types.Operator):
                 input_ = next((input_ for input_ in mix_2.inputs if input_.identifier=='B_Color'), None)
                 if input_:
                     if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
+                        input_.default_value = (0.0, 1.0, 0.0, 1.0)
                     if hasattr(input_, 'display_shape'):
                         input_.display_shape = 'CIRCLE'
                     if hasattr(input_, 'enabled'):
@@ -29193,7 +29792,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_input_2, 'hide'):
                     group_input_2.hide = False
                 if hasattr(group_input_2, 'location'):
-                    group_input_2.location = (-2684.6220703125, 0.0)
+                    group_input_2.location = (-1483.0567626953125, 489.8262023925781)
                 if hasattr(group_input_2, 'mute'):
                     group_input_2.mute = False
                 if hasattr(group_input_2, 'name'):
@@ -29381,7 +29980,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_input_2.outputs[12], 'hide_value'):
                     group_input_2.outputs[12].hide_value = False
                 if hasattr(group_input_2.outputs[12], 'name'):
-                    group_input_2.outputs[12].name = 'Grime Amount'
+                    group_input_2.outputs[12].name = 'Scratch Amount'
                 if hasattr(group_input_2.outputs[12], 'show_expanded'):
                     group_input_2.outputs[12].show_expanded = False
                 if hasattr(group_input_2.outputs[13], 'default_value'):
@@ -29395,213 +29994,37 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_input_2.outputs[13], 'hide_value'):
                     group_input_2.outputs[13].hide_value = False
                 if hasattr(group_input_2.outputs[13], 'name'):
-                    group_input_2.outputs[13].name = 'Dust Amount'
+                    group_input_2.outputs[13].name = 'Grime Amount'
                 if hasattr(group_input_2.outputs[13], 'show_expanded'):
                     group_input_2.outputs[13].show_expanded = False
-
-                mix_005_2 = node_tree2.nodes.new('ShaderNodeMix')
-                if hasattr(mix_005_2, 'blend_type'):
-                    mix_005_2.blend_type = 'MIX'
-                if hasattr(mix_005_2, 'clamp_factor'):
-                    mix_005_2.clamp_factor = True
-                if hasattr(mix_005_2, 'clamp_result'):
-                    mix_005_2.clamp_result = False
-                if hasattr(mix_005_2, 'color'):
-                    mix_005_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(mix_005_2, 'data_type'):
-                    mix_005_2.data_type = 'RGBA'
-                if hasattr(mix_005_2, 'factor_mode'):
-                    mix_005_2.factor_mode = 'UNIFORM'
-                if hasattr(mix_005_2, 'hide'):
-                    mix_005_2.hide = False
-                if hasattr(mix_005_2, 'label'):
-                    mix_005_2.label = 'Grime'
-                if hasattr(mix_005_2, 'location'):
-                    mix_005_2.location = (-720.0, 0.0)
-                if hasattr(mix_005_2, 'mute'):
-                    mix_005_2.mute = False
-                if hasattr(mix_005_2, 'name'):
-                    mix_005_2.name = 'Mix.005'
-                if hasattr(mix_005_2, 'use_custom_color'):
-                    mix_005_2.use_custom_color = False
-                if hasattr(mix_005_2, 'width'):
-                    mix_005_2.width = 140.0
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='Factor_Float'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.5
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Factor'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='Factor_Vector'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'Factor'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='A_Float'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'A'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='B_Float'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = 0.0
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'B'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='A_Vector'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.0, 0.0, 0.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'A'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='B_Vector'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.0, 0.0, 0.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = False
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'B'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='A_Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'A'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                input_ = next((input_ for input_ in mix_005_2.inputs if input_.identifier=='B_Color'), None)
-                if input_:
-                    if hasattr(input_, 'default_value'):
-                        input_.default_value = (0.5, 0.5, 0.5, 1.0)
-                    if hasattr(input_, 'display_shape'):
-                        input_.display_shape = 'CIRCLE'
-                    if hasattr(input_, 'enabled'):
-                        input_.enabled = True
-                    if hasattr(input_, 'hide'):
-                        input_.hide = False
-                    if hasattr(input_, 'hide_value'):
-                        input_.hide_value = False
-                    if hasattr(input_, 'name'):
-                        input_.name = 'B'
-                    if hasattr(input_, 'show_expanded'):
-                        input_.show_expanded = False
-                output = next((output for output in mix_005_2.outputs if output.identifier=='Result_Float'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = 0.0
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = False
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Result'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in mix_005_2.outputs if output.identifier=='Result_Vector'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = (0.0, 0.0, 0.0)
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = False
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Result'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
-                output = next((output for output in mix_005_2.outputs if output.identifier=='Result_Color'), None)
-                if output:
-                    if hasattr(output, 'default_value'):
-                        output.default_value = (0.0, 0.0, 0.0, 0.0)
-                    if hasattr(output, 'display_shape'):
-                        output.display_shape = 'CIRCLE'
-                    if hasattr(output, 'enabled'):
-                        output.enabled = True
-                    if hasattr(output, 'hide'):
-                        output.hide = False
-                    if hasattr(output, 'hide_value'):
-                        output.hide_value = False
-                    if hasattr(output, 'name'):
-                        output.name = 'Result'
-                    if hasattr(output, 'show_expanded'):
-                        output.show_expanded = False
+                if hasattr(group_input_2.outputs[14], 'default_value'):
+                    group_input_2.outputs[14].default_value = 1.0
+                if hasattr(group_input_2.outputs[14], 'display_shape'):
+                    group_input_2.outputs[14].display_shape = 'CIRCLE'
+                if hasattr(group_input_2.outputs[14], 'enabled'):
+                    group_input_2.outputs[14].enabled = True
+                if hasattr(group_input_2.outputs[14], 'hide'):
+                    group_input_2.outputs[14].hide = False
+                if hasattr(group_input_2.outputs[14], 'hide_value'):
+                    group_input_2.outputs[14].hide_value = False
+                if hasattr(group_input_2.outputs[14], 'name'):
+                    group_input_2.outputs[14].name = 'Dust Amount'
+                if hasattr(group_input_2.outputs[14], 'show_expanded'):
+                    group_input_2.outputs[14].show_expanded = False
+                if hasattr(group_input_2.outputs[15], 'default_value'):
+                    group_input_2.outputs[15].default_value = 1.0
+                if hasattr(group_input_2.outputs[15], 'display_shape'):
+                    group_input_2.outputs[15].display_shape = 'CIRCLE'
+                if hasattr(group_input_2.outputs[15], 'enabled'):
+                    group_input_2.outputs[15].enabled = True
+                if hasattr(group_input_2.outputs[15], 'hide'):
+                    group_input_2.outputs[15].hide = False
+                if hasattr(group_input_2.outputs[15], 'hide_value'):
+                    group_input_2.outputs[15].hide_value = False
+                if hasattr(group_input_2.outputs[15], 'name'):
+                    group_input_2.outputs[15].name = 'Detail Normal Toggle'
+                if hasattr(group_input_2.outputs[15], 'show_expanded'):
+                    group_input_2.outputs[15].show_expanded = False
 
                 node_tree3 = bpy.data.node_groups.get('Norm Normalize')
                 if not node_tree3:
@@ -29653,7 +30076,179 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(frame_3, 'use_custom_color'):
                         frame_3.use_custom_color = True
                     if hasattr(frame_3, 'width'):
-                        frame_3.width = 1100.0
+                        frame_3.width = 1940.0
+
+                    math_107_3 = node_tree3.nodes.new('ShaderNodeMath')
+                    if hasattr(math_107_3, 'parent'):
+                        math_107_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(math_107_3, 'color'):
+                        math_107_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(math_107_3, 'hide'):
+                        math_107_3.hide = False
+                    if hasattr(math_107_3, 'location'):
+                        math_107_3.location = (220.0, 0.0)
+                    if hasattr(math_107_3, 'mute'):
+                        math_107_3.mute = False
+                    if hasattr(math_107_3, 'name'):
+                        math_107_3.name = 'Math.107'
+                    if hasattr(math_107_3, 'operation'):
+                        math_107_3.operation = 'MULTIPLY_ADD'
+                    if hasattr(math_107_3, 'use_clamp'):
+                        math_107_3.use_clamp = False
+                    if hasattr(math_107_3, 'use_custom_color'):
+                        math_107_3.use_custom_color = False
+                    if hasattr(math_107_3, 'width'):
+                        math_107_3.width = 140.0
+                    input_ = next((input_ for input_ in math_107_3.inputs if input_.identifier=='Value'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_107_3.inputs if input_.identifier=='Value_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 2.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_107_3.inputs if input_.identifier=='Value_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = -1.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in math_107_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
+                    math_108_3 = node_tree3.nodes.new('ShaderNodeMath')
+                    if hasattr(math_108_3, 'parent'):
+                        math_108_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(math_108_3, 'color'):
+                        math_108_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(math_108_3, 'hide'):
+                        math_108_3.hide = False
+                    if hasattr(math_108_3, 'location'):
+                        math_108_3.location = (220.0, -180.0)
+                    if hasattr(math_108_3, 'mute'):
+                        math_108_3.mute = False
+                    if hasattr(math_108_3, 'name'):
+                        math_108_3.name = 'Math.108'
+                    if hasattr(math_108_3, 'operation'):
+                        math_108_3.operation = 'MULTIPLY_ADD'
+                    if hasattr(math_108_3, 'use_clamp'):
+                        math_108_3.use_clamp = False
+                    if hasattr(math_108_3, 'use_custom_color'):
+                        math_108_3.use_custom_color = False
+                    if hasattr(math_108_3, 'width'):
+                        math_108_3.width = 140.0
+                    input_ = next((input_ for input_ in math_108_3.inputs if input_.identifier=='Value'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_108_3.inputs if input_.identifier=='Value_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 2.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_108_3.inputs if input_.identifier=='Value_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = -1.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in math_108_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
 
                     math_106_3 = node_tree3.nodes.new('ShaderNodeMath')
                     if hasattr(math_106_3, 'parent'):
@@ -29663,7 +30258,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(math_106_3, 'hide'):
                         math_106_3.hide = False
                     if hasattr(math_106_3, 'location'):
-                        math_106_3.location = (314.832275390625, -145.10931396484375)
+                        math_106_3.location = (960.0, -100.0001220703125)
                     if hasattr(math_106_3, 'mute'):
                         math_106_3.mute = False
                     if hasattr(math_106_3, 'name'):
@@ -29741,6 +30336,204 @@ class ImportCoating(bpy.types.Operator):
                         if hasattr(output, 'show_expanded'):
                             output.show_expanded = False
 
+                    combine_xyz_004_3 = node_tree3.nodes.new('ShaderNodeCombineXYZ')
+                    if hasattr(combine_xyz_004_3, 'parent'):
+                        combine_xyz_004_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(combine_xyz_004_3, 'color'):
+                        combine_xyz_004_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(combine_xyz_004_3, 'hide'):
+                        combine_xyz_004_3.hide = False
+                    if hasattr(combine_xyz_004_3, 'location'):
+                        combine_xyz_004_3.location = (1180.0, -140.0)
+                    if hasattr(combine_xyz_004_3, 'mute'):
+                        combine_xyz_004_3.mute = False
+                    if hasattr(combine_xyz_004_3, 'name'):
+                        combine_xyz_004_3.name = 'Combine XYZ.004'
+                    if hasattr(combine_xyz_004_3, 'use_custom_color'):
+                        combine_xyz_004_3.use_custom_color = False
+                    if hasattr(combine_xyz_004_3, 'width'):
+                        combine_xyz_004_3.width = 140.0
+                    input_ = next((input_ for input_ in combine_xyz_004_3.inputs if input_.identifier=='X'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'X'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in combine_xyz_004_3.inputs if input_.identifier=='Y'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Y'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in combine_xyz_004_3.inputs if input_.identifier=='Z'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Z'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in combine_xyz_004_3.outputs if output.identifier=='Vector'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Vector'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
+                    vector_math_3 = node_tree3.nodes.new('ShaderNodeVectorMath')
+                    if hasattr(vector_math_3, 'parent'):
+                        vector_math_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(vector_math_3, 'color'):
+                        vector_math_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(vector_math_3, 'hide'):
+                        vector_math_3.hide = False
+                    if hasattr(vector_math_3, 'location'):
+                        vector_math_3.location = (1340.0, -140.0)
+                    if hasattr(vector_math_3, 'mute'):
+                        vector_math_3.mute = False
+                    if hasattr(vector_math_3, 'name'):
+                        vector_math_3.name = 'Vector Math'
+                    if hasattr(vector_math_3, 'operation'):
+                        vector_math_3.operation = 'NORMALIZE'
+                    if hasattr(vector_math_3, 'use_custom_color'):
+                        vector_math_3.use_custom_color = False
+                    if hasattr(vector_math_3, 'width'):
+                        vector_math_3.width = 140.0
+                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Vector'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Vector_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Vector_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Scale'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 1.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Scale'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in vector_math_3.outputs if output.identifier=='Vector'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Vector'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+                    output = next((output for output in vector_math_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = False
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
                     mix_028_3 = node_tree3.nodes.new('ShaderNodeMix')
                     if hasattr(mix_028_3, 'parent'):
                         mix_028_3.parent = node_tree3.nodes.get('Frame')
@@ -29759,7 +30552,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(mix_028_3, 'hide'):
                         mix_028_3.hide = False
                     if hasattr(mix_028_3, 'location'):
-                        mix_028_3.location = (614.832275390625, -125.10931396484375)
+                        mix_028_3.location = (1520.0, -140.0)
                     if hasattr(mix_028_3, 'mute'):
                         mix_028_3.mute = False
                     if hasattr(mix_028_3, 'name'):
@@ -29945,6 +30738,432 @@ class ImportCoating(bpy.types.Operator):
                         if hasattr(output, 'show_expanded'):
                             output.show_expanded = False
 
+                    separate_xyz_001_3 = node_tree3.nodes.new('ShaderNodeSeparateXYZ')
+                    if hasattr(separate_xyz_001_3, 'parent'):
+                        separate_xyz_001_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(separate_xyz_001_3, 'color'):
+                        separate_xyz_001_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(separate_xyz_001_3, 'hide'):
+                        separate_xyz_001_3.hide = False
+                    if hasattr(separate_xyz_001_3, 'location'):
+                        separate_xyz_001_3.location = (-40.0, -100.0001220703125)
+                    if hasattr(separate_xyz_001_3, 'mute'):
+                        separate_xyz_001_3.mute = False
+                    if hasattr(separate_xyz_001_3, 'name'):
+                        separate_xyz_001_3.name = 'Separate XYZ.001'
+                    if hasattr(separate_xyz_001_3, 'use_custom_color'):
+                        separate_xyz_001_3.use_custom_color = False
+                    if hasattr(separate_xyz_001_3, 'width'):
+                        separate_xyz_001_3.width = 140.0
+                    input_ = next((input_ for input_ in separate_xyz_001_3.inputs if input_.identifier=='Vector'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in separate_xyz_001_3.outputs if output.identifier=='X'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'X'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+                    output = next((output for output in separate_xyz_001_3.outputs if output.identifier=='Y'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Y'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+                    output = next((output for output in separate_xyz_001_3.outputs if output.identifier=='Z'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Z'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
+                    math_111_3 = node_tree3.nodes.new('ShaderNodeMath')
+                    if hasattr(math_111_3, 'parent'):
+                        math_111_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(math_111_3, 'color'):
+                        math_111_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(math_111_3, 'hide'):
+                        math_111_3.hide = False
+                    if hasattr(math_111_3, 'location'):
+                        math_111_3.location = (780.0, -280.0)
+                    if hasattr(math_111_3, 'mute'):
+                        math_111_3.mute = False
+                    if hasattr(math_111_3, 'name'):
+                        math_111_3.name = 'Math.111'
+                    if hasattr(math_111_3, 'operation'):
+                        math_111_3.operation = 'MULTIPLY'
+                    if hasattr(math_111_3, 'use_clamp'):
+                        math_111_3.use_clamp = False
+                    if hasattr(math_111_3, 'use_custom_color'):
+                        math_111_3.use_custom_color = False
+                    if hasattr(math_111_3, 'width'):
+                        math_111_3.width = 140.0
+                    input_ = next((input_ for input_ in math_111_3.inputs if input_.identifier=='Value'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_111_3.inputs if input_.identifier=='Value_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 1.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_111_3.inputs if input_.identifier=='Value_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in math_111_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
+                    math_035_3 = node_tree3.nodes.new('ShaderNodeMath')
+                    if hasattr(math_035_3, 'parent'):
+                        math_035_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(math_035_3, 'color'):
+                        math_035_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(math_035_3, 'hide'):
+                        math_035_3.hide = False
+                    if hasattr(math_035_3, 'location'):
+                        math_035_3.location = (780.0, -80.0)
+                    if hasattr(math_035_3, 'mute'):
+                        math_035_3.mute = False
+                    if hasattr(math_035_3, 'name'):
+                        math_035_3.name = 'Math.035'
+                    if hasattr(math_035_3, 'operation'):
+                        math_035_3.operation = 'SUBTRACT'
+                    if hasattr(math_035_3, 'use_clamp'):
+                        math_035_3.use_clamp = False
+                    if hasattr(math_035_3, 'use_custom_color'):
+                        math_035_3.use_custom_color = False
+                    if hasattr(math_035_3, 'width'):
+                        math_035_3.width = 140.0
+                    input_ = next((input_ for input_ in math_035_3.inputs if input_.identifier=='Value'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 1.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_035_3.inputs if input_.identifier=='Value_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_035_3.inputs if input_.identifier=='Value_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in math_035_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
+                    math_110_3 = node_tree3.nodes.new('ShaderNodeMath')
+                    if hasattr(math_110_3, 'parent'):
+                        math_110_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(math_110_3, 'color'):
+                        math_110_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(math_110_3, 'hide'):
+                        math_110_3.hide = False
+                    if hasattr(math_110_3, 'location'):
+                        math_110_3.location = (600.0, -80.0)
+                    if hasattr(math_110_3, 'mute'):
+                        math_110_3.mute = False
+                    if hasattr(math_110_3, 'name'):
+                        math_110_3.name = 'Math.110'
+                    if hasattr(math_110_3, 'operation'):
+                        math_110_3.operation = 'MULTIPLY_ADD'
+                    if hasattr(math_110_3, 'use_clamp'):
+                        math_110_3.use_clamp = True
+                    if hasattr(math_110_3, 'use_custom_color'):
+                        math_110_3.use_custom_color = False
+                    if hasattr(math_110_3, 'width'):
+                        math_110_3.width = 140.0
+                    input_ = next((input_ for input_ in math_110_3.inputs if input_.identifier=='Value'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_110_3.inputs if input_.identifier=='Value_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_110_3.inputs if input_.identifier=='Value_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in math_110_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
+                    math_109_3 = node_tree3.nodes.new('ShaderNodeMath')
+                    if hasattr(math_109_3, 'parent'):
+                        math_109_3.parent = node_tree3.nodes.get('Frame')
+                    if hasattr(math_109_3, 'color'):
+                        math_109_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(math_109_3, 'hide'):
+                        math_109_3.hide = False
+                    if hasattr(math_109_3, 'location'):
+                        math_109_3.location = (400.0, -180.0)
+                    if hasattr(math_109_3, 'mute'):
+                        math_109_3.mute = False
+                    if hasattr(math_109_3, 'name'):
+                        math_109_3.name = 'Math.109'
+                    if hasattr(math_109_3, 'operation'):
+                        math_109_3.operation = 'MULTIPLY'
+                    if hasattr(math_109_3, 'use_clamp'):
+                        math_109_3.use_clamp = False
+                    if hasattr(math_109_3, 'use_custom_color'):
+                        math_109_3.use_custom_color = False
+                    if hasattr(math_109_3, 'width'):
+                        math_109_3.width = 140.0
+                    input_ = next((input_ for input_ in math_109_3.inputs if input_.identifier=='Value'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_109_3.inputs if input_.identifier=='Value_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.5
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in math_109_3.inputs if input_.identifier=='Value_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 0.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Value'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in math_109_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
                     mix_024_3 = node_tree3.nodes.new('ShaderNodeMix')
                     if hasattr(mix_024_3, 'parent'):
                         mix_024_3.parent = node_tree3.nodes.get('Frame')
@@ -29963,7 +31182,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(mix_024_3, 'hide'):
                         mix_024_3.hide = False
                     if hasattr(mix_024_3, 'location'):
-                        mix_024_3.location = (714.832275390625, -125.10931396484375)
+                        mix_024_3.location = (1700.0, -140.0)
                     if hasattr(mix_024_3, 'mute'):
                         mix_024_3.mute = False
                     if hasattr(mix_024_3, 'name'):
@@ -30149,45 +31368,13 @@ class ImportCoating(bpy.types.Operator):
                         if hasattr(output, 'show_expanded'):
                             output.show_expanded = False
 
-                    group_output_3 = node_tree3.nodes.new('NodeGroupOutput')
-                    if hasattr(group_output_3, 'color'):
-                        group_output_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(group_output_3, 'hide'):
-                        group_output_3.hide = False
-                    if hasattr(group_output_3, 'is_active_output'):
-                        group_output_3.is_active_output = True
-                    if hasattr(group_output_3, 'location'):
-                        group_output_3.location = (0.0, 0.0)
-                    if hasattr(group_output_3, 'mute'):
-                        group_output_3.mute = False
-                    if hasattr(group_output_3, 'name'):
-                        group_output_3.name = 'Group Output'
-                    if hasattr(group_output_3, 'use_custom_color'):
-                        group_output_3.use_custom_color = False
-                    if hasattr(group_output_3, 'width'):
-                        group_output_3.width = 140.0
-                    if hasattr(group_output_3.inputs[0], 'default_value'):
-                        group_output_3.inputs[0].default_value = (0.0, 0.0, 0.0, 0.0)
-                    if hasattr(group_output_3.inputs[0], 'display_shape'):
-                        group_output_3.inputs[0].display_shape = 'CIRCLE'
-                    if hasattr(group_output_3.inputs[0], 'enabled'):
-                        group_output_3.inputs[0].enabled = True
-                    if hasattr(group_output_3.inputs[0], 'hide'):
-                        group_output_3.inputs[0].hide = False
-                    if hasattr(group_output_3.inputs[0], 'hide_value'):
-                        group_output_3.inputs[0].hide_value = True
-                    if hasattr(group_output_3.inputs[0], 'name'):
-                        group_output_3.inputs[0].name = 'Normal Normalized'
-                    if hasattr(group_output_3.inputs[0], 'show_expanded'):
-                        group_output_3.inputs[0].show_expanded = False
-
                     group_input_3 = node_tree3.nodes.new('NodeGroupInput')
                     if hasattr(group_input_3, 'color'):
                         group_input_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
                     if hasattr(group_input_3, 'hide'):
                         group_input_3.hide = False
                     if hasattr(group_input_3, 'location'):
-                        group_input_3.location = (-1100.0, 0.0)
+                        group_input_3.location = (-1085.167724609375, -0.0)
                     if hasattr(group_input_3, 'mute'):
                         group_input_3.mute = False
                     if hasattr(group_input_3, 'name'):
@@ -30211,801 +31398,37 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(group_input_3.outputs[0], 'show_expanded'):
                         group_input_3.outputs[0].show_expanded = False
 
-                    separate_xyz_001_3 = node_tree3.nodes.new('ShaderNodeSeparateXYZ')
-                    if hasattr(separate_xyz_001_3, 'parent'):
-                        separate_xyz_001_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(separate_xyz_001_3, 'color'):
-                        separate_xyz_001_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(separate_xyz_001_3, 'hide'):
-                        separate_xyz_001_3.hide = False
-                    if hasattr(separate_xyz_001_3, 'location'):
-                        separate_xyz_001_3.location = (-185.167724609375, -125.10931396484375)
-                    if hasattr(separate_xyz_001_3, 'mute'):
-                        separate_xyz_001_3.mute = False
-                    if hasattr(separate_xyz_001_3, 'name'):
-                        separate_xyz_001_3.name = 'Separate XYZ.001'
-                    if hasattr(separate_xyz_001_3, 'use_custom_color'):
-                        separate_xyz_001_3.use_custom_color = False
-                    if hasattr(separate_xyz_001_3, 'width'):
-                        separate_xyz_001_3.width = 140.0
-                    input_ = next((input_ for input_ in separate_xyz_001_3.inputs if input_.identifier=='Vector'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in separate_xyz_001_3.outputs if output.identifier=='X'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'X'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-                    output = next((output for output in separate_xyz_001_3.outputs if output.identifier=='Y'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Y'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-                    output = next((output for output in separate_xyz_001_3.outputs if output.identifier=='Z'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Z'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    math_108_3 = node_tree3.nodes.new('ShaderNodeMath')
-                    if hasattr(math_108_3, 'parent'):
-                        math_108_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(math_108_3, 'color'):
-                        math_108_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(math_108_3, 'hide'):
-                        math_108_3.hide = False
-                    if hasattr(math_108_3, 'location'):
-                        math_108_3.location = (-85.167724609375, -125.10931396484375)
-                    if hasattr(math_108_3, 'mute'):
-                        math_108_3.mute = False
-                    if hasattr(math_108_3, 'name'):
-                        math_108_3.name = 'Math.108'
-                    if hasattr(math_108_3, 'operation'):
-                        math_108_3.operation = 'MULTIPLY_ADD'
-                    if hasattr(math_108_3, 'use_clamp'):
-                        math_108_3.use_clamp = True
-                    if hasattr(math_108_3, 'use_custom_color'):
-                        math_108_3.use_custom_color = False
-                    if hasattr(math_108_3, 'width'):
-                        math_108_3.width = 140.0
-                    input_ = next((input_ for input_ in math_108_3.inputs if input_.identifier=='Value'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_108_3.inputs if input_.identifier=='Value_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 2.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_108_3.inputs if input_.identifier=='Value_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = -1.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in math_108_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    math_110_3 = node_tree3.nodes.new('ShaderNodeMath')
-                    if hasattr(math_110_3, 'parent'):
-                        math_110_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(math_110_3, 'color'):
-                        math_110_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(math_110_3, 'hide'):
-                        math_110_3.hide = False
-                    if hasattr(math_110_3, 'location'):
-                        math_110_3.location = (114.832275390625, -125.10931396484375)
-                    if hasattr(math_110_3, 'mute'):
-                        math_110_3.mute = False
-                    if hasattr(math_110_3, 'name'):
-                        math_110_3.name = 'Math.110'
-                    if hasattr(math_110_3, 'operation'):
-                        math_110_3.operation = 'MULTIPLY_ADD'
-                    if hasattr(math_110_3, 'use_clamp'):
-                        math_110_3.use_clamp = True
-                    if hasattr(math_110_3, 'use_custom_color'):
-                        math_110_3.use_custom_color = False
-                    if hasattr(math_110_3, 'width'):
-                        math_110_3.width = 140.0
-                    input_ = next((input_ for input_ in math_110_3.inputs if input_.identifier=='Value'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_110_3.inputs if input_.identifier=='Value_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_110_3.inputs if input_.identifier=='Value_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in math_110_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    math_107_3 = node_tree3.nodes.new('ShaderNodeMath')
-                    if hasattr(math_107_3, 'parent'):
-                        math_107_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(math_107_3, 'color'):
-                        math_107_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(math_107_3, 'hide'):
-                        math_107_3.hide = False
-                    if hasattr(math_107_3, 'location'):
-                        math_107_3.location = (20.66552734375, 20.961288452148438)
-                    if hasattr(math_107_3, 'mute'):
-                        math_107_3.mute = False
-                    if hasattr(math_107_3, 'name'):
-                        math_107_3.name = 'Math.107'
-                    if hasattr(math_107_3, 'operation'):
-                        math_107_3.operation = 'MULTIPLY_ADD'
-                    if hasattr(math_107_3, 'use_clamp'):
-                        math_107_3.use_clamp = True
-                    if hasattr(math_107_3, 'use_custom_color'):
-                        math_107_3.use_custom_color = False
-                    if hasattr(math_107_3, 'width'):
-                        math_107_3.width = 140.0
-                    input_ = next((input_ for input_ in math_107_3.inputs if input_.identifier=='Value'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_107_3.inputs if input_.identifier=='Value_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 2.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_107_3.inputs if input_.identifier=='Value_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = -1.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in math_107_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    math_109_3 = node_tree3.nodes.new('ShaderNodeMath')
-                    if hasattr(math_109_3, 'parent'):
-                        math_109_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(math_109_3, 'color'):
-                        math_109_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(math_109_3, 'hide'):
-                        math_109_3.hide = False
-                    if hasattr(math_109_3, 'location'):
-                        math_109_3.location = (14.832275390625, -145.10931396484375)
-                    if hasattr(math_109_3, 'mute'):
-                        math_109_3.mute = False
-                    if hasattr(math_109_3, 'name'):
-                        math_109_3.name = 'Math.109'
-                    if hasattr(math_109_3, 'operation'):
-                        math_109_3.operation = 'MULTIPLY'
-                    if hasattr(math_109_3, 'use_clamp'):
-                        math_109_3.use_clamp = True
-                    if hasattr(math_109_3, 'use_custom_color'):
-                        math_109_3.use_custom_color = False
-                    if hasattr(math_109_3, 'width'):
-                        math_109_3.width = 140.0
-                    input_ = next((input_ for input_ in math_109_3.inputs if input_.identifier=='Value'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_109_3.inputs if input_.identifier=='Value_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_109_3.inputs if input_.identifier=='Value_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in math_109_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    math_111_3 = node_tree3.nodes.new('ShaderNodeMath')
-                    if hasattr(math_111_3, 'parent'):
-                        math_111_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(math_111_3, 'color'):
-                        math_111_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(math_111_3, 'hide'):
-                        math_111_3.hide = False
-                    if hasattr(math_111_3, 'location'):
-                        math_111_3.location = (314.832275390625, -125.10931396484375)
-                    if hasattr(math_111_3, 'mute'):
-                        math_111_3.mute = False
-                    if hasattr(math_111_3, 'name'):
-                        math_111_3.name = 'Math.111'
-                    if hasattr(math_111_3, 'operation'):
-                        math_111_3.operation = 'MULTIPLY'
-                    if hasattr(math_111_3, 'use_clamp'):
-                        math_111_3.use_clamp = True
-                    if hasattr(math_111_3, 'use_custom_color'):
-                        math_111_3.use_custom_color = False
-                    if hasattr(math_111_3, 'width'):
-                        math_111_3.width = 140.0
-                    input_ = next((input_ for input_ in math_111_3.inputs if input_.identifier=='Value'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_111_3.inputs if input_.identifier=='Value_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 1.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_111_3.inputs if input_.identifier=='Value_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in math_111_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    combine_xyz_004_3 = node_tree3.nodes.new('ShaderNodeCombineXYZ')
-                    if hasattr(combine_xyz_004_3, 'parent'):
-                        combine_xyz_004_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(combine_xyz_004_3, 'color'):
-                        combine_xyz_004_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(combine_xyz_004_3, 'hide'):
-                        combine_xyz_004_3.hide = False
-                    if hasattr(combine_xyz_004_3, 'location'):
-                        combine_xyz_004_3.location = (414.832275390625, -125.10931396484375)
-                    if hasattr(combine_xyz_004_3, 'mute'):
-                        combine_xyz_004_3.mute = False
-                    if hasattr(combine_xyz_004_3, 'name'):
-                        combine_xyz_004_3.name = 'Combine XYZ.004'
-                    if hasattr(combine_xyz_004_3, 'use_custom_color'):
-                        combine_xyz_004_3.use_custom_color = False
-                    if hasattr(combine_xyz_004_3, 'width'):
-                        combine_xyz_004_3.width = 140.0
-                    input_ = next((input_ for input_ in combine_xyz_004_3.inputs if input_.identifier=='X'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'X'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in combine_xyz_004_3.inputs if input_.identifier=='Y'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Y'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in combine_xyz_004_3.inputs if input_.identifier=='Z'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Z'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in combine_xyz_004_3.outputs if output.identifier=='Vector'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Vector'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    math_035_3 = node_tree3.nodes.new('ShaderNodeMath')
-                    if hasattr(math_035_3, 'parent'):
-                        math_035_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(math_035_3, 'color'):
-                        math_035_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(math_035_3, 'hide'):
-                        math_035_3.hide = False
-                    if hasattr(math_035_3, 'location'):
-                        math_035_3.location = (214.832275390625, -125.10931396484375)
-                    if hasattr(math_035_3, 'mute'):
-                        math_035_3.mute = False
-                    if hasattr(math_035_3, 'name'):
-                        math_035_3.name = 'Math.035'
-                    if hasattr(math_035_3, 'operation'):
-                        math_035_3.operation = 'SUBTRACT'
-                    if hasattr(math_035_3, 'use_clamp'):
-                        math_035_3.use_clamp = True
-                    if hasattr(math_035_3, 'use_custom_color'):
-                        math_035_3.use_custom_color = False
-                    if hasattr(math_035_3, 'width'):
-                        math_035_3.width = 140.0
-                    input_ = next((input_ for input_ in math_035_3.inputs if input_.identifier=='Value'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 1.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_035_3.inputs if input_.identifier=='Value_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.5
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in math_035_3.inputs if input_.identifier=='Value_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 0.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Value'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in math_035_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
-                    vector_math_3 = node_tree3.nodes.new('ShaderNodeVectorMath')
-                    if hasattr(vector_math_3, 'parent'):
-                        vector_math_3.parent = node_tree3.nodes.get('Frame')
-                    if hasattr(vector_math_3, 'color'):
-                        vector_math_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(vector_math_3, 'hide'):
-                        vector_math_3.hide = False
-                    if hasattr(vector_math_3, 'location'):
-                        vector_math_3.location = (514.832275390625, -125.10931396484375)
-                    if hasattr(vector_math_3, 'mute'):
-                        vector_math_3.mute = False
-                    if hasattr(vector_math_3, 'name'):
-                        vector_math_3.name = 'Vector Math'
-                    if hasattr(vector_math_3, 'operation'):
-                        vector_math_3.operation = 'NORMALIZE'
-                    if hasattr(vector_math_3, 'use_custom_color'):
-                        vector_math_3.use_custom_color = False
-                    if hasattr(vector_math_3, 'width'):
-                        vector_math_3.width = 140.0
-                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Vector'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Vector_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Vector_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in vector_math_3.inputs if input_.identifier=='Scale'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 1.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Scale'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in vector_math_3.outputs if output.identifier=='Vector'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Vector'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-                    output = next((output for output in vector_math_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = False
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
+                    group_output_3 = node_tree3.nodes.new('NodeGroupOutput')
+                    if hasattr(group_output_3, 'color'):
+                        group_output_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(group_output_3, 'hide'):
+                        group_output_3.hide = False
+                    if hasattr(group_output_3, 'is_active_output'):
+                        group_output_3.is_active_output = True
+                    if hasattr(group_output_3, 'location'):
+                        group_output_3.location = (1104.832275390625, -0.0)
+                    if hasattr(group_output_3, 'mute'):
+                        group_output_3.mute = False
+                    if hasattr(group_output_3, 'name'):
+                        group_output_3.name = 'Group Output'
+                    if hasattr(group_output_3, 'use_custom_color'):
+                        group_output_3.use_custom_color = False
+                    if hasattr(group_output_3, 'width'):
+                        group_output_3.width = 140.0
+                    if hasattr(group_output_3.inputs[0], 'default_value'):
+                        group_output_3.inputs[0].default_value = (0.0, 0.0, 0.0, 0.0)
+                    if hasattr(group_output_3.inputs[0], 'display_shape'):
+                        group_output_3.inputs[0].display_shape = 'CIRCLE'
+                    if hasattr(group_output_3.inputs[0], 'enabled'):
+                        group_output_3.inputs[0].enabled = True
+                    if hasattr(group_output_3.inputs[0], 'hide'):
+                        group_output_3.inputs[0].hide = False
+                    if hasattr(group_output_3.inputs[0], 'hide_value'):
+                        group_output_3.inputs[0].hide_value = True
+                    if hasattr(group_output_3.inputs[0], 'name'):
+                        group_output_3.inputs[0].name = 'Normal Normalized'
+                    if hasattr(group_output_3.inputs[0], 'show_expanded'):
+                        group_output_3.inputs[0].show_expanded = False
 
                     # LINKS
                     node_tree3.links.new(group_input_3.outputs[0], separate_xyz_001_3.inputs[0])
@@ -31035,7 +31458,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_2, 'hide'):
                     group_2.hide = False
                 if hasattr(group_2, 'location'):
-                    group_2.location = (-480.0, 0.0)
+                    group_2.location = (611.7042846679688, 328.9756164550781)
                 if hasattr(group_2, 'mute'):
                     group_2.mute = False
                 if hasattr(group_2, 'name'):
@@ -31059,7 +31482,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_2.inputs[0], 'show_expanded'):
                     group_2.inputs[0].show_expanded = False
                 if hasattr(group_2.outputs[0], 'default_value'):
-                    group_2.outputs[0].default_value = (0.0, 0.0, 0.0, 1.0)
+                    group_2.outputs[0].default_value = (0.0, 0.0, 0.0, 0.0)
                 if hasattr(group_2.outputs[0], 'display_shape'):
                     group_2.outputs[0].display_shape = 'CIRCLE'
                 if hasattr(group_2.outputs[0], 'enabled'):
@@ -31072,52 +31495,6 @@ class ImportCoating(bpy.types.Operator):
                     group_2.outputs[0].name = 'Normal Normalized'
                 if hasattr(group_2.outputs[0], 'show_expanded'):
                     group_2.outputs[0].show_expanded = False
-
-                group_002_2 = node_tree2.nodes.new('ShaderNodeGroup')
-                if hasattr(group_002_2, 'node_tree'):
-                    group_002_2.node_tree = bpy.data.node_groups.get('Norm Normalize')
-                if hasattr(group_002_2, 'color'):
-                    group_002_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                if hasattr(group_002_2, 'hide'):
-                    group_002_2.hide = False
-                if hasattr(group_002_2, 'location'):
-                    group_002_2.location = (-480.0, -125.0)
-                if hasattr(group_002_2, 'mute'):
-                    group_002_2.mute = False
-                if hasattr(group_002_2, 'name'):
-                    group_002_2.name = 'Group.002'
-                if hasattr(group_002_2, 'use_custom_color'):
-                    group_002_2.use_custom_color = False
-                if hasattr(group_002_2, 'width'):
-                    group_002_2.width = 140.0
-                if hasattr(group_002_2.inputs[0], 'default_value'):
-                    group_002_2.inputs[0].default_value = (0.0, 0.0, 0.0)
-                if hasattr(group_002_2.inputs[0], 'display_shape'):
-                    group_002_2.inputs[0].display_shape = 'CIRCLE'
-                if hasattr(group_002_2.inputs[0], 'enabled'):
-                    group_002_2.inputs[0].enabled = True
-                if hasattr(group_002_2.inputs[0], 'hide'):
-                    group_002_2.inputs[0].hide = False
-                if hasattr(group_002_2.inputs[0], 'hide_value'):
-                    group_002_2.inputs[0].hide_value = True
-                if hasattr(group_002_2.inputs[0], 'name'):
-                    group_002_2.inputs[0].name = 'Normal'
-                if hasattr(group_002_2.inputs[0], 'show_expanded'):
-                    group_002_2.inputs[0].show_expanded = False
-                if hasattr(group_002_2.outputs[0], 'default_value'):
-                    group_002_2.outputs[0].default_value = (0.0, 0.0, 0.0, 1.0)
-                if hasattr(group_002_2.outputs[0], 'display_shape'):
-                    group_002_2.outputs[0].display_shape = 'CIRCLE'
-                if hasattr(group_002_2.outputs[0], 'enabled'):
-                    group_002_2.outputs[0].enabled = True
-                if hasattr(group_002_2.outputs[0], 'hide'):
-                    group_002_2.outputs[0].hide = False
-                if hasattr(group_002_2.outputs[0], 'hide_value'):
-                    group_002_2.outputs[0].hide_value = True
-                if hasattr(group_002_2.outputs[0], 'name'):
-                    group_002_2.outputs[0].name = 'Normal Normalized'
-                if hasattr(group_002_2.outputs[0], 'show_expanded'):
-                    group_002_2.outputs[0].show_expanded = False
 
                 node_tree3 = bpy.data.node_groups.get('NormalMap_Combine-Orientation')
                 if not node_tree3:
@@ -31167,13 +31544,87 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(output, 'name'):
                         output.name = 'Combined Normal Map'
                     # NODES
+                    group_input_3 = node_tree3.nodes.new('NodeGroupInput')
+                    if hasattr(group_input_3, 'color'):
+                        group_input_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(group_input_3, 'hide'):
+                        group_input_3.hide = False
+                    if hasattr(group_input_3, 'location'):
+                        group_input_3.location = (-680.1478271484375, -1.7763557434082031)
+                    if hasattr(group_input_3, 'mute'):
+                        group_input_3.mute = False
+                    if hasattr(group_input_3, 'name'):
+                        group_input_3.name = 'Group Input'
+                    if hasattr(group_input_3, 'use_custom_color'):
+                        group_input_3.use_custom_color = False
+                    if hasattr(group_input_3, 'width'):
+                        group_input_3.width = 140.0
+                    if hasattr(group_input_3.outputs[0], 'default_value'):
+                        group_input_3.outputs[0].default_value = 0.5
+                    if hasattr(group_input_3.outputs[0], 'display_shape'):
+                        group_input_3.outputs[0].display_shape = 'CIRCLE'
+                    if hasattr(group_input_3.outputs[0], 'enabled'):
+                        group_input_3.outputs[0].enabled = True
+                    if hasattr(group_input_3.outputs[0], 'hide'):
+                        group_input_3.outputs[0].hide = False
+                    if hasattr(group_input_3.outputs[0], 'hide_value'):
+                        group_input_3.outputs[0].hide_value = False
+                    if hasattr(group_input_3.outputs[0], 'name'):
+                        group_input_3.outputs[0].name = 'Factor'
+                    if hasattr(group_input_3.outputs[0], 'show_expanded'):
+                        group_input_3.outputs[0].show_expanded = False
+                    if hasattr(group_input_3.outputs[1], 'default_value'):
+                        group_input_3.outputs[1].default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(group_input_3.outputs[1], 'display_shape'):
+                        group_input_3.outputs[1].display_shape = 'CIRCLE'
+                    if hasattr(group_input_3.outputs[1], 'enabled'):
+                        group_input_3.outputs[1].enabled = True
+                    if hasattr(group_input_3.outputs[1], 'hide'):
+                        group_input_3.outputs[1].hide = False
+                    if hasattr(group_input_3.outputs[1], 'hide_value'):
+                        group_input_3.outputs[1].hide_value = False
+                    if hasattr(group_input_3.outputs[1], 'name'):
+                        group_input_3.outputs[1].name = 'Base'
+                    if hasattr(group_input_3.outputs[1], 'show_expanded'):
+                        group_input_3.outputs[1].show_expanded = False
+                    if hasattr(group_input_3.outputs[2], 'default_value'):
+                        group_input_3.outputs[2].default_value = (0.5, 0.5, 0.5, 1.0)
+                    if hasattr(group_input_3.outputs[2], 'display_shape'):
+                        group_input_3.outputs[2].display_shape = 'CIRCLE'
+                    if hasattr(group_input_3.outputs[2], 'enabled'):
+                        group_input_3.outputs[2].enabled = True
+                    if hasattr(group_input_3.outputs[2], 'hide'):
+                        group_input_3.outputs[2].hide = False
+                    if hasattr(group_input_3.outputs[2], 'hide_value'):
+                        group_input_3.outputs[2].hide_value = False
+                    if hasattr(group_input_3.outputs[2], 'name'):
+                        group_input_3.outputs[2].name = 'Detail'
+                    if hasattr(group_input_3.outputs[2], 'show_expanded'):
+                        group_input_3.outputs[2].show_expanded = False
+
+                    reroute_003_3 = node_tree3.nodes.new('NodeReroute')
+                    if hasattr(reroute_003_3, 'color'):
+                        reroute_003_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(reroute_003_3, 'hide'):
+                        reroute_003_3.hide = False
+                    if hasattr(reroute_003_3, 'location'):
+                        reroute_003_3.location = (-473.7449645996094, -55.63496780395508)
+                    if hasattr(reroute_003_3, 'mute'):
+                        reroute_003_3.mute = False
+                    if hasattr(reroute_003_3, 'name'):
+                        reroute_003_3.name = 'Reroute.003'
+                    if hasattr(reroute_003_3, 'use_custom_color'):
+                        reroute_003_3.use_custom_color = False
+                    if hasattr(reroute_003_3, 'width'):
+                        reroute_003_3.width = 16.0
+
                     reroute_002_3 = node_tree3.nodes.new('NodeReroute')
                     if hasattr(reroute_002_3, 'color'):
                         reroute_002_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
                     if hasattr(reroute_002_3, 'hide'):
                         reroute_002_3.hide = False
                     if hasattr(reroute_002_3, 'location'):
-                        reroute_002_3.location = (-1300.0, 0.0)
+                        reroute_002_3.location = (-472.5776062011719, 236.6663818359375)
                     if hasattr(reroute_002_3, 'mute'):
                         reroute_002_3.mute = False
                     if hasattr(reroute_002_3, 'name'):
@@ -31189,7 +31640,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(reroute_001_3, 'hide'):
                         reroute_001_3.hide = False
                     if hasattr(reroute_001_3, 'location'):
-                        reroute_001_3.location = (-1400.0, -20.0)
+                        reroute_001_3.location = (-442.8094177246094, -76.09606170654297)
                     if hasattr(reroute_001_3, 'mute'):
                         reroute_001_3.mute = False
                     if hasattr(reroute_001_3, 'name'):
@@ -31205,7 +31656,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(reroute_004_3, 'hide'):
                         reroute_004_3.hide = False
                     if hasattr(reroute_004_3, 'location'):
-                        reroute_004_3.location = (-1300.0, -20.0)
+                        reroute_004_3.location = (-436.8861389160156, 164.55894470214844)
                     if hasattr(reroute_004_3, 'mute'):
                         reroute_004_3.mute = False
                     if hasattr(reroute_004_3, 'name'):
@@ -31221,7 +31672,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_002_3, 'hide'):
                         vector_math_002_3.hide = True
                     if hasattr(vector_math_002_3, 'location'):
-                        vector_math_002_3.location = (-1200.0, -12.0)
+                        vector_math_002_3.location = (-361.7262268066406, 166.41342163085938)
                     if hasattr(vector_math_002_3, 'mute'):
                         vector_math_002_3.mute = False
                     if hasattr(vector_math_002_3, 'name'):
@@ -31335,7 +31786,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_3, 'hide'):
                         vector_math_3.hide = True
                     if hasattr(vector_math_3, 'location'):
-                        vector_math_3.location = (-1200.0, 8.0)
+                        vector_math_3.location = (-352.0022277832031, 240.16766357421875)
                     if hasattr(vector_math_3, 'mute'):
                         vector_math_3.mute = False
                     if hasattr(vector_math_3, 'name'):
@@ -31449,7 +31900,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_001_3, 'hide'):
                         vector_math_001_3.hide = True
                     if hasattr(vector_math_001_3, 'location'):
-                        vector_math_001_3.location = (-1100.0, 8.0)
+                        vector_math_001_3.location = (-357.1380615234375, 205.62777709960938)
                     if hasattr(vector_math_001_3, 'mute'):
                         vector_math_001_3.mute = False
                     if hasattr(vector_math_001_3, 'name'):
@@ -31563,7 +32014,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_003_3, 'hide'):
                         vector_math_003_3.hide = True
                     if hasattr(vector_math_003_3, 'location'):
-                        vector_math_003_3.location = (-1100.0, -12.0)
+                        vector_math_003_3.location = (-366.862060546875, 131.87353515625)
                     if hasattr(vector_math_003_3, 'mute'):
                         vector_math_003_3.mute = False
                     if hasattr(vector_math_003_3, 'name'):
@@ -31677,7 +32128,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_008_3, 'hide'):
                         vector_math_008_3.hide = True
                     if hasattr(vector_math_008_3, 'location'):
-                        vector_math_008_3.location = (-900.0, 8.0)
+                        vector_math_008_3.location = (-115.93279266357422, 165.04258728027344)
                     if hasattr(vector_math_008_3, 'mute'):
                         vector_math_008_3.mute = False
                     if hasattr(vector_math_008_3, 'name'):
@@ -31791,7 +32242,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_007_3, 'hide'):
                         vector_math_007_3.hide = True
                     if hasattr(vector_math_007_3, 'location'):
-                        vector_math_007_3.location = (-1000.0, 8.0)
+                        vector_math_007_3.location = (-113.82295227050781, 200.9220733642578)
                     if hasattr(vector_math_007_3, 'mute'):
                         vector_math_007_3.mute = False
                     if hasattr(vector_math_007_3, 'name'):
@@ -31905,7 +32356,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(separate_xyz_3, 'hide'):
                         separate_xyz_3.hide = True
                     if hasattr(separate_xyz_3, 'location'):
-                        separate_xyz_3.location = (-1000.0, -12.0)
+                        separate_xyz_3.location = (-109.48788452148438, 241.37655639648438)
                     if hasattr(separate_xyz_3, 'mute'):
                         separate_xyz_3.mute = False
                     if hasattr(separate_xyz_3, 'name'):
@@ -31985,7 +32436,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(combine_xyz_3, 'hide'):
                         combine_xyz_3.hide = True
                     if hasattr(combine_xyz_3, 'location'):
-                        combine_xyz_3.location = (-900.0, -12.0)
+                        combine_xyz_3.location = (57.07867431640625, 209.7696075439453)
                     if hasattr(combine_xyz_3, 'mute'):
                         combine_xyz_3.mute = False
                     if hasattr(combine_xyz_3, 'name'):
@@ -32065,7 +32516,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_010_3, 'hide'):
                         vector_math_010_3.hide = True
                     if hasattr(vector_math_010_3, 'location'):
-                        vector_math_010_3.location = (-800.0, 8.0)
+                        vector_math_010_3.location = (55.63336181640625, 175.2928924560547)
                     if hasattr(vector_math_010_3, 'mute'):
                         vector_math_010_3.mute = False
                     if hasattr(vector_math_010_3, 'name'):
@@ -32179,7 +32630,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_009_3, 'hide'):
                         vector_math_009_3.hide = True
                     if hasattr(vector_math_009_3, 'location'):
-                        vector_math_009_3.location = (-700.0, 8.0)
+                        vector_math_009_3.location = (212.1328887939453, 148.53402709960938)
                     if hasattr(vector_math_009_3, 'mute'):
                         vector_math_009_3.mute = False
                     if hasattr(vector_math_009_3, 'name'):
@@ -32293,7 +32744,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_005_3, 'hide'):
                         vector_math_005_3.hide = True
                     if hasattr(vector_math_005_3, 'location'):
-                        vector_math_005_3.location = (-500.0, 8.0)
+                        vector_math_005_3.location = (214.83480834960938, 77.948974609375)
                     if hasattr(vector_math_005_3, 'mute'):
                         vector_math_005_3.mute = False
                     if hasattr(vector_math_005_3, 'name'):
@@ -32407,7 +32858,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(vector_math_004_3, 'hide'):
                         vector_math_004_3.hide = True
                     if hasattr(vector_math_004_3, 'location'):
-                        vector_math_004_3.location = (-600.0, 8.0)
+                        vector_math_004_3.location = (213.77255249023438, 112.6468505859375)
                     if hasattr(vector_math_004_3, 'mute'):
                         vector_math_004_3.mute = False
                     if hasattr(vector_math_004_3, 'name'):
@@ -32515,13 +32966,127 @@ class ImportCoating(bpy.types.Operator):
                         if hasattr(output, 'show_expanded'):
                             output.show_expanded = False
 
+                    vector_math_006_3 = node_tree3.nodes.new('ShaderNodeVectorMath')
+                    if hasattr(vector_math_006_3, 'color'):
+                        vector_math_006_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(vector_math_006_3, 'hide'):
+                        vector_math_006_3.hide = True
+                    if hasattr(vector_math_006_3, 'location'):
+                        vector_math_006_3.location = (216.1195068359375, 43.219696044921875)
+                    if hasattr(vector_math_006_3, 'mute'):
+                        vector_math_006_3.mute = False
+                    if hasattr(vector_math_006_3, 'name'):
+                        vector_math_006_3.name = 'Vector Math.006'
+                    if hasattr(vector_math_006_3, 'operation'):
+                        vector_math_006_3.operation = 'ADD'
+                    if hasattr(vector_math_006_3, 'use_custom_color'):
+                        vector_math_006_3.use_custom_color = False
+                    if hasattr(vector_math_006_3, 'width'):
+                        vector_math_006_3.width = 140.0
+                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Vector'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Vector_001'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.5, 0.5, 0.5)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = True
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Vector_002'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Vector'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Scale'), None)
+                    if input_:
+                        if hasattr(input_, 'default_value'):
+                            input_.default_value = 1.0
+                        if hasattr(input_, 'display_shape'):
+                            input_.display_shape = 'CIRCLE'
+                        if hasattr(input_, 'enabled'):
+                            input_.enabled = False
+                        if hasattr(input_, 'hide'):
+                            input_.hide = False
+                        if hasattr(input_, 'hide_value'):
+                            input_.hide_value = False
+                        if hasattr(input_, 'name'):
+                            input_.name = 'Scale'
+                        if hasattr(input_, 'show_expanded'):
+                            input_.show_expanded = False
+                    output = next((output for output in vector_math_006_3.outputs if output.identifier=='Vector'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = (0.0, 0.0, 0.0)
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = True
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Vector'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+                    output = next((output for output in vector_math_006_3.outputs if output.identifier=='Value'), None)
+                    if output:
+                        if hasattr(output, 'default_value'):
+                            output.default_value = 0.0
+                        if hasattr(output, 'display_shape'):
+                            output.display_shape = 'CIRCLE'
+                        if hasattr(output, 'enabled'):
+                            output.enabled = False
+                        if hasattr(output, 'hide'):
+                            output.hide = False
+                        if hasattr(output, 'hide_value'):
+                            output.hide_value = False
+                        if hasattr(output, 'name'):
+                            output.name = 'Value'
+                        if hasattr(output, 'show_expanded'):
+                            output.show_expanded = False
+
                     reroute_3 = node_tree3.nodes.new('NodeReroute')
                     if hasattr(reroute_3, 'color'):
                         reroute_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
                     if hasattr(reroute_3, 'hide'):
                         reroute_3.hide = False
                     if hasattr(reroute_3, 'location'):
-                        reroute_3.location = (-200.0, 0.0)
+                        reroute_3.location = (383.51739501953125, -64.48645782470703)
                     if hasattr(reroute_3, 'mute'):
                         reroute_3.mute = False
                     if hasattr(reroute_3, 'name'):
@@ -32530,96 +33095,6 @@ class ImportCoating(bpy.types.Operator):
                         reroute_3.use_custom_color = False
                     if hasattr(reroute_3, 'width'):
                         reroute_3.width = 16.0
-
-                    reroute_005_3 = node_tree3.nodes.new('NodeReroute')
-                    if hasattr(reroute_005_3, 'color'):
-                        reroute_005_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(reroute_005_3, 'hide'):
-                        reroute_005_3.hide = False
-                    if hasattr(reroute_005_3, 'location'):
-                        reroute_005_3.location = (-300.0, 0.0)
-                    if hasattr(reroute_005_3, 'mute'):
-                        reroute_005_3.mute = False
-                    if hasattr(reroute_005_3, 'name'):
-                        reroute_005_3.name = 'Reroute.005'
-                    if hasattr(reroute_005_3, 'use_custom_color'):
-                        reroute_005_3.use_custom_color = False
-                    if hasattr(reroute_005_3, 'width'):
-                        reroute_005_3.width = 16.0
-
-                    group_input_3 = node_tree3.nodes.new('NodeGroupInput')
-                    if hasattr(group_input_3, 'color'):
-                        group_input_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(group_input_3, 'hide'):
-                        group_input_3.hide = False
-                    if hasattr(group_input_3, 'location'):
-                        group_input_3.location = (-1500.0, 0.0)
-                    if hasattr(group_input_3, 'mute'):
-                        group_input_3.mute = False
-                    if hasattr(group_input_3, 'name'):
-                        group_input_3.name = 'Group Input'
-                    if hasattr(group_input_3, 'use_custom_color'):
-                        group_input_3.use_custom_color = False
-                    if hasattr(group_input_3, 'width'):
-                        group_input_3.width = 140.0
-                    if hasattr(group_input_3.outputs[0], 'default_value'):
-                        group_input_3.outputs[0].default_value = 0.5
-                    if hasattr(group_input_3.outputs[0], 'display_shape'):
-                        group_input_3.outputs[0].display_shape = 'CIRCLE'
-                    if hasattr(group_input_3.outputs[0], 'enabled'):
-                        group_input_3.outputs[0].enabled = True
-                    if hasattr(group_input_3.outputs[0], 'hide'):
-                        group_input_3.outputs[0].hide = False
-                    if hasattr(group_input_3.outputs[0], 'hide_value'):
-                        group_input_3.outputs[0].hide_value = False
-                    if hasattr(group_input_3.outputs[0], 'name'):
-                        group_input_3.outputs[0].name = 'Factor'
-                    if hasattr(group_input_3.outputs[0], 'show_expanded'):
-                        group_input_3.outputs[0].show_expanded = False
-                    if hasattr(group_input_3.outputs[1], 'default_value'):
-                        group_input_3.outputs[1].default_value = (0.5, 0.5, 0.5, 1.0)
-                    if hasattr(group_input_3.outputs[1], 'display_shape'):
-                        group_input_3.outputs[1].display_shape = 'CIRCLE'
-                    if hasattr(group_input_3.outputs[1], 'enabled'):
-                        group_input_3.outputs[1].enabled = True
-                    if hasattr(group_input_3.outputs[1], 'hide'):
-                        group_input_3.outputs[1].hide = False
-                    if hasattr(group_input_3.outputs[1], 'hide_value'):
-                        group_input_3.outputs[1].hide_value = False
-                    if hasattr(group_input_3.outputs[1], 'name'):
-                        group_input_3.outputs[1].name = 'Base'
-                    if hasattr(group_input_3.outputs[1], 'show_expanded'):
-                        group_input_3.outputs[1].show_expanded = False
-                    if hasattr(group_input_3.outputs[2], 'default_value'):
-                        group_input_3.outputs[2].default_value = (0.5, 0.5, 0.5, 1.0)
-                    if hasattr(group_input_3.outputs[2], 'display_shape'):
-                        group_input_3.outputs[2].display_shape = 'CIRCLE'
-                    if hasattr(group_input_3.outputs[2], 'enabled'):
-                        group_input_3.outputs[2].enabled = True
-                    if hasattr(group_input_3.outputs[2], 'hide'):
-                        group_input_3.outputs[2].hide = False
-                    if hasattr(group_input_3.outputs[2], 'hide_value'):
-                        group_input_3.outputs[2].hide_value = False
-                    if hasattr(group_input_3.outputs[2], 'name'):
-                        group_input_3.outputs[2].name = 'Detail'
-                    if hasattr(group_input_3.outputs[2], 'show_expanded'):
-                        group_input_3.outputs[2].show_expanded = False
-
-                    reroute_003_3 = node_tree3.nodes.new('NodeReroute')
-                    if hasattr(reroute_003_3, 'color'):
-                        reroute_003_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(reroute_003_3, 'hide'):
-                        reroute_003_3.hide = False
-                    if hasattr(reroute_003_3, 'location'):
-                        reroute_003_3.location = (-1400.0, 0.0)
-                    if hasattr(reroute_003_3, 'mute'):
-                        reroute_003_3.mute = False
-                    if hasattr(reroute_003_3, 'name'):
-                        reroute_003_3.name = 'Reroute.003'
-                    if hasattr(reroute_003_3, 'use_custom_color'):
-                        reroute_003_3.use_custom_color = False
-                    if hasattr(reroute_003_3, 'width'):
-                        reroute_003_3.width = 16.0
 
                     mix_3 = node_tree3.nodes.new('ShaderNodeMix')
                     if hasattr(mix_3, 'blend_type'):
@@ -32637,7 +33112,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(mix_3, 'hide'):
                         mix_3.hide = False
                     if hasattr(mix_3, 'location'):
-                        mix_3.location = (-100.0, 0.0)
+                        mix_3.location = (415.302734375, 89.13896942138672)
                     if hasattr(mix_3, 'mute'):
                         mix_3.mute = False
                     if hasattr(mix_3, 'name'):
@@ -32823,6 +33298,22 @@ class ImportCoating(bpy.types.Operator):
                         if hasattr(output, 'show_expanded'):
                             output.show_expanded = False
 
+                    reroute_005_3 = node_tree3.nodes.new('NodeReroute')
+                    if hasattr(reroute_005_3, 'color'):
+                        reroute_005_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                    if hasattr(reroute_005_3, 'hide'):
+                        reroute_005_3.hide = False
+                    if hasattr(reroute_005_3, 'location'):
+                        reroute_005_3.location = (383.51739501953125, 31.338207244873047)
+                    if hasattr(reroute_005_3, 'mute'):
+                        reroute_005_3.mute = False
+                    if hasattr(reroute_005_3, 'name'):
+                        reroute_005_3.name = 'Reroute.005'
+                    if hasattr(reroute_005_3, 'use_custom_color'):
+                        reroute_005_3.use_custom_color = False
+                    if hasattr(reroute_005_3, 'width'):
+                        reroute_005_3.width = 16.0
+
                     group_output_3 = node_tree3.nodes.new('NodeGroupOutput')
                     if hasattr(group_output_3, 'color'):
                         group_output_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
@@ -32831,7 +33322,7 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(group_output_3, 'is_active_output'):
                         group_output_3.is_active_output = True
                     if hasattr(group_output_3, 'location'):
-                        group_output_3.location = (0.0, 0.0)
+                        group_output_3.location = (613.7005615234375, 81.01988983154297)
                     if hasattr(group_output_3, 'mute'):
                         group_output_3.mute = False
                     if hasattr(group_output_3, 'name'):
@@ -32855,126 +33346,15 @@ class ImportCoating(bpy.types.Operator):
                     if hasattr(group_output_3.inputs[0], 'show_expanded'):
                         group_output_3.inputs[0].show_expanded = False
 
-                    vector_math_006_3 = node_tree3.nodes.new('ShaderNodeVectorMath')
-                    if hasattr(vector_math_006_3, 'color'):
-                        vector_math_006_3.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-                    if hasattr(vector_math_006_3, 'hide'):
-                        vector_math_006_3.hide = True
-                    if hasattr(vector_math_006_3, 'location'):
-                        vector_math_006_3.location = (-400.0, 8.0)
-                    if hasattr(vector_math_006_3, 'mute'):
-                        vector_math_006_3.mute = False
-                    if hasattr(vector_math_006_3, 'name'):
-                        vector_math_006_3.name = 'Vector Math.006'
-                    if hasattr(vector_math_006_3, 'operation'):
-                        vector_math_006_3.operation = 'ADD'
-                    if hasattr(vector_math_006_3, 'use_custom_color'):
-                        vector_math_006_3.use_custom_color = False
-                    if hasattr(vector_math_006_3, 'width'):
-                        vector_math_006_3.width = 140.0
-                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Vector'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Vector_001'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.5, 0.5, 0.5)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = True
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Vector_002'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Vector'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    input_ = next((input_ for input_ in vector_math_006_3.inputs if input_.identifier=='Scale'), None)
-                    if input_:
-                        if hasattr(input_, 'default_value'):
-                            input_.default_value = 1.0
-                        if hasattr(input_, 'display_shape'):
-                            input_.display_shape = 'CIRCLE'
-                        if hasattr(input_, 'enabled'):
-                            input_.enabled = False
-                        if hasattr(input_, 'hide'):
-                            input_.hide = False
-                        if hasattr(input_, 'hide_value'):
-                            input_.hide_value = False
-                        if hasattr(input_, 'name'):
-                            input_.name = 'Scale'
-                        if hasattr(input_, 'show_expanded'):
-                            input_.show_expanded = False
-                    output = next((output for output in vector_math_006_3.outputs if output.identifier=='Vector'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = (0.0, 0.0, 0.0)
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = True
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Vector'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-                    output = next((output for output in vector_math_006_3.outputs if output.identifier=='Value'), None)
-                    if output:
-                        if hasattr(output, 'default_value'):
-                            output.default_value = 0.0
-                        if hasattr(output, 'display_shape'):
-                            output.display_shape = 'CIRCLE'
-                        if hasattr(output, 'enabled'):
-                            output.enabled = False
-                        if hasattr(output, 'hide'):
-                            output.hide = False
-                        if hasattr(output, 'hide_value'):
-                            output.hide_value = False
-                        if hasattr(output, 'name'):
-                            output.name = 'Value'
-                        if hasattr(output, 'show_expanded'):
-                            output.show_expanded = False
-
                     # LINKS
                     node_tree3.links.new(reroute_002_3.outputs[0], vector_math_3.inputs[0])
                     node_tree3.links.new(vector_math_3.outputs[0], vector_math_001_3.inputs[0])
                     node_tree3.links.new(vector_math_001_3.outputs[0], separate_xyz_3.inputs[0])
                     node_tree3.links.new(vector_math_005_3.outputs[0], vector_math_006_3.inputs[0])
                     node_tree3.links.new(vector_math_004_3.outputs[0], vector_math_005_3.inputs[0])
+                    node_tree3.links.new(mix_3.outputs[2], group_output_3.inputs[0])
+                    node_tree3.links.new(group_input_3.outputs[0], mix_3.inputs[0])
+                    node_tree3.links.new(reroute_003_3.outputs[0], mix_3.inputs[6])
                     node_tree3.links.new(vector_math_002_3.outputs[0], vector_math_003_3.inputs[0])
                     node_tree3.links.new(reroute_004_3.outputs[0], vector_math_002_3.inputs[0])
                     node_tree3.links.new(vector_math_001_3.outputs[0], vector_math_007_3.inputs[0])
@@ -32989,26 +33369,97 @@ class ImportCoating(bpy.types.Operator):
                     node_tree3.links.new(separate_xyz_3.outputs[2], combine_xyz_3.inputs[2])
                     node_tree3.links.new(combine_xyz_3.outputs[0], vector_math_010_3.inputs[1])
                     node_tree3.links.new(vector_math_009_3.outputs[0], vector_math_004_3.inputs[0])
+                    node_tree3.links.new(reroute_3.outputs[0], mix_3.inputs[7])
                     node_tree3.links.new(group_input_3.outputs[2], reroute_001_3.inputs[0])
                     node_tree3.links.new(group_input_3.outputs[1], reroute_003_3.inputs[0])
                     node_tree3.links.new(reroute_003_3.outputs[0], reroute_002_3.inputs[0])
                     node_tree3.links.new(reroute_001_3.outputs[0], reroute_004_3.inputs[0])
                     node_tree3.links.new(reroute_005_3.outputs[0], reroute_3.inputs[0])
                     node_tree3.links.new(vector_math_006_3.outputs[0], reroute_005_3.inputs[0])
-                    node_tree3.links.new(group_input_3.outputs[0], mix_3.inputs[0])
-                    node_tree3.links.new(mix_3.outputs[2], group_output_3.inputs[0])
-                    node_tree3.links.new(reroute_003_3.outputs[0], mix_3.inputs[6])
-                    node_tree3.links.new(reroute_3.outputs[0], mix_3.inputs[7])
+
+                group_002_2 = node_tree2.nodes.new('ShaderNodeGroup')
+                if hasattr(group_002_2, 'node_tree'):
+                    group_002_2.node_tree = bpy.data.node_groups.get('NormalMap_Combine-Orientation')
+                if hasattr(group_002_2, 'color'):
+                    group_002_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(group_002_2, 'hide'):
+                    group_002_2.hide = False
+                if hasattr(group_002_2, 'location'):
+                    group_002_2.location = (888.6771850585938, 477.678955078125)
+                if hasattr(group_002_2, 'mute'):
+                    group_002_2.mute = False
+                if hasattr(group_002_2, 'name'):
+                    group_002_2.name = 'Group.002'
+                if hasattr(group_002_2, 'use_custom_color'):
+                    group_002_2.use_custom_color = False
+                if hasattr(group_002_2, 'width'):
+                    group_002_2.width = 140.0
+                if hasattr(group_002_2.inputs[0], 'default_value'):
+                    group_002_2.inputs[0].default_value = 1.0
+                if hasattr(group_002_2.inputs[0], 'display_shape'):
+                    group_002_2.inputs[0].display_shape = 'CIRCLE'
+                if hasattr(group_002_2.inputs[0], 'enabled'):
+                    group_002_2.inputs[0].enabled = True
+                if hasattr(group_002_2.inputs[0], 'hide'):
+                    group_002_2.inputs[0].hide = False
+                if hasattr(group_002_2.inputs[0], 'hide_value'):
+                    group_002_2.inputs[0].hide_value = False
+                if hasattr(group_002_2.inputs[0], 'name'):
+                    group_002_2.inputs[0].name = 'Factor'
+                if hasattr(group_002_2.inputs[0], 'show_expanded'):
+                    group_002_2.inputs[0].show_expanded = False
+                if hasattr(group_002_2.inputs[1], 'default_value'):
+                    group_002_2.inputs[1].default_value = (0.5, 0.5, 1.0, 1.0)
+                if hasattr(group_002_2.inputs[1], 'display_shape'):
+                    group_002_2.inputs[1].display_shape = 'CIRCLE'
+                if hasattr(group_002_2.inputs[1], 'enabled'):
+                    group_002_2.inputs[1].enabled = True
+                if hasattr(group_002_2.inputs[1], 'hide'):
+                    group_002_2.inputs[1].hide = False
+                if hasattr(group_002_2.inputs[1], 'hide_value'):
+                    group_002_2.inputs[1].hide_value = False
+                if hasattr(group_002_2.inputs[1], 'name'):
+                    group_002_2.inputs[1].name = 'Base'
+                if hasattr(group_002_2.inputs[1], 'show_expanded'):
+                    group_002_2.inputs[1].show_expanded = False
+                if hasattr(group_002_2.inputs[2], 'default_value'):
+                    group_002_2.inputs[2].default_value = (0.5, 0.5, 1.0, 1.0)
+                if hasattr(group_002_2.inputs[2], 'display_shape'):
+                    group_002_2.inputs[2].display_shape = 'CIRCLE'
+                if hasattr(group_002_2.inputs[2], 'enabled'):
+                    group_002_2.inputs[2].enabled = True
+                if hasattr(group_002_2.inputs[2], 'hide'):
+                    group_002_2.inputs[2].hide = False
+                if hasattr(group_002_2.inputs[2], 'hide_value'):
+                    group_002_2.inputs[2].hide_value = False
+                if hasattr(group_002_2.inputs[2], 'name'):
+                    group_002_2.inputs[2].name = 'Detail'
+                if hasattr(group_002_2.inputs[2], 'show_expanded'):
+                    group_002_2.inputs[2].show_expanded = False
+                if hasattr(group_002_2.outputs[0], 'default_value'):
+                    group_002_2.outputs[0].default_value = (0.5, 0.5, 1.0, 1.0)
+                if hasattr(group_002_2.outputs[0], 'display_shape'):
+                    group_002_2.outputs[0].display_shape = 'CIRCLE'
+                if hasattr(group_002_2.outputs[0], 'enabled'):
+                    group_002_2.outputs[0].enabled = True
+                if hasattr(group_002_2.outputs[0], 'hide'):
+                    group_002_2.outputs[0].hide = False
+                if hasattr(group_002_2.outputs[0], 'hide_value'):
+                    group_002_2.outputs[0].hide_value = False
+                if hasattr(group_002_2.outputs[0], 'name'):
+                    group_002_2.outputs[0].name = 'Combined Normal Map'
+                if hasattr(group_002_2.outputs[0], 'show_expanded'):
+                    group_002_2.outputs[0].show_expanded = False
 
                 group_001_2 = node_tree2.nodes.new('ShaderNodeGroup')
                 if hasattr(group_001_2, 'node_tree'):
-                    group_001_2.node_tree = bpy.data.node_groups.get('NormalMap_Combine-Orientation')
+                    group_001_2.node_tree = bpy.data.node_groups.get('Norm Normalize')
                 if hasattr(group_001_2, 'color'):
                     group_001_2.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
                 if hasattr(group_001_2, 'hide'):
                     group_001_2.hide = False
                 if hasattr(group_001_2, 'location'):
-                    group_001_2.location = (-240.0, 0.0)
+                    group_001_2.location = (607.6754150390625, 479.01580810546875)
                 if hasattr(group_001_2, 'mute'):
                     group_001_2.mute = False
                 if hasattr(group_001_2, 'name'):
@@ -33018,7 +33469,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_001_2, 'width'):
                     group_001_2.width = 140.0
                 if hasattr(group_001_2.inputs[0], 'default_value'):
-                    group_001_2.inputs[0].default_value = 1.0
+                    group_001_2.inputs[0].default_value = (0.0, 0.0, 0.0)
                 if hasattr(group_001_2.inputs[0], 'display_shape'):
                     group_001_2.inputs[0].display_shape = 'CIRCLE'
                 if hasattr(group_001_2.inputs[0], 'enabled'):
@@ -33026,41 +33477,13 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_001_2.inputs[0], 'hide'):
                     group_001_2.inputs[0].hide = False
                 if hasattr(group_001_2.inputs[0], 'hide_value'):
-                    group_001_2.inputs[0].hide_value = False
+                    group_001_2.inputs[0].hide_value = True
                 if hasattr(group_001_2.inputs[0], 'name'):
-                    group_001_2.inputs[0].name = 'Factor'
+                    group_001_2.inputs[0].name = 'Normal'
                 if hasattr(group_001_2.inputs[0], 'show_expanded'):
                     group_001_2.inputs[0].show_expanded = False
-                if hasattr(group_001_2.inputs[1], 'default_value'):
-                    group_001_2.inputs[1].default_value = (0.5, 0.5, 1.0, 1.0)
-                if hasattr(group_001_2.inputs[1], 'display_shape'):
-                    group_001_2.inputs[1].display_shape = 'CIRCLE'
-                if hasattr(group_001_2.inputs[1], 'enabled'):
-                    group_001_2.inputs[1].enabled = True
-                if hasattr(group_001_2.inputs[1], 'hide'):
-                    group_001_2.inputs[1].hide = False
-                if hasattr(group_001_2.inputs[1], 'hide_value'):
-                    group_001_2.inputs[1].hide_value = False
-                if hasattr(group_001_2.inputs[1], 'name'):
-                    group_001_2.inputs[1].name = 'Base'
-                if hasattr(group_001_2.inputs[1], 'show_expanded'):
-                    group_001_2.inputs[1].show_expanded = False
-                if hasattr(group_001_2.inputs[2], 'default_value'):
-                    group_001_2.inputs[2].default_value = (0.5, 0.5, 1.0, 1.0)
-                if hasattr(group_001_2.inputs[2], 'display_shape'):
-                    group_001_2.inputs[2].display_shape = 'CIRCLE'
-                if hasattr(group_001_2.inputs[2], 'enabled'):
-                    group_001_2.inputs[2].enabled = True
-                if hasattr(group_001_2.inputs[2], 'hide'):
-                    group_001_2.inputs[2].hide = False
-                if hasattr(group_001_2.inputs[2], 'hide_value'):
-                    group_001_2.inputs[2].hide_value = False
-                if hasattr(group_001_2.inputs[2], 'name'):
-                    group_001_2.inputs[2].name = 'Detail'
-                if hasattr(group_001_2.inputs[2], 'show_expanded'):
-                    group_001_2.inputs[2].show_expanded = False
                 if hasattr(group_001_2.outputs[0], 'default_value'):
-                    group_001_2.outputs[0].default_value = (0.5, 0.5, 1.0, 1.0)
+                    group_001_2.outputs[0].default_value = (0.0, 0.0, 0.0, 0.0)
                 if hasattr(group_001_2.outputs[0], 'display_shape'):
                     group_001_2.outputs[0].display_shape = 'CIRCLE'
                 if hasattr(group_001_2.outputs[0], 'enabled'):
@@ -33068,9 +33491,9 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_001_2.outputs[0], 'hide'):
                     group_001_2.outputs[0].hide = False
                 if hasattr(group_001_2.outputs[0], 'hide_value'):
-                    group_001_2.outputs[0].hide_value = False
+                    group_001_2.outputs[0].hide_value = True
                 if hasattr(group_001_2.outputs[0], 'name'):
-                    group_001_2.outputs[0].name = 'Combined Normal Map'
+                    group_001_2.outputs[0].name = 'Normal Normalized'
                 if hasattr(group_001_2.outputs[0], 'show_expanded'):
                     group_001_2.outputs[0].show_expanded = False
 
@@ -33082,7 +33505,7 @@ class ImportCoating(bpy.types.Operator):
                 if hasattr(group_output_2, 'is_active_output'):
                     group_output_2.is_active_output = True
                 if hasattr(group_output_2, 'location'):
-                    group_output_2.location = (0.0, 0.0)
+                    group_output_2.location = (1145.656005859375, 347.71014404296875)
                 if hasattr(group_output_2, 'mute'):
                     group_output_2.mute = False
                 if hasattr(group_output_2, 'name'):
@@ -33108,44 +33531,50 @@ class ImportCoating(bpy.types.Operator):
 
                 # LINKS
                 node_tree2.links.new(group_input_2.outputs[1], separate_rgb_2.inputs[0])
-                node_tree2.links.new(separate_rgb_2.outputs[0], mix_2.inputs[0])
-                node_tree2.links.new(mix_2.outputs[2], mix_001_2.inputs[6])
-                node_tree2.links.new(mix_001_2.outputs[2], mix_002_2.inputs[6])
-                node_tree2.links.new(separate_rgb_2.outputs[1], mix_001_2.inputs[0])
-                node_tree2.links.new(mix_002_2.outputs[2], mix_003_2.inputs[6])
-                node_tree2.links.new(separate_rgb_2.outputs[2], mix_002_2.inputs[0])
-                node_tree2.links.new(mix_003_2.outputs[2], mix_004_2.inputs[6])
                 node_tree2.links.new(group_input_2.outputs[2], separate_rgb_001_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[0], separate_rgb_002_2.inputs[0])
+                node_tree2.links.new(separate_rgb_002_2.outputs[2], math_008_2.inputs[0])
+                node_tree2.links.new(math_012_2.outputs[0], math_008_2.inputs[1])
+                node_tree2.links.new(math_010_2.outputs[0], math_007_2.inputs[1])
+                node_tree2.links.new(separate_rgb_001_2.outputs[2], math_007_2.inputs[0])
+                node_tree2.links.new(separate_rgb_002_2.outputs[1], math_009_2.inputs[0])
+                node_tree2.links.new(math_011_2.outputs[0], math_009_2.inputs[1])
+                node_tree2.links.new(group_input_2.outputs[12], math_011_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[14], math_010_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[13], math_012_2.inputs[0])
+                node_tree2.links.new(mix_2.outputs[2], mix_001_2.inputs[6])
+                node_tree2.links.new(group_input_2.outputs[6], mix_001_2.inputs[7])
+                node_tree2.links.new(mix_001_2.outputs[2], mix_002_2.inputs[6])
+                node_tree2.links.new(group_input_2.outputs[7], mix_002_2.inputs[7])
+                node_tree2.links.new(mix_002_2.outputs[2], mix_003_2.inputs[6])
+                node_tree2.links.new(group_input_2.outputs[8], mix_003_2.inputs[7])
+                node_tree2.links.new(mix_003_2.outputs[2], mix_004_2.inputs[6])
+                node_tree2.links.new(group_input_2.outputs[9], mix_004_2.inputs[7])
+                node_tree2.links.new(mix_004_2.outputs[2], mix_005_2.inputs[6])
+                node_tree2.links.new(math_007_2.outputs[0], mix_005_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[11], mix_005_2.inputs[7])
+                node_tree2.links.new(mix_005_2.outputs[2], mix_006_2.inputs[6])
+                node_tree2.links.new(math_009_2.outputs[0], mix_006_2.inputs[0])
+                node_tree2.links.new(mix_006_2.outputs[2], mix_007_2.inputs[6])
+                node_tree2.links.new(math_008_2.outputs[0], mix_007_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[10], mix_007_2.inputs[7])
+                node_tree2.links.new(separate_rgb_2.outputs[0], mix_2.inputs[0])
+                node_tree2.links.new(separate_rgb_2.outputs[1], mix_001_2.inputs[0])
+                node_tree2.links.new(separate_rgb_2.outputs[2], mix_002_2.inputs[0])
                 node_tree2.links.new(separate_rgb_001_2.outputs[0], mix_003_2.inputs[0])
                 node_tree2.links.new(separate_rgb_001_2.outputs[1], mix_004_2.inputs[0])
-                node_tree2.links.new(group_input_2.outputs[0], separate_rgb_002_2.inputs[0])
                 node_tree2.links.new(group_input_2.outputs[4], mix_2.inputs[6])
                 node_tree2.links.new(group_input_2.outputs[5], mix_2.inputs[7])
-                node_tree2.links.new(group_input_2.outputs[6], mix_001_2.inputs[7])
-                node_tree2.links.new(group_input_2.outputs[7], mix_002_2.inputs[7])
-                node_tree2.links.new(group_input_2.outputs[8], mix_003_2.inputs[7])
-                node_tree2.links.new(group_input_2.outputs[9], mix_004_2.inputs[7])
-                node_tree2.links.new(mix_004_2.outputs[2], mix_007_2.inputs[6])
-                node_tree2.links.new(mix_007_2.outputs[2], mix_005_2.inputs[6])
-                node_tree2.links.new(math_2.outputs[0], math_001_2.inputs[1])
-                node_tree2.links.new(math_002_2.outputs[0], math_003_2.inputs[1])
-                node_tree2.links.new(separate_rgb_002_2.outputs[2], math_001_2.inputs[0])
-                node_tree2.links.new(group_input_2.outputs[12], math_2.inputs[0])
-                node_tree2.links.new(separate_rgb_001_2.outputs[2], math_003_2.inputs[0])
-                node_tree2.links.new(group_input_2.outputs[13], math_002_2.inputs[0])
-                node_tree2.links.new(math_001_2.outputs[0], mix_005_2.inputs[0])
-                node_tree2.links.new(math_003_2.outputs[0], mix_007_2.inputs[0])
-                node_tree2.links.new(group_input_2.outputs[10], mix_005_2.inputs[7])
-                node_tree2.links.new(group_input_2.outputs[11], mix_007_2.inputs[7])
-                node_tree2.links.new(group_002_2.outputs[0], group_001_2.inputs[2])
-                node_tree2.links.new(group_2.outputs[0], group_001_2.inputs[1])
-                node_tree2.links.new(group_001_2.outputs[0], group_output_2.inputs[0])
-                node_tree2.links.new(group_input_2.outputs[3], group_2.inputs[0])
-                node_tree2.links.new(mix_005_2.outputs[2], group_002_2.inputs[0])
+                node_tree2.links.new(mix_007_2.outputs[2], group_2.inputs[0])
+                node_tree2.links.new(group_001_2.outputs[0], group_002_2.inputs[1])
+                node_tree2.links.new(group_2.outputs[0], group_002_2.inputs[2])
+                node_tree2.links.new(group_002_2.outputs[0], group_output_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[3], group_001_2.inputs[0])
+                node_tree2.links.new(group_input_2.outputs[15], group_002_2.inputs[0])
 
             group_003_1 = node_tree4.nodes.new('ShaderNodeGroup')
             if hasattr(group_003_1, 'node_tree'):
-                group_003_1.node_tree = bpy.data.node_groups.get('Detail Normals')
+                group_003_1.node_tree = bpy.data.node_groups.get('Detail Normals (Chroma Mod)')
             if hasattr(group_003_1, 'color'):
                 group_003_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
             if hasattr(group_003_1, 'hide'):
@@ -33339,7 +33768,7 @@ class ImportCoating(bpy.types.Operator):
             if hasattr(group_003_1.inputs[12], 'hide_value'):
                 group_003_1.inputs[12].hide_value = False
             if hasattr(group_003_1.inputs[12], 'name'):
-                group_003_1.inputs[12].name = 'Grime Amount'
+                group_003_1.inputs[12].name = 'Scratch Amount'
             if hasattr(group_003_1.inputs[12], 'show_expanded'):
                 group_003_1.inputs[12].show_expanded = False
             if hasattr(group_003_1.inputs[13], 'default_value'):
@@ -33353,9 +33782,37 @@ class ImportCoating(bpy.types.Operator):
             if hasattr(group_003_1.inputs[13], 'hide_value'):
                 group_003_1.inputs[13].hide_value = False
             if hasattr(group_003_1.inputs[13], 'name'):
-                group_003_1.inputs[13].name = 'Dust Amount'
+                group_003_1.inputs[13].name = 'Grime Amount'
             if hasattr(group_003_1.inputs[13], 'show_expanded'):
                 group_003_1.inputs[13].show_expanded = False
+            if hasattr(group_003_1.inputs[14], 'default_value'):
+                group_003_1.inputs[14].default_value = 1.0
+            if hasattr(group_003_1.inputs[14], 'display_shape'):
+                group_003_1.inputs[14].display_shape = 'CIRCLE'
+            if hasattr(group_003_1.inputs[14], 'enabled'):
+                group_003_1.inputs[14].enabled = True
+            if hasattr(group_003_1.inputs[14], 'hide'):
+                group_003_1.inputs[14].hide = False
+            if hasattr(group_003_1.inputs[14], 'hide_value'):
+                group_003_1.inputs[14].hide_value = False
+            if hasattr(group_003_1.inputs[14], 'name'):
+                group_003_1.inputs[14].name = 'Dust Amount'
+            if hasattr(group_003_1.inputs[14], 'show_expanded'):
+                group_003_1.inputs[14].show_expanded = False
+            if hasattr(group_003_1.inputs[15], 'default_value'):
+                group_003_1.inputs[15].default_value = 1.0
+            if hasattr(group_003_1.inputs[15], 'display_shape'):
+                group_003_1.inputs[15].display_shape = 'CIRCLE'
+            if hasattr(group_003_1.inputs[15], 'enabled'):
+                group_003_1.inputs[15].enabled = True
+            if hasattr(group_003_1.inputs[15], 'hide'):
+                group_003_1.inputs[15].hide = False
+            if hasattr(group_003_1.inputs[15], 'hide_value'):
+                group_003_1.inputs[15].hide_value = False
+            if hasattr(group_003_1.inputs[15], 'name'):
+                group_003_1.inputs[15].name = 'Detail Normal Toggle'
+            if hasattr(group_003_1.inputs[15], 'show_expanded'):
+                group_003_1.inputs[15].show_expanded = False
             if hasattr(group_003_1.outputs[0], 'default_value'):
                 group_003_1.outputs[0].default_value = (0.0, 0.0, 0.0, 0.0)
             if hasattr(group_003_1.outputs[0], 'display_shape'):
@@ -33371,2259 +33828,2260 @@ class ImportCoating(bpy.types.Operator):
             if hasattr(group_003_1.outputs[0], 'show_expanded'):
                 group_003_1.outputs[0].show_expanded = False
 
-            group_input_001_1 = node_tree4.nodes.new('NodeGroupInput')
-            if hasattr(group_input_001_1, 'color'):
-                group_input_001_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-            if hasattr(group_input_001_1, 'hide'):
-                group_input_001_1.hide = False
-            if hasattr(group_input_001_1, 'location'):
-                group_input_001_1.location = (-3793.19091796875, 2497.38134765625)
-            if hasattr(group_input_001_1, 'mute'):
-                group_input_001_1.mute = False
-            if hasattr(group_input_001_1, 'name'):
-                group_input_001_1.name = 'Group Input.001'
-            if hasattr(group_input_001_1, 'use_custom_color'):
-                group_input_001_1.use_custom_color = False
-            if hasattr(group_input_001_1, 'width'):
-                group_input_001_1.width = 140.0
-            if hasattr(group_input_001_1.outputs[0], 'default_value'):
-                group_input_001_1.outputs[0].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[0], 'display_shape'):
-                group_input_001_1.outputs[0].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[0], 'enabled'):
-                group_input_001_1.outputs[0].enabled = True
-            if hasattr(group_input_001_1.outputs[0], 'hide'):
-                group_input_001_1.outputs[0].hide = False
-            if hasattr(group_input_001_1.outputs[0], 'hide_value'):
-                group_input_001_1.outputs[0].hide_value = False
-            if hasattr(group_input_001_1.outputs[0], 'name'):
-                group_input_001_1.outputs[0].name = 'ASG'
-            if hasattr(group_input_001_1.outputs[0], 'show_expanded'):
-                group_input_001_1.outputs[0].show_expanded = False
-            if hasattr(group_input_001_1.outputs[1], 'default_value'):
-                group_input_001_1.outputs[1].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[1], 'display_shape'):
-                group_input_001_1.outputs[1].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[1], 'enabled'):
-                group_input_001_1.outputs[1].enabled = True
-            if hasattr(group_input_001_1.outputs[1], 'hide'):
-                group_input_001_1.outputs[1].hide = False
-            if hasattr(group_input_001_1.outputs[1], 'hide_value'):
-                group_input_001_1.outputs[1].hide_value = False
-            if hasattr(group_input_001_1.outputs[1], 'name'):
-                group_input_001_1.outputs[1].name = 'Mask_0'
-            if hasattr(group_input_001_1.outputs[1], 'show_expanded'):
-                group_input_001_1.outputs[1].show_expanded = False
-            if hasattr(group_input_001_1.outputs[2], 'default_value'):
-                group_input_001_1.outputs[2].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[2], 'display_shape'):
-                group_input_001_1.outputs[2].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[2], 'enabled'):
-                group_input_001_1.outputs[2].enabled = True
-            if hasattr(group_input_001_1.outputs[2], 'hide'):
-                group_input_001_1.outputs[2].hide = False
-            if hasattr(group_input_001_1.outputs[2], 'hide_value'):
-                group_input_001_1.outputs[2].hide_value = False
-            if hasattr(group_input_001_1.outputs[2], 'name'):
-                group_input_001_1.outputs[2].name = 'Mask_1'
-            if hasattr(group_input_001_1.outputs[2], 'show_expanded'):
-                group_input_001_1.outputs[2].show_expanded = False
-            if hasattr(group_input_001_1.outputs[3], 'default_value'):
-                group_input_001_1.outputs[3].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[3], 'display_shape'):
-                group_input_001_1.outputs[3].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[3], 'enabled'):
-                group_input_001_1.outputs[3].enabled = True
-            if hasattr(group_input_001_1.outputs[3], 'hide'):
-                group_input_001_1.outputs[3].hide = False
-            if hasattr(group_input_001_1.outputs[3], 'hide_value'):
-                group_input_001_1.outputs[3].hide_value = False
-            if hasattr(group_input_001_1.outputs[3], 'name'):
-                group_input_001_1.outputs[3].name = 'Normal'
-            if hasattr(group_input_001_1.outputs[3], 'show_expanded'):
-                group_input_001_1.outputs[3].show_expanded = False
-            if hasattr(group_input_001_1.outputs[4], 'default_value'):
-                group_input_001_1.outputs[4].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[4], 'display_shape'):
-                group_input_001_1.outputs[4].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[4], 'enabled'):
-                group_input_001_1.outputs[4].enabled = True
-            if hasattr(group_input_001_1.outputs[4], 'hide'):
-                group_input_001_1.outputs[4].hide = False
-            if hasattr(group_input_001_1.outputs[4], 'hide_value'):
-                group_input_001_1.outputs[4].hide_value = False
-            if hasattr(group_input_001_1.outputs[4], 'name'):
-                group_input_001_1.outputs[4].name = 'Grime Amount'
-            if hasattr(group_input_001_1.outputs[4], 'show_expanded'):
-                group_input_001_1.outputs[4].show_expanded = False
-            if hasattr(group_input_001_1.outputs[5], 'default_value'):
-                group_input_001_1.outputs[5].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[5], 'display_shape'):
-                group_input_001_1.outputs[5].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[5], 'enabled'):
-                group_input_001_1.outputs[5].enabled = True
-            if hasattr(group_input_001_1.outputs[5], 'hide'):
-                group_input_001_1.outputs[5].hide = False
-            if hasattr(group_input_001_1.outputs[5], 'hide_value'):
-                group_input_001_1.outputs[5].hide_value = False
-            if hasattr(group_input_001_1.outputs[5], 'name'):
-                group_input_001_1.outputs[5].name = 'Grime Height Scale'
-            if hasattr(group_input_001_1.outputs[5], 'show_expanded'):
-                group_input_001_1.outputs[5].show_expanded = False
-            if hasattr(group_input_001_1.outputs[6], 'default_value'):
-                group_input_001_1.outputs[6].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[6], 'display_shape'):
-                group_input_001_1.outputs[6].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[6], 'enabled'):
-                group_input_001_1.outputs[6].enabled = True
-            if hasattr(group_input_001_1.outputs[6], 'hide'):
-                group_input_001_1.outputs[6].hide = False
-            if hasattr(group_input_001_1.outputs[6], 'hide_value'):
-                group_input_001_1.outputs[6].hide_value = False
-            if hasattr(group_input_001_1.outputs[6], 'name'):
-                group_input_001_1.outputs[6].name = 'Grime Height'
-            if hasattr(group_input_001_1.outputs[6], 'show_expanded'):
-                group_input_001_1.outputs[6].show_expanded = False
-            if hasattr(group_input_001_1.outputs[7], 'default_value'):
-                group_input_001_1.outputs[7].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[7], 'display_shape'):
-                group_input_001_1.outputs[7].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[7], 'enabled'):
-                group_input_001_1.outputs[7].enabled = True
-            if hasattr(group_input_001_1.outputs[7], 'hide'):
-                group_input_001_1.outputs[7].hide = False
-            if hasattr(group_input_001_1.outputs[7], 'hide_value'):
-                group_input_001_1.outputs[7].hide_value = False
-            if hasattr(group_input_001_1.outputs[7], 'name'):
-                group_input_001_1.outputs[7].name = 'Ambient Occlusion'
-            if hasattr(group_input_001_1.outputs[7], 'show_expanded'):
-                group_input_001_1.outputs[7].show_expanded = False
-            if hasattr(group_input_001_1.outputs[8], 'default_value'):
-                group_input_001_1.outputs[8].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[8], 'display_shape'):
-                group_input_001_1.outputs[8].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[8], 'enabled'):
-                group_input_001_1.outputs[8].enabled = True
-            if hasattr(group_input_001_1.outputs[8], 'hide'):
-                group_input_001_1.outputs[8].hide = False
-            if hasattr(group_input_001_1.outputs[8], 'hide_value'):
-                group_input_001_1.outputs[8].hide_value = False
-            if hasattr(group_input_001_1.outputs[8], 'name'):
-                group_input_001_1.outputs[8].name = 'Scratch Height Amount'
-            if hasattr(group_input_001_1.outputs[8], 'show_expanded'):
-                group_input_001_1.outputs[8].show_expanded = False
-            if hasattr(group_input_001_1.outputs[9], 'default_value'):
-                group_input_001_1.outputs[9].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[9], 'display_shape'):
-                group_input_001_1.outputs[9].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[9], 'enabled'):
-                group_input_001_1.outputs[9].enabled = True
-            if hasattr(group_input_001_1.outputs[9], 'hide'):
-                group_input_001_1.outputs[9].hide = False
-            if hasattr(group_input_001_1.outputs[9], 'hide_value'):
-                group_input_001_1.outputs[9].hide_value = False
-            if hasattr(group_input_001_1.outputs[9], 'name'):
-                group_input_001_1.outputs[9].name = 'Zone 1 Gradient Out'
-            if hasattr(group_input_001_1.outputs[9], 'show_expanded'):
-                group_input_001_1.outputs[9].show_expanded = False
-            if hasattr(group_input_001_1.outputs[10], 'default_value'):
-                group_input_001_1.outputs[10].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[10], 'display_shape'):
-                group_input_001_1.outputs[10].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[10], 'enabled'):
-                group_input_001_1.outputs[10].enabled = True
-            if hasattr(group_input_001_1.outputs[10], 'hide'):
-                group_input_001_1.outputs[10].hide = False
-            if hasattr(group_input_001_1.outputs[10], 'hide_value'):
-                group_input_001_1.outputs[10].hide_value = False
-            if hasattr(group_input_001_1.outputs[10], 'name'):
-                group_input_001_1.outputs[10].name = 'Zone 1 Rough Out'
-            if hasattr(group_input_001_1.outputs[10], 'show_expanded'):
-                group_input_001_1.outputs[10].show_expanded = False
-            if hasattr(group_input_001_1.outputs[11], 'default_value'):
-                group_input_001_1.outputs[11].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[11], 'display_shape'):
-                group_input_001_1.outputs[11].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[11], 'enabled'):
-                group_input_001_1.outputs[11].enabled = True
-            if hasattr(group_input_001_1.outputs[11], 'hide'):
-                group_input_001_1.outputs[11].hide = False
-            if hasattr(group_input_001_1.outputs[11], 'hide_value'):
-                group_input_001_1.outputs[11].hide_value = False
-            if hasattr(group_input_001_1.outputs[11], 'name'):
-                group_input_001_1.outputs[11].name = 'Zone 1 Norm Out'
-            if hasattr(group_input_001_1.outputs[11], 'show_expanded'):
-                group_input_001_1.outputs[11].show_expanded = False
-            if hasattr(group_input_001_1.outputs[12], 'default_value'):
-                group_input_001_1.outputs[12].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[12], 'display_shape'):
-                group_input_001_1.outputs[12].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[12], 'enabled'):
-                group_input_001_1.outputs[12].enabled = True
-            if hasattr(group_input_001_1.outputs[12], 'hide'):
-                group_input_001_1.outputs[12].hide = False
-            if hasattr(group_input_001_1.outputs[12], 'hide_value'):
-                group_input_001_1.outputs[12].hide_value = False
-            if hasattr(group_input_001_1.outputs[12], 'name'):
-                group_input_001_1.outputs[12].name = 'Zone 1 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[12], 'show_expanded'):
-                group_input_001_1.outputs[12].show_expanded = False
-            if hasattr(group_input_001_1.outputs[13], 'default_value'):
-                group_input_001_1.outputs[13].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[13], 'display_shape'):
-                group_input_001_1.outputs[13].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[13], 'enabled'):
-                group_input_001_1.outputs[13].enabled = True
-            if hasattr(group_input_001_1.outputs[13], 'hide'):
-                group_input_001_1.outputs[13].hide = False
-            if hasattr(group_input_001_1.outputs[13], 'hide_value'):
-                group_input_001_1.outputs[13].hide_value = False
-            if hasattr(group_input_001_1.outputs[13], 'name'):
-                group_input_001_1.outputs[13].name = 'Zone 1 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[13], 'show_expanded'):
-                group_input_001_1.outputs[13].show_expanded = False
-            if hasattr(group_input_001_1.outputs[14], 'default_value'):
-                group_input_001_1.outputs[14].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[14], 'display_shape'):
-                group_input_001_1.outputs[14].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[14], 'enabled'):
-                group_input_001_1.outputs[14].enabled = True
-            if hasattr(group_input_001_1.outputs[14], 'hide'):
-                group_input_001_1.outputs[14].hide = False
-            if hasattr(group_input_001_1.outputs[14], 'hide_value'):
-                group_input_001_1.outputs[14].hide_value = False
-            if hasattr(group_input_001_1.outputs[14], 'name'):
-                group_input_001_1.outputs[14].name = 'Zone 1 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[14], 'show_expanded'):
-                group_input_001_1.outputs[14].show_expanded = False
-            if hasattr(group_input_001_1.outputs[15], 'default_value'):
-                group_input_001_1.outputs[15].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[15], 'display_shape'):
-                group_input_001_1.outputs[15].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[15], 'enabled'):
-                group_input_001_1.outputs[15].enabled = True
-            if hasattr(group_input_001_1.outputs[15], 'hide'):
-                group_input_001_1.outputs[15].hide = False
-            if hasattr(group_input_001_1.outputs[15], 'hide_value'):
-                group_input_001_1.outputs[15].hide_value = False
-            if hasattr(group_input_001_1.outputs[15], 'name'):
-                group_input_001_1.outputs[15].name = 'Zone 1 Metallic'
-            if hasattr(group_input_001_1.outputs[15], 'show_expanded'):
-                group_input_001_1.outputs[15].show_expanded = False
-            if hasattr(group_input_001_1.outputs[16], 'default_value'):
-                group_input_001_1.outputs[16].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[16], 'display_shape'):
-                group_input_001_1.outputs[16].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[16], 'enabled'):
-                group_input_001_1.outputs[16].enabled = True
-            if hasattr(group_input_001_1.outputs[16], 'hide'):
-                group_input_001_1.outputs[16].hide = False
-            if hasattr(group_input_001_1.outputs[16], 'hide_value'):
-                group_input_001_1.outputs[16].hide_value = False
-            if hasattr(group_input_001_1.outputs[16], 'name'):
-                group_input_001_1.outputs[16].name = 'Zone 1 SSS Amount'
-            if hasattr(group_input_001_1.outputs[16], 'show_expanded'):
-                group_input_001_1.outputs[16].show_expanded = False
-            if hasattr(group_input_001_1.outputs[17], 'default_value'):
-                group_input_001_1.outputs[17].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[17], 'display_shape'):
-                group_input_001_1.outputs[17].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[17], 'enabled'):
-                group_input_001_1.outputs[17].enabled = True
-            if hasattr(group_input_001_1.outputs[17], 'hide'):
-                group_input_001_1.outputs[17].hide = False
-            if hasattr(group_input_001_1.outputs[17], 'hide_value'):
-                group_input_001_1.outputs[17].hide_value = False
-            if hasattr(group_input_001_1.outputs[17], 'name'):
-                group_input_001_1.outputs[17].name = 'Zone 1 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[17], 'show_expanded'):
-                group_input_001_1.outputs[17].show_expanded = False
-            if hasattr(group_input_001_1.outputs[18], 'default_value'):
-                group_input_001_1.outputs[18].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[18], 'display_shape'):
-                group_input_001_1.outputs[18].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[18], 'enabled'):
-                group_input_001_1.outputs[18].enabled = True
-            if hasattr(group_input_001_1.outputs[18], 'hide'):
-                group_input_001_1.outputs[18].hide = False
-            if hasattr(group_input_001_1.outputs[18], 'hide_value'):
-                group_input_001_1.outputs[18].hide_value = False
-            if hasattr(group_input_001_1.outputs[18], 'name'):
-                group_input_001_1.outputs[18].name = 'Zone 1 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[18], 'show_expanded'):
-                group_input_001_1.outputs[18].show_expanded = False
-            if hasattr(group_input_001_1.outputs[19], 'default_value'):
-                group_input_001_1.outputs[19].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[19], 'display_shape'):
-                group_input_001_1.outputs[19].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[19], 'enabled'):
-                group_input_001_1.outputs[19].enabled = True
-            if hasattr(group_input_001_1.outputs[19], 'hide'):
-                group_input_001_1.outputs[19].hide = False
-            if hasattr(group_input_001_1.outputs[19], 'hide_value'):
-                group_input_001_1.outputs[19].hide_value = False
-            if hasattr(group_input_001_1.outputs[19], 'name'):
-                group_input_001_1.outputs[19].name = 'Zone 1 Top Color'
-            if hasattr(group_input_001_1.outputs[19], 'show_expanded'):
-                group_input_001_1.outputs[19].show_expanded = False
-            if hasattr(group_input_001_1.outputs[20], 'default_value'):
-                group_input_001_1.outputs[20].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[20], 'display_shape'):
-                group_input_001_1.outputs[20].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[20], 'enabled'):
-                group_input_001_1.outputs[20].enabled = True
-            if hasattr(group_input_001_1.outputs[20], 'hide'):
-                group_input_001_1.outputs[20].hide = False
-            if hasattr(group_input_001_1.outputs[20], 'hide_value'):
-                group_input_001_1.outputs[20].hide_value = False
-            if hasattr(group_input_001_1.outputs[20], 'name'):
-                group_input_001_1.outputs[20].name = 'Zone 1 Mid Color'
-            if hasattr(group_input_001_1.outputs[20], 'show_expanded'):
-                group_input_001_1.outputs[20].show_expanded = False
-            if hasattr(group_input_001_1.outputs[21], 'default_value'):
-                group_input_001_1.outputs[21].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[21], 'display_shape'):
-                group_input_001_1.outputs[21].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[21], 'enabled'):
-                group_input_001_1.outputs[21].enabled = True
-            if hasattr(group_input_001_1.outputs[21], 'hide'):
-                group_input_001_1.outputs[21].hide = False
-            if hasattr(group_input_001_1.outputs[21], 'hide_value'):
-                group_input_001_1.outputs[21].hide_value = False
-            if hasattr(group_input_001_1.outputs[21], 'name'):
-                group_input_001_1.outputs[21].name = 'Zone 1 Bot Color'
-            if hasattr(group_input_001_1.outputs[21], 'show_expanded'):
-                group_input_001_1.outputs[21].show_expanded = False
-            if hasattr(group_input_001_1.outputs[22], 'default_value'):
-                group_input_001_1.outputs[22].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[22], 'display_shape'):
-                group_input_001_1.outputs[22].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[22], 'enabled'):
-                group_input_001_1.outputs[22].enabled = True
-            if hasattr(group_input_001_1.outputs[22], 'hide'):
-                group_input_001_1.outputs[22].hide = False
-            if hasattr(group_input_001_1.outputs[22], 'hide_value'):
-                group_input_001_1.outputs[22].hide_value = False
-            if hasattr(group_input_001_1.outputs[22], 'name'):
-                group_input_001_1.outputs[22].name = 'Zone 1 ScratchColor'
-            if hasattr(group_input_001_1.outputs[22], 'show_expanded'):
-                group_input_001_1.outputs[22].show_expanded = False
-            if hasattr(group_input_001_1.outputs[23], 'default_value'):
-                group_input_001_1.outputs[23].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[23], 'display_shape'):
-                group_input_001_1.outputs[23].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[23], 'enabled'):
-                group_input_001_1.outputs[23].enabled = True
-            if hasattr(group_input_001_1.outputs[23], 'hide'):
-                group_input_001_1.outputs[23].hide = False
-            if hasattr(group_input_001_1.outputs[23], 'hide_value'):
-                group_input_001_1.outputs[23].hide_value = False
-            if hasattr(group_input_001_1.outputs[23], 'name'):
-                group_input_001_1.outputs[23].name = 'Zone 1 SSS Color'
-            if hasattr(group_input_001_1.outputs[23], 'show_expanded'):
-                group_input_001_1.outputs[23].show_expanded = False
-            if hasattr(group_input_001_1.outputs[24], 'default_value'):
-                group_input_001_1.outputs[24].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[24], 'display_shape'):
-                group_input_001_1.outputs[24].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[24], 'enabled'):
-                group_input_001_1.outputs[24].enabled = True
-            if hasattr(group_input_001_1.outputs[24], 'hide'):
-                group_input_001_1.outputs[24].hide = False
-            if hasattr(group_input_001_1.outputs[24], 'hide_value'):
-                group_input_001_1.outputs[24].hide_value = False
-            if hasattr(group_input_001_1.outputs[24], 'name'):
-                group_input_001_1.outputs[24].name = 'Zone 2 Toggle'
-            if hasattr(group_input_001_1.outputs[24], 'show_expanded'):
-                group_input_001_1.outputs[24].show_expanded = False
-            if hasattr(group_input_001_1.outputs[25], 'default_value'):
-                group_input_001_1.outputs[25].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[25], 'display_shape'):
-                group_input_001_1.outputs[25].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[25], 'enabled'):
-                group_input_001_1.outputs[25].enabled = True
-            if hasattr(group_input_001_1.outputs[25], 'hide'):
-                group_input_001_1.outputs[25].hide = False
-            if hasattr(group_input_001_1.outputs[25], 'hide_value'):
-                group_input_001_1.outputs[25].hide_value = False
-            if hasattr(group_input_001_1.outputs[25], 'name'):
-                group_input_001_1.outputs[25].name = 'Zone 2 Gradient Out'
-            if hasattr(group_input_001_1.outputs[25], 'show_expanded'):
-                group_input_001_1.outputs[25].show_expanded = False
-            if hasattr(group_input_001_1.outputs[26], 'default_value'):
-                group_input_001_1.outputs[26].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[26], 'display_shape'):
-                group_input_001_1.outputs[26].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[26], 'enabled'):
-                group_input_001_1.outputs[26].enabled = True
-            if hasattr(group_input_001_1.outputs[26], 'hide'):
-                group_input_001_1.outputs[26].hide = False
-            if hasattr(group_input_001_1.outputs[26], 'hide_value'):
-                group_input_001_1.outputs[26].hide_value = False
-            if hasattr(group_input_001_1.outputs[26], 'name'):
-                group_input_001_1.outputs[26].name = 'Zone 2 Rough Out'
-            if hasattr(group_input_001_1.outputs[26], 'show_expanded'):
-                group_input_001_1.outputs[26].show_expanded = False
-            if hasattr(group_input_001_1.outputs[27], 'default_value'):
-                group_input_001_1.outputs[27].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[27], 'display_shape'):
-                group_input_001_1.outputs[27].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[27], 'enabled'):
-                group_input_001_1.outputs[27].enabled = True
-            if hasattr(group_input_001_1.outputs[27], 'hide'):
-                group_input_001_1.outputs[27].hide = False
-            if hasattr(group_input_001_1.outputs[27], 'hide_value'):
-                group_input_001_1.outputs[27].hide_value = False
-            if hasattr(group_input_001_1.outputs[27], 'name'):
-                group_input_001_1.outputs[27].name = 'Zone 2 Norm Out'
-            if hasattr(group_input_001_1.outputs[27], 'show_expanded'):
-                group_input_001_1.outputs[27].show_expanded = False
-            if hasattr(group_input_001_1.outputs[28], 'default_value'):
-                group_input_001_1.outputs[28].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[28], 'display_shape'):
-                group_input_001_1.outputs[28].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[28], 'enabled'):
-                group_input_001_1.outputs[28].enabled = True
-            if hasattr(group_input_001_1.outputs[28], 'hide'):
-                group_input_001_1.outputs[28].hide = False
-            if hasattr(group_input_001_1.outputs[28], 'hide_value'):
-                group_input_001_1.outputs[28].hide_value = False
-            if hasattr(group_input_001_1.outputs[28], 'name'):
-                group_input_001_1.outputs[28].name = 'Zone 2 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[28], 'show_expanded'):
-                group_input_001_1.outputs[28].show_expanded = False
-            if hasattr(group_input_001_1.outputs[29], 'default_value'):
-                group_input_001_1.outputs[29].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[29], 'display_shape'):
-                group_input_001_1.outputs[29].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[29], 'enabled'):
-                group_input_001_1.outputs[29].enabled = True
-            if hasattr(group_input_001_1.outputs[29], 'hide'):
-                group_input_001_1.outputs[29].hide = False
-            if hasattr(group_input_001_1.outputs[29], 'hide_value'):
-                group_input_001_1.outputs[29].hide_value = False
-            if hasattr(group_input_001_1.outputs[29], 'name'):
-                group_input_001_1.outputs[29].name = 'Zone 2 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[29], 'show_expanded'):
-                group_input_001_1.outputs[29].show_expanded = False
-            if hasattr(group_input_001_1.outputs[30], 'default_value'):
-                group_input_001_1.outputs[30].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[30], 'display_shape'):
-                group_input_001_1.outputs[30].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[30], 'enabled'):
-                group_input_001_1.outputs[30].enabled = True
-            if hasattr(group_input_001_1.outputs[30], 'hide'):
-                group_input_001_1.outputs[30].hide = False
-            if hasattr(group_input_001_1.outputs[30], 'hide_value'):
-                group_input_001_1.outputs[30].hide_value = False
-            if hasattr(group_input_001_1.outputs[30], 'name'):
-                group_input_001_1.outputs[30].name = 'Zone 2 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[30], 'show_expanded'):
-                group_input_001_1.outputs[30].show_expanded = False
-            if hasattr(group_input_001_1.outputs[31], 'default_value'):
-                group_input_001_1.outputs[31].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[31], 'display_shape'):
-                group_input_001_1.outputs[31].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[31], 'enabled'):
-                group_input_001_1.outputs[31].enabled = True
-            if hasattr(group_input_001_1.outputs[31], 'hide'):
-                group_input_001_1.outputs[31].hide = False
-            if hasattr(group_input_001_1.outputs[31], 'hide_value'):
-                group_input_001_1.outputs[31].hide_value = False
-            if hasattr(group_input_001_1.outputs[31], 'name'):
-                group_input_001_1.outputs[31].name = 'Zone 2 Metallic'
-            if hasattr(group_input_001_1.outputs[31], 'show_expanded'):
-                group_input_001_1.outputs[31].show_expanded = False
-            if hasattr(group_input_001_1.outputs[32], 'default_value'):
-                group_input_001_1.outputs[32].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[32], 'display_shape'):
-                group_input_001_1.outputs[32].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[32], 'enabled'):
-                group_input_001_1.outputs[32].enabled = True
-            if hasattr(group_input_001_1.outputs[32], 'hide'):
-                group_input_001_1.outputs[32].hide = False
-            if hasattr(group_input_001_1.outputs[32], 'hide_value'):
-                group_input_001_1.outputs[32].hide_value = False
-            if hasattr(group_input_001_1.outputs[32], 'name'):
-                group_input_001_1.outputs[32].name = 'Zone 2 SSS Amount'
-            if hasattr(group_input_001_1.outputs[32], 'show_expanded'):
-                group_input_001_1.outputs[32].show_expanded = False
-            if hasattr(group_input_001_1.outputs[33], 'default_value'):
-                group_input_001_1.outputs[33].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[33], 'display_shape'):
-                group_input_001_1.outputs[33].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[33], 'enabled'):
-                group_input_001_1.outputs[33].enabled = True
-            if hasattr(group_input_001_1.outputs[33], 'hide'):
-                group_input_001_1.outputs[33].hide = False
-            if hasattr(group_input_001_1.outputs[33], 'hide_value'):
-                group_input_001_1.outputs[33].hide_value = False
-            if hasattr(group_input_001_1.outputs[33], 'name'):
-                group_input_001_1.outputs[33].name = 'Zone 2 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[33], 'show_expanded'):
-                group_input_001_1.outputs[33].show_expanded = False
-            if hasattr(group_input_001_1.outputs[34], 'default_value'):
-                group_input_001_1.outputs[34].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[34], 'display_shape'):
-                group_input_001_1.outputs[34].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[34], 'enabled'):
-                group_input_001_1.outputs[34].enabled = True
-            if hasattr(group_input_001_1.outputs[34], 'hide'):
-                group_input_001_1.outputs[34].hide = False
-            if hasattr(group_input_001_1.outputs[34], 'hide_value'):
-                group_input_001_1.outputs[34].hide_value = False
-            if hasattr(group_input_001_1.outputs[34], 'name'):
-                group_input_001_1.outputs[34].name = 'Zone 2 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[34], 'show_expanded'):
-                group_input_001_1.outputs[34].show_expanded = False
-            if hasattr(group_input_001_1.outputs[35], 'default_value'):
-                group_input_001_1.outputs[35].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[35], 'display_shape'):
-                group_input_001_1.outputs[35].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[35], 'enabled'):
-                group_input_001_1.outputs[35].enabled = True
-            if hasattr(group_input_001_1.outputs[35], 'hide'):
-                group_input_001_1.outputs[35].hide = False
-            if hasattr(group_input_001_1.outputs[35], 'hide_value'):
-                group_input_001_1.outputs[35].hide_value = False
-            if hasattr(group_input_001_1.outputs[35], 'name'):
-                group_input_001_1.outputs[35].name = 'Zone 2 Top Color'
-            if hasattr(group_input_001_1.outputs[35], 'show_expanded'):
-                group_input_001_1.outputs[35].show_expanded = False
-            if hasattr(group_input_001_1.outputs[36], 'default_value'):
-                group_input_001_1.outputs[36].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[36], 'display_shape'):
-                group_input_001_1.outputs[36].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[36], 'enabled'):
-                group_input_001_1.outputs[36].enabled = True
-            if hasattr(group_input_001_1.outputs[36], 'hide'):
-                group_input_001_1.outputs[36].hide = False
-            if hasattr(group_input_001_1.outputs[36], 'hide_value'):
-                group_input_001_1.outputs[36].hide_value = False
-            if hasattr(group_input_001_1.outputs[36], 'name'):
-                group_input_001_1.outputs[36].name = 'Zone 2 Mid Color'
-            if hasattr(group_input_001_1.outputs[36], 'show_expanded'):
-                group_input_001_1.outputs[36].show_expanded = False
-            if hasattr(group_input_001_1.outputs[37], 'default_value'):
-                group_input_001_1.outputs[37].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[37], 'display_shape'):
-                group_input_001_1.outputs[37].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[37], 'enabled'):
-                group_input_001_1.outputs[37].enabled = True
-            if hasattr(group_input_001_1.outputs[37], 'hide'):
-                group_input_001_1.outputs[37].hide = False
-            if hasattr(group_input_001_1.outputs[37], 'hide_value'):
-                group_input_001_1.outputs[37].hide_value = False
-            if hasattr(group_input_001_1.outputs[37], 'name'):
-                group_input_001_1.outputs[37].name = 'Zone 2 Bot Color'
-            if hasattr(group_input_001_1.outputs[37], 'show_expanded'):
-                group_input_001_1.outputs[37].show_expanded = False
-            if hasattr(group_input_001_1.outputs[38], 'default_value'):
-                group_input_001_1.outputs[38].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[38], 'display_shape'):
-                group_input_001_1.outputs[38].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[38], 'enabled'):
-                group_input_001_1.outputs[38].enabled = True
-            if hasattr(group_input_001_1.outputs[38], 'hide'):
-                group_input_001_1.outputs[38].hide = False
-            if hasattr(group_input_001_1.outputs[38], 'hide_value'):
-                group_input_001_1.outputs[38].hide_value = False
-            if hasattr(group_input_001_1.outputs[38], 'name'):
-                group_input_001_1.outputs[38].name = 'Zone 2 ScratchColor'
-            if hasattr(group_input_001_1.outputs[38], 'show_expanded'):
-                group_input_001_1.outputs[38].show_expanded = False
-            if hasattr(group_input_001_1.outputs[39], 'default_value'):
-                group_input_001_1.outputs[39].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[39], 'display_shape'):
-                group_input_001_1.outputs[39].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[39], 'enabled'):
-                group_input_001_1.outputs[39].enabled = True
-            if hasattr(group_input_001_1.outputs[39], 'hide'):
-                group_input_001_1.outputs[39].hide = False
-            if hasattr(group_input_001_1.outputs[39], 'hide_value'):
-                group_input_001_1.outputs[39].hide_value = False
-            if hasattr(group_input_001_1.outputs[39], 'name'):
-                group_input_001_1.outputs[39].name = 'Zone 2 SSS Color'
-            if hasattr(group_input_001_1.outputs[39], 'show_expanded'):
-                group_input_001_1.outputs[39].show_expanded = False
-            if hasattr(group_input_001_1.outputs[40], 'default_value'):
-                group_input_001_1.outputs[40].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[40], 'display_shape'):
-                group_input_001_1.outputs[40].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[40], 'enabled'):
-                group_input_001_1.outputs[40].enabled = True
-            if hasattr(group_input_001_1.outputs[40], 'hide'):
-                group_input_001_1.outputs[40].hide = False
-            if hasattr(group_input_001_1.outputs[40], 'hide_value'):
-                group_input_001_1.outputs[40].hide_value = False
-            if hasattr(group_input_001_1.outputs[40], 'name'):
-                group_input_001_1.outputs[40].name = 'Zone 3 Toggle'
-            if hasattr(group_input_001_1.outputs[40], 'show_expanded'):
-                group_input_001_1.outputs[40].show_expanded = False
-            if hasattr(group_input_001_1.outputs[41], 'default_value'):
-                group_input_001_1.outputs[41].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[41], 'display_shape'):
-                group_input_001_1.outputs[41].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[41], 'enabled'):
-                group_input_001_1.outputs[41].enabled = True
-            if hasattr(group_input_001_1.outputs[41], 'hide'):
-                group_input_001_1.outputs[41].hide = False
-            if hasattr(group_input_001_1.outputs[41], 'hide_value'):
-                group_input_001_1.outputs[41].hide_value = False
-            if hasattr(group_input_001_1.outputs[41], 'name'):
-                group_input_001_1.outputs[41].name = 'Zone 3 Gradient Out'
-            if hasattr(group_input_001_1.outputs[41], 'show_expanded'):
-                group_input_001_1.outputs[41].show_expanded = False
-            if hasattr(group_input_001_1.outputs[42], 'default_value'):
-                group_input_001_1.outputs[42].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[42], 'display_shape'):
-                group_input_001_1.outputs[42].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[42], 'enabled'):
-                group_input_001_1.outputs[42].enabled = True
-            if hasattr(group_input_001_1.outputs[42], 'hide'):
-                group_input_001_1.outputs[42].hide = False
-            if hasattr(group_input_001_1.outputs[42], 'hide_value'):
-                group_input_001_1.outputs[42].hide_value = False
-            if hasattr(group_input_001_1.outputs[42], 'name'):
-                group_input_001_1.outputs[42].name = 'Zone 3 Rough Out'
-            if hasattr(group_input_001_1.outputs[42], 'show_expanded'):
-                group_input_001_1.outputs[42].show_expanded = False
-            if hasattr(group_input_001_1.outputs[43], 'default_value'):
-                group_input_001_1.outputs[43].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[43], 'display_shape'):
-                group_input_001_1.outputs[43].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[43], 'enabled'):
-                group_input_001_1.outputs[43].enabled = True
-            if hasattr(group_input_001_1.outputs[43], 'hide'):
-                group_input_001_1.outputs[43].hide = False
-            if hasattr(group_input_001_1.outputs[43], 'hide_value'):
-                group_input_001_1.outputs[43].hide_value = False
-            if hasattr(group_input_001_1.outputs[43], 'name'):
-                group_input_001_1.outputs[43].name = 'Zone 3 Norm Out'
-            if hasattr(group_input_001_1.outputs[43], 'show_expanded'):
-                group_input_001_1.outputs[43].show_expanded = False
-            if hasattr(group_input_001_1.outputs[44], 'default_value'):
-                group_input_001_1.outputs[44].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[44], 'display_shape'):
-                group_input_001_1.outputs[44].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[44], 'enabled'):
-                group_input_001_1.outputs[44].enabled = True
-            if hasattr(group_input_001_1.outputs[44], 'hide'):
-                group_input_001_1.outputs[44].hide = False
-            if hasattr(group_input_001_1.outputs[44], 'hide_value'):
-                group_input_001_1.outputs[44].hide_value = False
-            if hasattr(group_input_001_1.outputs[44], 'name'):
-                group_input_001_1.outputs[44].name = 'Zone 3 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[44], 'show_expanded'):
-                group_input_001_1.outputs[44].show_expanded = False
-            if hasattr(group_input_001_1.outputs[45], 'default_value'):
-                group_input_001_1.outputs[45].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[45], 'display_shape'):
-                group_input_001_1.outputs[45].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[45], 'enabled'):
-                group_input_001_1.outputs[45].enabled = True
-            if hasattr(group_input_001_1.outputs[45], 'hide'):
-                group_input_001_1.outputs[45].hide = False
-            if hasattr(group_input_001_1.outputs[45], 'hide_value'):
-                group_input_001_1.outputs[45].hide_value = False
-            if hasattr(group_input_001_1.outputs[45], 'name'):
-                group_input_001_1.outputs[45].name = 'Zone 3 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[45], 'show_expanded'):
-                group_input_001_1.outputs[45].show_expanded = False
-            if hasattr(group_input_001_1.outputs[46], 'default_value'):
-                group_input_001_1.outputs[46].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[46], 'display_shape'):
-                group_input_001_1.outputs[46].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[46], 'enabled'):
-                group_input_001_1.outputs[46].enabled = True
-            if hasattr(group_input_001_1.outputs[46], 'hide'):
-                group_input_001_1.outputs[46].hide = False
-            if hasattr(group_input_001_1.outputs[46], 'hide_value'):
-                group_input_001_1.outputs[46].hide_value = False
-            if hasattr(group_input_001_1.outputs[46], 'name'):
-                group_input_001_1.outputs[46].name = 'Zone 3 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[46], 'show_expanded'):
-                group_input_001_1.outputs[46].show_expanded = False
-            if hasattr(group_input_001_1.outputs[47], 'default_value'):
-                group_input_001_1.outputs[47].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[47], 'display_shape'):
-                group_input_001_1.outputs[47].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[47], 'enabled'):
-                group_input_001_1.outputs[47].enabled = True
-            if hasattr(group_input_001_1.outputs[47], 'hide'):
-                group_input_001_1.outputs[47].hide = False
-            if hasattr(group_input_001_1.outputs[47], 'hide_value'):
-                group_input_001_1.outputs[47].hide_value = False
-            if hasattr(group_input_001_1.outputs[47], 'name'):
-                group_input_001_1.outputs[47].name = 'Zone 3 Metallic'
-            if hasattr(group_input_001_1.outputs[47], 'show_expanded'):
-                group_input_001_1.outputs[47].show_expanded = False
-            if hasattr(group_input_001_1.outputs[48], 'default_value'):
-                group_input_001_1.outputs[48].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[48], 'display_shape'):
-                group_input_001_1.outputs[48].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[48], 'enabled'):
-                group_input_001_1.outputs[48].enabled = True
-            if hasattr(group_input_001_1.outputs[48], 'hide'):
-                group_input_001_1.outputs[48].hide = False
-            if hasattr(group_input_001_1.outputs[48], 'hide_value'):
-                group_input_001_1.outputs[48].hide_value = False
-            if hasattr(group_input_001_1.outputs[48], 'name'):
-                group_input_001_1.outputs[48].name = 'Zone 3 SSS Amount'
-            if hasattr(group_input_001_1.outputs[48], 'show_expanded'):
-                group_input_001_1.outputs[48].show_expanded = False
-            if hasattr(group_input_001_1.outputs[49], 'default_value'):
-                group_input_001_1.outputs[49].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[49], 'display_shape'):
-                group_input_001_1.outputs[49].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[49], 'enabled'):
-                group_input_001_1.outputs[49].enabled = True
-            if hasattr(group_input_001_1.outputs[49], 'hide'):
-                group_input_001_1.outputs[49].hide = False
-            if hasattr(group_input_001_1.outputs[49], 'hide_value'):
-                group_input_001_1.outputs[49].hide_value = False
-            if hasattr(group_input_001_1.outputs[49], 'name'):
-                group_input_001_1.outputs[49].name = 'Zone 3 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[49], 'show_expanded'):
-                group_input_001_1.outputs[49].show_expanded = False
-            if hasattr(group_input_001_1.outputs[50], 'default_value'):
-                group_input_001_1.outputs[50].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[50], 'display_shape'):
-                group_input_001_1.outputs[50].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[50], 'enabled'):
-                group_input_001_1.outputs[50].enabled = True
-            if hasattr(group_input_001_1.outputs[50], 'hide'):
-                group_input_001_1.outputs[50].hide = False
-            if hasattr(group_input_001_1.outputs[50], 'hide_value'):
-                group_input_001_1.outputs[50].hide_value = False
-            if hasattr(group_input_001_1.outputs[50], 'name'):
-                group_input_001_1.outputs[50].name = 'Zone 3 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[50], 'show_expanded'):
-                group_input_001_1.outputs[50].show_expanded = False
-            if hasattr(group_input_001_1.outputs[51], 'default_value'):
-                group_input_001_1.outputs[51].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[51], 'display_shape'):
-                group_input_001_1.outputs[51].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[51], 'enabled'):
-                group_input_001_1.outputs[51].enabled = True
-            if hasattr(group_input_001_1.outputs[51], 'hide'):
-                group_input_001_1.outputs[51].hide = False
-            if hasattr(group_input_001_1.outputs[51], 'hide_value'):
-                group_input_001_1.outputs[51].hide_value = False
-            if hasattr(group_input_001_1.outputs[51], 'name'):
-                group_input_001_1.outputs[51].name = 'Zone 3 Top Color'
-            if hasattr(group_input_001_1.outputs[51], 'show_expanded'):
-                group_input_001_1.outputs[51].show_expanded = False
-            if hasattr(group_input_001_1.outputs[52], 'default_value'):
-                group_input_001_1.outputs[52].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[52], 'display_shape'):
-                group_input_001_1.outputs[52].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[52], 'enabled'):
-                group_input_001_1.outputs[52].enabled = True
-            if hasattr(group_input_001_1.outputs[52], 'hide'):
-                group_input_001_1.outputs[52].hide = False
-            if hasattr(group_input_001_1.outputs[52], 'hide_value'):
-                group_input_001_1.outputs[52].hide_value = False
-            if hasattr(group_input_001_1.outputs[52], 'name'):
-                group_input_001_1.outputs[52].name = 'Zone 3 Mid Color'
-            if hasattr(group_input_001_1.outputs[52], 'show_expanded'):
-                group_input_001_1.outputs[52].show_expanded = False
-            if hasattr(group_input_001_1.outputs[53], 'default_value'):
-                group_input_001_1.outputs[53].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[53], 'display_shape'):
-                group_input_001_1.outputs[53].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[53], 'enabled'):
-                group_input_001_1.outputs[53].enabled = True
-            if hasattr(group_input_001_1.outputs[53], 'hide'):
-                group_input_001_1.outputs[53].hide = False
-            if hasattr(group_input_001_1.outputs[53], 'hide_value'):
-                group_input_001_1.outputs[53].hide_value = False
-            if hasattr(group_input_001_1.outputs[53], 'name'):
-                group_input_001_1.outputs[53].name = 'Zone 3 Bot Color'
-            if hasattr(group_input_001_1.outputs[53], 'show_expanded'):
-                group_input_001_1.outputs[53].show_expanded = False
-            if hasattr(group_input_001_1.outputs[54], 'default_value'):
-                group_input_001_1.outputs[54].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[54], 'display_shape'):
-                group_input_001_1.outputs[54].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[54], 'enabled'):
-                group_input_001_1.outputs[54].enabled = True
-            if hasattr(group_input_001_1.outputs[54], 'hide'):
-                group_input_001_1.outputs[54].hide = False
-            if hasattr(group_input_001_1.outputs[54], 'hide_value'):
-                group_input_001_1.outputs[54].hide_value = False
-            if hasattr(group_input_001_1.outputs[54], 'name'):
-                group_input_001_1.outputs[54].name = 'Zone 3 ScratchColor'
-            if hasattr(group_input_001_1.outputs[54], 'show_expanded'):
-                group_input_001_1.outputs[54].show_expanded = False
-            if hasattr(group_input_001_1.outputs[55], 'default_value'):
-                group_input_001_1.outputs[55].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[55], 'display_shape'):
-                group_input_001_1.outputs[55].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[55], 'enabled'):
-                group_input_001_1.outputs[55].enabled = True
-            if hasattr(group_input_001_1.outputs[55], 'hide'):
-                group_input_001_1.outputs[55].hide = False
-            if hasattr(group_input_001_1.outputs[55], 'hide_value'):
-                group_input_001_1.outputs[55].hide_value = False
-            if hasattr(group_input_001_1.outputs[55], 'name'):
-                group_input_001_1.outputs[55].name = 'Zone 3 SSS Color'
-            if hasattr(group_input_001_1.outputs[55], 'show_expanded'):
-                group_input_001_1.outputs[55].show_expanded = False
-            if hasattr(group_input_001_1.outputs[56], 'default_value'):
-                group_input_001_1.outputs[56].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[56], 'display_shape'):
-                group_input_001_1.outputs[56].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[56], 'enabled'):
-                group_input_001_1.outputs[56].enabled = True
-            if hasattr(group_input_001_1.outputs[56], 'hide'):
-                group_input_001_1.outputs[56].hide = False
-            if hasattr(group_input_001_1.outputs[56], 'hide_value'):
-                group_input_001_1.outputs[56].hide_value = False
-            if hasattr(group_input_001_1.outputs[56], 'name'):
-                group_input_001_1.outputs[56].name = 'Zone 4 Toggle'
-            if hasattr(group_input_001_1.outputs[56], 'show_expanded'):
-                group_input_001_1.outputs[56].show_expanded = False
-            if hasattr(group_input_001_1.outputs[57], 'default_value'):
-                group_input_001_1.outputs[57].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[57], 'display_shape'):
-                group_input_001_1.outputs[57].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[57], 'enabled'):
-                group_input_001_1.outputs[57].enabled = True
-            if hasattr(group_input_001_1.outputs[57], 'hide'):
-                group_input_001_1.outputs[57].hide = False
-            if hasattr(group_input_001_1.outputs[57], 'hide_value'):
-                group_input_001_1.outputs[57].hide_value = False
-            if hasattr(group_input_001_1.outputs[57], 'name'):
-                group_input_001_1.outputs[57].name = 'Zone 4 Gradient Out'
-            if hasattr(group_input_001_1.outputs[57], 'show_expanded'):
-                group_input_001_1.outputs[57].show_expanded = False
-            if hasattr(group_input_001_1.outputs[58], 'default_value'):
-                group_input_001_1.outputs[58].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[58], 'display_shape'):
-                group_input_001_1.outputs[58].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[58], 'enabled'):
-                group_input_001_1.outputs[58].enabled = True
-            if hasattr(group_input_001_1.outputs[58], 'hide'):
-                group_input_001_1.outputs[58].hide = False
-            if hasattr(group_input_001_1.outputs[58], 'hide_value'):
-                group_input_001_1.outputs[58].hide_value = False
-            if hasattr(group_input_001_1.outputs[58], 'name'):
-                group_input_001_1.outputs[58].name = 'Zone 4 Rough Out'
-            if hasattr(group_input_001_1.outputs[58], 'show_expanded'):
-                group_input_001_1.outputs[58].show_expanded = False
-            if hasattr(group_input_001_1.outputs[59], 'default_value'):
-                group_input_001_1.outputs[59].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[59], 'display_shape'):
-                group_input_001_1.outputs[59].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[59], 'enabled'):
-                group_input_001_1.outputs[59].enabled = True
-            if hasattr(group_input_001_1.outputs[59], 'hide'):
-                group_input_001_1.outputs[59].hide = False
-            if hasattr(group_input_001_1.outputs[59], 'hide_value'):
-                group_input_001_1.outputs[59].hide_value = False
-            if hasattr(group_input_001_1.outputs[59], 'name'):
-                group_input_001_1.outputs[59].name = 'Zone 4 Norm Out'
-            if hasattr(group_input_001_1.outputs[59], 'show_expanded'):
-                group_input_001_1.outputs[59].show_expanded = False
-            if hasattr(group_input_001_1.outputs[60], 'default_value'):
-                group_input_001_1.outputs[60].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[60], 'display_shape'):
-                group_input_001_1.outputs[60].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[60], 'enabled'):
-                group_input_001_1.outputs[60].enabled = True
-            if hasattr(group_input_001_1.outputs[60], 'hide'):
-                group_input_001_1.outputs[60].hide = False
-            if hasattr(group_input_001_1.outputs[60], 'hide_value'):
-                group_input_001_1.outputs[60].hide_value = False
-            if hasattr(group_input_001_1.outputs[60], 'name'):
-                group_input_001_1.outputs[60].name = 'Zone 4 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[60], 'show_expanded'):
-                group_input_001_1.outputs[60].show_expanded = False
-            if hasattr(group_input_001_1.outputs[61], 'default_value'):
-                group_input_001_1.outputs[61].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[61], 'display_shape'):
-                group_input_001_1.outputs[61].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[61], 'enabled'):
-                group_input_001_1.outputs[61].enabled = True
-            if hasattr(group_input_001_1.outputs[61], 'hide'):
-                group_input_001_1.outputs[61].hide = False
-            if hasattr(group_input_001_1.outputs[61], 'hide_value'):
-                group_input_001_1.outputs[61].hide_value = False
-            if hasattr(group_input_001_1.outputs[61], 'name'):
-                group_input_001_1.outputs[61].name = 'Zone 4 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[61], 'show_expanded'):
-                group_input_001_1.outputs[61].show_expanded = False
-            if hasattr(group_input_001_1.outputs[62], 'default_value'):
-                group_input_001_1.outputs[62].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[62], 'display_shape'):
-                group_input_001_1.outputs[62].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[62], 'enabled'):
-                group_input_001_1.outputs[62].enabled = True
-            if hasattr(group_input_001_1.outputs[62], 'hide'):
-                group_input_001_1.outputs[62].hide = False
-            if hasattr(group_input_001_1.outputs[62], 'hide_value'):
-                group_input_001_1.outputs[62].hide_value = False
-            if hasattr(group_input_001_1.outputs[62], 'name'):
-                group_input_001_1.outputs[62].name = 'Zone 4 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[62], 'show_expanded'):
-                group_input_001_1.outputs[62].show_expanded = False
-            if hasattr(group_input_001_1.outputs[63], 'default_value'):
-                group_input_001_1.outputs[63].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[63], 'display_shape'):
-                group_input_001_1.outputs[63].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[63], 'enabled'):
-                group_input_001_1.outputs[63].enabled = True
-            if hasattr(group_input_001_1.outputs[63], 'hide'):
-                group_input_001_1.outputs[63].hide = False
-            if hasattr(group_input_001_1.outputs[63], 'hide_value'):
-                group_input_001_1.outputs[63].hide_value = False
-            if hasattr(group_input_001_1.outputs[63], 'name'):
-                group_input_001_1.outputs[63].name = 'Zone 4 Metallic'
-            if hasattr(group_input_001_1.outputs[63], 'show_expanded'):
-                group_input_001_1.outputs[63].show_expanded = False
-            if hasattr(group_input_001_1.outputs[64], 'default_value'):
-                group_input_001_1.outputs[64].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[64], 'display_shape'):
-                group_input_001_1.outputs[64].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[64], 'enabled'):
-                group_input_001_1.outputs[64].enabled = True
-            if hasattr(group_input_001_1.outputs[64], 'hide'):
-                group_input_001_1.outputs[64].hide = False
-            if hasattr(group_input_001_1.outputs[64], 'hide_value'):
-                group_input_001_1.outputs[64].hide_value = False
-            if hasattr(group_input_001_1.outputs[64], 'name'):
-                group_input_001_1.outputs[64].name = 'Zone 4 SSS Amount'
-            if hasattr(group_input_001_1.outputs[64], 'show_expanded'):
-                group_input_001_1.outputs[64].show_expanded = False
-            if hasattr(group_input_001_1.outputs[65], 'default_value'):
-                group_input_001_1.outputs[65].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[65], 'display_shape'):
-                group_input_001_1.outputs[65].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[65], 'enabled'):
-                group_input_001_1.outputs[65].enabled = True
-            if hasattr(group_input_001_1.outputs[65], 'hide'):
-                group_input_001_1.outputs[65].hide = False
-            if hasattr(group_input_001_1.outputs[65], 'hide_value'):
-                group_input_001_1.outputs[65].hide_value = False
-            if hasattr(group_input_001_1.outputs[65], 'name'):
-                group_input_001_1.outputs[65].name = 'Zone 4 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[65], 'show_expanded'):
-                group_input_001_1.outputs[65].show_expanded = False
-            if hasattr(group_input_001_1.outputs[66], 'default_value'):
-                group_input_001_1.outputs[66].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[66], 'display_shape'):
-                group_input_001_1.outputs[66].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[66], 'enabled'):
-                group_input_001_1.outputs[66].enabled = True
-            if hasattr(group_input_001_1.outputs[66], 'hide'):
-                group_input_001_1.outputs[66].hide = False
-            if hasattr(group_input_001_1.outputs[66], 'hide_value'):
-                group_input_001_1.outputs[66].hide_value = False
-            if hasattr(group_input_001_1.outputs[66], 'name'):
-                group_input_001_1.outputs[66].name = 'Zone 4 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[66], 'show_expanded'):
-                group_input_001_1.outputs[66].show_expanded = False
-            if hasattr(group_input_001_1.outputs[67], 'default_value'):
-                group_input_001_1.outputs[67].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[67], 'display_shape'):
-                group_input_001_1.outputs[67].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[67], 'enabled'):
-                group_input_001_1.outputs[67].enabled = True
-            if hasattr(group_input_001_1.outputs[67], 'hide'):
-                group_input_001_1.outputs[67].hide = False
-            if hasattr(group_input_001_1.outputs[67], 'hide_value'):
-                group_input_001_1.outputs[67].hide_value = False
-            if hasattr(group_input_001_1.outputs[67], 'name'):
-                group_input_001_1.outputs[67].name = 'Zone 4 Top Color'
-            if hasattr(group_input_001_1.outputs[67], 'show_expanded'):
-                group_input_001_1.outputs[67].show_expanded = False
-            if hasattr(group_input_001_1.outputs[68], 'default_value'):
-                group_input_001_1.outputs[68].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[68], 'display_shape'):
-                group_input_001_1.outputs[68].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[68], 'enabled'):
-                group_input_001_1.outputs[68].enabled = True
-            if hasattr(group_input_001_1.outputs[68], 'hide'):
-                group_input_001_1.outputs[68].hide = False
-            if hasattr(group_input_001_1.outputs[68], 'hide_value'):
-                group_input_001_1.outputs[68].hide_value = False
-            if hasattr(group_input_001_1.outputs[68], 'name'):
-                group_input_001_1.outputs[68].name = 'Zone 4 Mid Color'
-            if hasattr(group_input_001_1.outputs[68], 'show_expanded'):
-                group_input_001_1.outputs[68].show_expanded = False
-            if hasattr(group_input_001_1.outputs[69], 'default_value'):
-                group_input_001_1.outputs[69].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[69], 'display_shape'):
-                group_input_001_1.outputs[69].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[69], 'enabled'):
-                group_input_001_1.outputs[69].enabled = True
-            if hasattr(group_input_001_1.outputs[69], 'hide'):
-                group_input_001_1.outputs[69].hide = False
-            if hasattr(group_input_001_1.outputs[69], 'hide_value'):
-                group_input_001_1.outputs[69].hide_value = False
-            if hasattr(group_input_001_1.outputs[69], 'name'):
-                group_input_001_1.outputs[69].name = 'Zone 4 Bot Color'
-            if hasattr(group_input_001_1.outputs[69], 'show_expanded'):
-                group_input_001_1.outputs[69].show_expanded = False
-            if hasattr(group_input_001_1.outputs[70], 'default_value'):
-                group_input_001_1.outputs[70].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[70], 'display_shape'):
-                group_input_001_1.outputs[70].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[70], 'enabled'):
-                group_input_001_1.outputs[70].enabled = True
-            if hasattr(group_input_001_1.outputs[70], 'hide'):
-                group_input_001_1.outputs[70].hide = False
-            if hasattr(group_input_001_1.outputs[70], 'hide_value'):
-                group_input_001_1.outputs[70].hide_value = False
-            if hasattr(group_input_001_1.outputs[70], 'name'):
-                group_input_001_1.outputs[70].name = 'Zone 4 ScratchColor'
-            if hasattr(group_input_001_1.outputs[70], 'show_expanded'):
-                group_input_001_1.outputs[70].show_expanded = False
-            if hasattr(group_input_001_1.outputs[71], 'default_value'):
-                group_input_001_1.outputs[71].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[71], 'display_shape'):
-                group_input_001_1.outputs[71].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[71], 'enabled'):
-                group_input_001_1.outputs[71].enabled = True
-            if hasattr(group_input_001_1.outputs[71], 'hide'):
-                group_input_001_1.outputs[71].hide = False
-            if hasattr(group_input_001_1.outputs[71], 'hide_value'):
-                group_input_001_1.outputs[71].hide_value = False
-            if hasattr(group_input_001_1.outputs[71], 'name'):
-                group_input_001_1.outputs[71].name = 'Zone 4 SSS Color'
-            if hasattr(group_input_001_1.outputs[71], 'show_expanded'):
-                group_input_001_1.outputs[71].show_expanded = False
-            if hasattr(group_input_001_1.outputs[72], 'default_value'):
-                group_input_001_1.outputs[72].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[72], 'display_shape'):
-                group_input_001_1.outputs[72].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[72], 'enabled'):
-                group_input_001_1.outputs[72].enabled = True
-            if hasattr(group_input_001_1.outputs[72], 'hide'):
-                group_input_001_1.outputs[72].hide = False
-            if hasattr(group_input_001_1.outputs[72], 'hide_value'):
-                group_input_001_1.outputs[72].hide_value = False
-            if hasattr(group_input_001_1.outputs[72], 'name'):
-                group_input_001_1.outputs[72].name = 'Zone 5 Toggle'
-            if hasattr(group_input_001_1.outputs[72], 'show_expanded'):
-                group_input_001_1.outputs[72].show_expanded = False
-            if hasattr(group_input_001_1.outputs[73], 'default_value'):
-                group_input_001_1.outputs[73].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[73], 'display_shape'):
-                group_input_001_1.outputs[73].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[73], 'enabled'):
-                group_input_001_1.outputs[73].enabled = True
-            if hasattr(group_input_001_1.outputs[73], 'hide'):
-                group_input_001_1.outputs[73].hide = False
-            if hasattr(group_input_001_1.outputs[73], 'hide_value'):
-                group_input_001_1.outputs[73].hide_value = False
-            if hasattr(group_input_001_1.outputs[73], 'name'):
-                group_input_001_1.outputs[73].name = 'Zone 5 Gradient Out'
-            if hasattr(group_input_001_1.outputs[73], 'show_expanded'):
-                group_input_001_1.outputs[73].show_expanded = False
-            if hasattr(group_input_001_1.outputs[74], 'default_value'):
-                group_input_001_1.outputs[74].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[74], 'display_shape'):
-                group_input_001_1.outputs[74].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[74], 'enabled'):
-                group_input_001_1.outputs[74].enabled = True
-            if hasattr(group_input_001_1.outputs[74], 'hide'):
-                group_input_001_1.outputs[74].hide = False
-            if hasattr(group_input_001_1.outputs[74], 'hide_value'):
-                group_input_001_1.outputs[74].hide_value = False
-            if hasattr(group_input_001_1.outputs[74], 'name'):
-                group_input_001_1.outputs[74].name = 'Zone 5 Rough Out'
-            if hasattr(group_input_001_1.outputs[74], 'show_expanded'):
-                group_input_001_1.outputs[74].show_expanded = False
-            if hasattr(group_input_001_1.outputs[75], 'default_value'):
-                group_input_001_1.outputs[75].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[75], 'display_shape'):
-                group_input_001_1.outputs[75].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[75], 'enabled'):
-                group_input_001_1.outputs[75].enabled = True
-            if hasattr(group_input_001_1.outputs[75], 'hide'):
-                group_input_001_1.outputs[75].hide = False
-            if hasattr(group_input_001_1.outputs[75], 'hide_value'):
-                group_input_001_1.outputs[75].hide_value = False
-            if hasattr(group_input_001_1.outputs[75], 'name'):
-                group_input_001_1.outputs[75].name = 'Zone 5 Norm Out'
-            if hasattr(group_input_001_1.outputs[75], 'show_expanded'):
-                group_input_001_1.outputs[75].show_expanded = False
-            if hasattr(group_input_001_1.outputs[76], 'default_value'):
-                group_input_001_1.outputs[76].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[76], 'display_shape'):
-                group_input_001_1.outputs[76].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[76], 'enabled'):
-                group_input_001_1.outputs[76].enabled = True
-            if hasattr(group_input_001_1.outputs[76], 'hide'):
-                group_input_001_1.outputs[76].hide = False
-            if hasattr(group_input_001_1.outputs[76], 'hide_value'):
-                group_input_001_1.outputs[76].hide_value = False
-            if hasattr(group_input_001_1.outputs[76], 'name'):
-                group_input_001_1.outputs[76].name = 'Zone 5 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[76], 'show_expanded'):
-                group_input_001_1.outputs[76].show_expanded = False
-            if hasattr(group_input_001_1.outputs[77], 'default_value'):
-                group_input_001_1.outputs[77].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[77], 'display_shape'):
-                group_input_001_1.outputs[77].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[77], 'enabled'):
-                group_input_001_1.outputs[77].enabled = True
-            if hasattr(group_input_001_1.outputs[77], 'hide'):
-                group_input_001_1.outputs[77].hide = False
-            if hasattr(group_input_001_1.outputs[77], 'hide_value'):
-                group_input_001_1.outputs[77].hide_value = False
-            if hasattr(group_input_001_1.outputs[77], 'name'):
-                group_input_001_1.outputs[77].name = 'Zone 5 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[77], 'show_expanded'):
-                group_input_001_1.outputs[77].show_expanded = False
-            if hasattr(group_input_001_1.outputs[78], 'default_value'):
-                group_input_001_1.outputs[78].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[78], 'display_shape'):
-                group_input_001_1.outputs[78].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[78], 'enabled'):
-                group_input_001_1.outputs[78].enabled = True
-            if hasattr(group_input_001_1.outputs[78], 'hide'):
-                group_input_001_1.outputs[78].hide = False
-            if hasattr(group_input_001_1.outputs[78], 'hide_value'):
-                group_input_001_1.outputs[78].hide_value = False
-            if hasattr(group_input_001_1.outputs[78], 'name'):
-                group_input_001_1.outputs[78].name = 'Zone 5 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[78], 'show_expanded'):
-                group_input_001_1.outputs[78].show_expanded = False
-            if hasattr(group_input_001_1.outputs[79], 'default_value'):
-                group_input_001_1.outputs[79].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[79], 'display_shape'):
-                group_input_001_1.outputs[79].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[79], 'enabled'):
-                group_input_001_1.outputs[79].enabled = True
-            if hasattr(group_input_001_1.outputs[79], 'hide'):
-                group_input_001_1.outputs[79].hide = False
-            if hasattr(group_input_001_1.outputs[79], 'hide_value'):
-                group_input_001_1.outputs[79].hide_value = False
-            if hasattr(group_input_001_1.outputs[79], 'name'):
-                group_input_001_1.outputs[79].name = 'Zone 5 Metallic'
-            if hasattr(group_input_001_1.outputs[79], 'show_expanded'):
-                group_input_001_1.outputs[79].show_expanded = False
-            if hasattr(group_input_001_1.outputs[80], 'default_value'):
-                group_input_001_1.outputs[80].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[80], 'display_shape'):
-                group_input_001_1.outputs[80].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[80], 'enabled'):
-                group_input_001_1.outputs[80].enabled = True
-            if hasattr(group_input_001_1.outputs[80], 'hide'):
-                group_input_001_1.outputs[80].hide = False
-            if hasattr(group_input_001_1.outputs[80], 'hide_value'):
-                group_input_001_1.outputs[80].hide_value = False
-            if hasattr(group_input_001_1.outputs[80], 'name'):
-                group_input_001_1.outputs[80].name = 'Zone 5 SSS Amount'
-            if hasattr(group_input_001_1.outputs[80], 'show_expanded'):
-                group_input_001_1.outputs[80].show_expanded = False
-            if hasattr(group_input_001_1.outputs[81], 'default_value'):
-                group_input_001_1.outputs[81].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[81], 'display_shape'):
-                group_input_001_1.outputs[81].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[81], 'enabled'):
-                group_input_001_1.outputs[81].enabled = True
-            if hasattr(group_input_001_1.outputs[81], 'hide'):
-                group_input_001_1.outputs[81].hide = False
-            if hasattr(group_input_001_1.outputs[81], 'hide_value'):
-                group_input_001_1.outputs[81].hide_value = False
-            if hasattr(group_input_001_1.outputs[81], 'name'):
-                group_input_001_1.outputs[81].name = 'Zone 5 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[81], 'show_expanded'):
-                group_input_001_1.outputs[81].show_expanded = False
-            if hasattr(group_input_001_1.outputs[82], 'default_value'):
-                group_input_001_1.outputs[82].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[82], 'display_shape'):
-                group_input_001_1.outputs[82].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[82], 'enabled'):
-                group_input_001_1.outputs[82].enabled = True
-            if hasattr(group_input_001_1.outputs[82], 'hide'):
-                group_input_001_1.outputs[82].hide = False
-            if hasattr(group_input_001_1.outputs[82], 'hide_value'):
-                group_input_001_1.outputs[82].hide_value = False
-            if hasattr(group_input_001_1.outputs[82], 'name'):
-                group_input_001_1.outputs[82].name = 'Zone 5 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[82], 'show_expanded'):
-                group_input_001_1.outputs[82].show_expanded = False
-            if hasattr(group_input_001_1.outputs[83], 'default_value'):
-                group_input_001_1.outputs[83].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[83], 'display_shape'):
-                group_input_001_1.outputs[83].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[83], 'enabled'):
-                group_input_001_1.outputs[83].enabled = True
-            if hasattr(group_input_001_1.outputs[83], 'hide'):
-                group_input_001_1.outputs[83].hide = False
-            if hasattr(group_input_001_1.outputs[83], 'hide_value'):
-                group_input_001_1.outputs[83].hide_value = False
-            if hasattr(group_input_001_1.outputs[83], 'name'):
-                group_input_001_1.outputs[83].name = 'Zone 5 Top Color'
-            if hasattr(group_input_001_1.outputs[83], 'show_expanded'):
-                group_input_001_1.outputs[83].show_expanded = False
-            if hasattr(group_input_001_1.outputs[84], 'default_value'):
-                group_input_001_1.outputs[84].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[84], 'display_shape'):
-                group_input_001_1.outputs[84].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[84], 'enabled'):
-                group_input_001_1.outputs[84].enabled = True
-            if hasattr(group_input_001_1.outputs[84], 'hide'):
-                group_input_001_1.outputs[84].hide = False
-            if hasattr(group_input_001_1.outputs[84], 'hide_value'):
-                group_input_001_1.outputs[84].hide_value = False
-            if hasattr(group_input_001_1.outputs[84], 'name'):
-                group_input_001_1.outputs[84].name = 'Zone 5 Mid Color'
-            if hasattr(group_input_001_1.outputs[84], 'show_expanded'):
-                group_input_001_1.outputs[84].show_expanded = False
-            if hasattr(group_input_001_1.outputs[85], 'default_value'):
-                group_input_001_1.outputs[85].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[85], 'display_shape'):
-                group_input_001_1.outputs[85].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[85], 'enabled'):
-                group_input_001_1.outputs[85].enabled = True
-            if hasattr(group_input_001_1.outputs[85], 'hide'):
-                group_input_001_1.outputs[85].hide = False
-            if hasattr(group_input_001_1.outputs[85], 'hide_value'):
-                group_input_001_1.outputs[85].hide_value = False
-            if hasattr(group_input_001_1.outputs[85], 'name'):
-                group_input_001_1.outputs[85].name = 'Zone 5 Bot Color'
-            if hasattr(group_input_001_1.outputs[85], 'show_expanded'):
-                group_input_001_1.outputs[85].show_expanded = False
-            if hasattr(group_input_001_1.outputs[86], 'default_value'):
-                group_input_001_1.outputs[86].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[86], 'display_shape'):
-                group_input_001_1.outputs[86].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[86], 'enabled'):
-                group_input_001_1.outputs[86].enabled = True
-            if hasattr(group_input_001_1.outputs[86], 'hide'):
-                group_input_001_1.outputs[86].hide = False
-            if hasattr(group_input_001_1.outputs[86], 'hide_value'):
-                group_input_001_1.outputs[86].hide_value = False
-            if hasattr(group_input_001_1.outputs[86], 'name'):
-                group_input_001_1.outputs[86].name = 'Zone 5 ScratchColor'
-            if hasattr(group_input_001_1.outputs[86], 'show_expanded'):
-                group_input_001_1.outputs[86].show_expanded = False
-            if hasattr(group_input_001_1.outputs[87], 'default_value'):
-                group_input_001_1.outputs[87].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[87], 'display_shape'):
-                group_input_001_1.outputs[87].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[87], 'enabled'):
-                group_input_001_1.outputs[87].enabled = True
-            if hasattr(group_input_001_1.outputs[87], 'hide'):
-                group_input_001_1.outputs[87].hide = False
-            if hasattr(group_input_001_1.outputs[87], 'hide_value'):
-                group_input_001_1.outputs[87].hide_value = False
-            if hasattr(group_input_001_1.outputs[87], 'name'):
-                group_input_001_1.outputs[87].name = 'Zone 5 SSS Color'
-            if hasattr(group_input_001_1.outputs[87], 'show_expanded'):
-                group_input_001_1.outputs[87].show_expanded = False
-            if hasattr(group_input_001_1.outputs[88], 'default_value'):
-                group_input_001_1.outputs[88].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[88], 'display_shape'):
-                group_input_001_1.outputs[88].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[88], 'enabled'):
-                group_input_001_1.outputs[88].enabled = True
-            if hasattr(group_input_001_1.outputs[88], 'hide'):
-                group_input_001_1.outputs[88].hide = False
-            if hasattr(group_input_001_1.outputs[88], 'hide_value'):
-                group_input_001_1.outputs[88].hide_value = False
-            if hasattr(group_input_001_1.outputs[88], 'name'):
-                group_input_001_1.outputs[88].name = 'Zone 6 Toggle'
-            if hasattr(group_input_001_1.outputs[88], 'show_expanded'):
-                group_input_001_1.outputs[88].show_expanded = False
-            if hasattr(group_input_001_1.outputs[89], 'default_value'):
-                group_input_001_1.outputs[89].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[89], 'display_shape'):
-                group_input_001_1.outputs[89].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[89], 'enabled'):
-                group_input_001_1.outputs[89].enabled = True
-            if hasattr(group_input_001_1.outputs[89], 'hide'):
-                group_input_001_1.outputs[89].hide = False
-            if hasattr(group_input_001_1.outputs[89], 'hide_value'):
-                group_input_001_1.outputs[89].hide_value = False
-            if hasattr(group_input_001_1.outputs[89], 'name'):
-                group_input_001_1.outputs[89].name = 'Zone 6 Gradient Out'
-            if hasattr(group_input_001_1.outputs[89], 'show_expanded'):
-                group_input_001_1.outputs[89].show_expanded = False
-            if hasattr(group_input_001_1.outputs[90], 'default_value'):
-                group_input_001_1.outputs[90].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[90], 'display_shape'):
-                group_input_001_1.outputs[90].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[90], 'enabled'):
-                group_input_001_1.outputs[90].enabled = True
-            if hasattr(group_input_001_1.outputs[90], 'hide'):
-                group_input_001_1.outputs[90].hide = False
-            if hasattr(group_input_001_1.outputs[90], 'hide_value'):
-                group_input_001_1.outputs[90].hide_value = False
-            if hasattr(group_input_001_1.outputs[90], 'name'):
-                group_input_001_1.outputs[90].name = 'Zone 6 Rough Out'
-            if hasattr(group_input_001_1.outputs[90], 'show_expanded'):
-                group_input_001_1.outputs[90].show_expanded = False
-            if hasattr(group_input_001_1.outputs[91], 'default_value'):
-                group_input_001_1.outputs[91].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[91], 'display_shape'):
-                group_input_001_1.outputs[91].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[91], 'enabled'):
-                group_input_001_1.outputs[91].enabled = True
-            if hasattr(group_input_001_1.outputs[91], 'hide'):
-                group_input_001_1.outputs[91].hide = False
-            if hasattr(group_input_001_1.outputs[91], 'hide_value'):
-                group_input_001_1.outputs[91].hide_value = False
-            if hasattr(group_input_001_1.outputs[91], 'name'):
-                group_input_001_1.outputs[91].name = 'Zone 6 Norm Out'
-            if hasattr(group_input_001_1.outputs[91], 'show_expanded'):
-                group_input_001_1.outputs[91].show_expanded = False
-            if hasattr(group_input_001_1.outputs[92], 'default_value'):
-                group_input_001_1.outputs[92].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[92], 'display_shape'):
-                group_input_001_1.outputs[92].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[92], 'enabled'):
-                group_input_001_1.outputs[92].enabled = True
-            if hasattr(group_input_001_1.outputs[92], 'hide'):
-                group_input_001_1.outputs[92].hide = False
-            if hasattr(group_input_001_1.outputs[92], 'hide_value'):
-                group_input_001_1.outputs[92].hide_value = False
-            if hasattr(group_input_001_1.outputs[92], 'name'):
-                group_input_001_1.outputs[92].name = 'Zone 6 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[92], 'show_expanded'):
-                group_input_001_1.outputs[92].show_expanded = False
-            if hasattr(group_input_001_1.outputs[93], 'default_value'):
-                group_input_001_1.outputs[93].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[93], 'display_shape'):
-                group_input_001_1.outputs[93].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[93], 'enabled'):
-                group_input_001_1.outputs[93].enabled = True
-            if hasattr(group_input_001_1.outputs[93], 'hide'):
-                group_input_001_1.outputs[93].hide = False
-            if hasattr(group_input_001_1.outputs[93], 'hide_value'):
-                group_input_001_1.outputs[93].hide_value = False
-            if hasattr(group_input_001_1.outputs[93], 'name'):
-                group_input_001_1.outputs[93].name = 'Zone 6 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[93], 'show_expanded'):
-                group_input_001_1.outputs[93].show_expanded = False
-            if hasattr(group_input_001_1.outputs[94], 'default_value'):
-                group_input_001_1.outputs[94].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[94], 'display_shape'):
-                group_input_001_1.outputs[94].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[94], 'enabled'):
-                group_input_001_1.outputs[94].enabled = True
-            if hasattr(group_input_001_1.outputs[94], 'hide'):
-                group_input_001_1.outputs[94].hide = False
-            if hasattr(group_input_001_1.outputs[94], 'hide_value'):
-                group_input_001_1.outputs[94].hide_value = False
-            if hasattr(group_input_001_1.outputs[94], 'name'):
-                group_input_001_1.outputs[94].name = 'Zone 6 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[94], 'show_expanded'):
-                group_input_001_1.outputs[94].show_expanded = False
-            if hasattr(group_input_001_1.outputs[95], 'default_value'):
-                group_input_001_1.outputs[95].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[95], 'display_shape'):
-                group_input_001_1.outputs[95].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[95], 'enabled'):
-                group_input_001_1.outputs[95].enabled = True
-            if hasattr(group_input_001_1.outputs[95], 'hide'):
-                group_input_001_1.outputs[95].hide = False
-            if hasattr(group_input_001_1.outputs[95], 'hide_value'):
-                group_input_001_1.outputs[95].hide_value = False
-            if hasattr(group_input_001_1.outputs[95], 'name'):
-                group_input_001_1.outputs[95].name = 'Zone 6 Metallic'
-            if hasattr(group_input_001_1.outputs[95], 'show_expanded'):
-                group_input_001_1.outputs[95].show_expanded = False
-            if hasattr(group_input_001_1.outputs[96], 'default_value'):
-                group_input_001_1.outputs[96].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[96], 'display_shape'):
-                group_input_001_1.outputs[96].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[96], 'enabled'):
-                group_input_001_1.outputs[96].enabled = True
-            if hasattr(group_input_001_1.outputs[96], 'hide'):
-                group_input_001_1.outputs[96].hide = False
-            if hasattr(group_input_001_1.outputs[96], 'hide_value'):
-                group_input_001_1.outputs[96].hide_value = False
-            if hasattr(group_input_001_1.outputs[96], 'name'):
-                group_input_001_1.outputs[96].name = 'Zone 6 SSS Amount'
-            if hasattr(group_input_001_1.outputs[96], 'show_expanded'):
-                group_input_001_1.outputs[96].show_expanded = False
-            if hasattr(group_input_001_1.outputs[97], 'default_value'):
-                group_input_001_1.outputs[97].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[97], 'display_shape'):
-                group_input_001_1.outputs[97].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[97], 'enabled'):
-                group_input_001_1.outputs[97].enabled = True
-            if hasattr(group_input_001_1.outputs[97], 'hide'):
-                group_input_001_1.outputs[97].hide = False
-            if hasattr(group_input_001_1.outputs[97], 'hide_value'):
-                group_input_001_1.outputs[97].hide_value = False
-            if hasattr(group_input_001_1.outputs[97], 'name'):
-                group_input_001_1.outputs[97].name = 'Zone 6 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[97], 'show_expanded'):
-                group_input_001_1.outputs[97].show_expanded = False
-            if hasattr(group_input_001_1.outputs[98], 'default_value'):
-                group_input_001_1.outputs[98].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[98], 'display_shape'):
-                group_input_001_1.outputs[98].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[98], 'enabled'):
-                group_input_001_1.outputs[98].enabled = True
-            if hasattr(group_input_001_1.outputs[98], 'hide'):
-                group_input_001_1.outputs[98].hide = False
-            if hasattr(group_input_001_1.outputs[98], 'hide_value'):
-                group_input_001_1.outputs[98].hide_value = False
-            if hasattr(group_input_001_1.outputs[98], 'name'):
-                group_input_001_1.outputs[98].name = 'Zone 6 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[98], 'show_expanded'):
-                group_input_001_1.outputs[98].show_expanded = False
-            if hasattr(group_input_001_1.outputs[99], 'default_value'):
-                group_input_001_1.outputs[99].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[99], 'display_shape'):
-                group_input_001_1.outputs[99].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[99], 'enabled'):
-                group_input_001_1.outputs[99].enabled = True
-            if hasattr(group_input_001_1.outputs[99], 'hide'):
-                group_input_001_1.outputs[99].hide = False
-            if hasattr(group_input_001_1.outputs[99], 'hide_value'):
-                group_input_001_1.outputs[99].hide_value = False
-            if hasattr(group_input_001_1.outputs[99], 'name'):
-                group_input_001_1.outputs[99].name = 'Zone 6 Top Color'
-            if hasattr(group_input_001_1.outputs[99], 'show_expanded'):
-                group_input_001_1.outputs[99].show_expanded = False
-            if hasattr(group_input_001_1.outputs[100], 'default_value'):
-                group_input_001_1.outputs[100].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[100], 'display_shape'):
-                group_input_001_1.outputs[100].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[100], 'enabled'):
-                group_input_001_1.outputs[100].enabled = True
-            if hasattr(group_input_001_1.outputs[100], 'hide'):
-                group_input_001_1.outputs[100].hide = False
-            if hasattr(group_input_001_1.outputs[100], 'hide_value'):
-                group_input_001_1.outputs[100].hide_value = False
-            if hasattr(group_input_001_1.outputs[100], 'name'):
-                group_input_001_1.outputs[100].name = 'Zone 6 Mid Color'
-            if hasattr(group_input_001_1.outputs[100], 'show_expanded'):
-                group_input_001_1.outputs[100].show_expanded = False
-            if hasattr(group_input_001_1.outputs[101], 'default_value'):
-                group_input_001_1.outputs[101].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[101], 'display_shape'):
-                group_input_001_1.outputs[101].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[101], 'enabled'):
-                group_input_001_1.outputs[101].enabled = True
-            if hasattr(group_input_001_1.outputs[101], 'hide'):
-                group_input_001_1.outputs[101].hide = False
-            if hasattr(group_input_001_1.outputs[101], 'hide_value'):
-                group_input_001_1.outputs[101].hide_value = False
-            if hasattr(group_input_001_1.outputs[101], 'name'):
-                group_input_001_1.outputs[101].name = 'Zone 6 Bot Color'
-            if hasattr(group_input_001_1.outputs[101], 'show_expanded'):
-                group_input_001_1.outputs[101].show_expanded = False
-            if hasattr(group_input_001_1.outputs[102], 'default_value'):
-                group_input_001_1.outputs[102].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[102], 'display_shape'):
-                group_input_001_1.outputs[102].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[102], 'enabled'):
-                group_input_001_1.outputs[102].enabled = True
-            if hasattr(group_input_001_1.outputs[102], 'hide'):
-                group_input_001_1.outputs[102].hide = False
-            if hasattr(group_input_001_1.outputs[102], 'hide_value'):
-                group_input_001_1.outputs[102].hide_value = False
-            if hasattr(group_input_001_1.outputs[102], 'name'):
-                group_input_001_1.outputs[102].name = 'Zone 6 ScratchColor'
-            if hasattr(group_input_001_1.outputs[102], 'show_expanded'):
-                group_input_001_1.outputs[102].show_expanded = False
-            if hasattr(group_input_001_1.outputs[103], 'default_value'):
-                group_input_001_1.outputs[103].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[103], 'display_shape'):
-                group_input_001_1.outputs[103].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[103], 'enabled'):
-                group_input_001_1.outputs[103].enabled = True
-            if hasattr(group_input_001_1.outputs[103], 'hide'):
-                group_input_001_1.outputs[103].hide = False
-            if hasattr(group_input_001_1.outputs[103], 'hide_value'):
-                group_input_001_1.outputs[103].hide_value = False
-            if hasattr(group_input_001_1.outputs[103], 'name'):
-                group_input_001_1.outputs[103].name = 'Zone 6 SSS Color'
-            if hasattr(group_input_001_1.outputs[103], 'show_expanded'):
-                group_input_001_1.outputs[103].show_expanded = False
-            if hasattr(group_input_001_1.outputs[104], 'default_value'):
-                group_input_001_1.outputs[104].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[104], 'display_shape'):
-                group_input_001_1.outputs[104].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[104], 'enabled'):
-                group_input_001_1.outputs[104].enabled = True
-            if hasattr(group_input_001_1.outputs[104], 'hide'):
-                group_input_001_1.outputs[104].hide = False
-            if hasattr(group_input_001_1.outputs[104], 'hide_value'):
-                group_input_001_1.outputs[104].hide_value = False
-            if hasattr(group_input_001_1.outputs[104], 'name'):
-                group_input_001_1.outputs[104].name = 'Zone 7 Toggle'
-            if hasattr(group_input_001_1.outputs[104], 'show_expanded'):
-                group_input_001_1.outputs[104].show_expanded = False
-            if hasattr(group_input_001_1.outputs[105], 'default_value'):
-                group_input_001_1.outputs[105].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[105], 'display_shape'):
-                group_input_001_1.outputs[105].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[105], 'enabled'):
-                group_input_001_1.outputs[105].enabled = True
-            if hasattr(group_input_001_1.outputs[105], 'hide'):
-                group_input_001_1.outputs[105].hide = False
-            if hasattr(group_input_001_1.outputs[105], 'hide_value'):
-                group_input_001_1.outputs[105].hide_value = False
-            if hasattr(group_input_001_1.outputs[105], 'name'):
-                group_input_001_1.outputs[105].name = 'Zone 7 Gradient Out'
-            if hasattr(group_input_001_1.outputs[105], 'show_expanded'):
-                group_input_001_1.outputs[105].show_expanded = False
-            if hasattr(group_input_001_1.outputs[106], 'default_value'):
-                group_input_001_1.outputs[106].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[106], 'display_shape'):
-                group_input_001_1.outputs[106].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[106], 'enabled'):
-                group_input_001_1.outputs[106].enabled = True
-            if hasattr(group_input_001_1.outputs[106], 'hide'):
-                group_input_001_1.outputs[106].hide = False
-            if hasattr(group_input_001_1.outputs[106], 'hide_value'):
-                group_input_001_1.outputs[106].hide_value = False
-            if hasattr(group_input_001_1.outputs[106], 'name'):
-                group_input_001_1.outputs[106].name = 'Zone 7 Rough Out'
-            if hasattr(group_input_001_1.outputs[106], 'show_expanded'):
-                group_input_001_1.outputs[106].show_expanded = False
-            if hasattr(group_input_001_1.outputs[107], 'default_value'):
-                group_input_001_1.outputs[107].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[107], 'display_shape'):
-                group_input_001_1.outputs[107].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[107], 'enabled'):
-                group_input_001_1.outputs[107].enabled = True
-            if hasattr(group_input_001_1.outputs[107], 'hide'):
-                group_input_001_1.outputs[107].hide = False
-            if hasattr(group_input_001_1.outputs[107], 'hide_value'):
-                group_input_001_1.outputs[107].hide_value = False
-            if hasattr(group_input_001_1.outputs[107], 'name'):
-                group_input_001_1.outputs[107].name = 'Zone 7 Norm Out'
-            if hasattr(group_input_001_1.outputs[107], 'show_expanded'):
-                group_input_001_1.outputs[107].show_expanded = False
-            if hasattr(group_input_001_1.outputs[108], 'default_value'):
-                group_input_001_1.outputs[108].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[108], 'display_shape'):
-                group_input_001_1.outputs[108].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[108], 'enabled'):
-                group_input_001_1.outputs[108].enabled = True
-            if hasattr(group_input_001_1.outputs[108], 'hide'):
-                group_input_001_1.outputs[108].hide = False
-            if hasattr(group_input_001_1.outputs[108], 'hide_value'):
-                group_input_001_1.outputs[108].hide_value = False
-            if hasattr(group_input_001_1.outputs[108], 'name'):
-                group_input_001_1.outputs[108].name = 'Zone 7 Scratch Amount'
-            if hasattr(group_input_001_1.outputs[108], 'show_expanded'):
-                group_input_001_1.outputs[108].show_expanded = False
-            if hasattr(group_input_001_1.outputs[109], 'default_value'):
-                group_input_001_1.outputs[109].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[109], 'display_shape'):
-                group_input_001_1.outputs[109].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[109], 'enabled'):
-                group_input_001_1.outputs[109].enabled = True
-            if hasattr(group_input_001_1.outputs[109], 'hide'):
-                group_input_001_1.outputs[109].hide = False
-            if hasattr(group_input_001_1.outputs[109], 'hide_value'):
-                group_input_001_1.outputs[109].hide_value = False
-            if hasattr(group_input_001_1.outputs[109], 'name'):
-                group_input_001_1.outputs[109].name = 'Zone 7 Scratch Roughness'
-            if hasattr(group_input_001_1.outputs[109], 'show_expanded'):
-                group_input_001_1.outputs[109].show_expanded = False
-            if hasattr(group_input_001_1.outputs[110], 'default_value'):
-                group_input_001_1.outputs[110].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[110], 'display_shape'):
-                group_input_001_1.outputs[110].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[110], 'enabled'):
-                group_input_001_1.outputs[110].enabled = True
-            if hasattr(group_input_001_1.outputs[110], 'hide'):
-                group_input_001_1.outputs[110].hide = False
-            if hasattr(group_input_001_1.outputs[110], 'hide_value'):
-                group_input_001_1.outputs[110].hide_value = False
-            if hasattr(group_input_001_1.outputs[110], 'name'):
-                group_input_001_1.outputs[110].name = 'Zone 7 Scratch Metallic'
-            if hasattr(group_input_001_1.outputs[110], 'show_expanded'):
-                group_input_001_1.outputs[110].show_expanded = False
-            if hasattr(group_input_001_1.outputs[111], 'default_value'):
-                group_input_001_1.outputs[111].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[111], 'display_shape'):
-                group_input_001_1.outputs[111].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[111], 'enabled'):
-                group_input_001_1.outputs[111].enabled = True
-            if hasattr(group_input_001_1.outputs[111], 'hide'):
-                group_input_001_1.outputs[111].hide = False
-            if hasattr(group_input_001_1.outputs[111], 'hide_value'):
-                group_input_001_1.outputs[111].hide_value = False
-            if hasattr(group_input_001_1.outputs[111], 'name'):
-                group_input_001_1.outputs[111].name = 'Zone 7 Metallic'
-            if hasattr(group_input_001_1.outputs[111], 'show_expanded'):
-                group_input_001_1.outputs[111].show_expanded = False
-            if hasattr(group_input_001_1.outputs[112], 'default_value'):
-                group_input_001_1.outputs[112].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[112], 'display_shape'):
-                group_input_001_1.outputs[112].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[112], 'enabled'):
-                group_input_001_1.outputs[112].enabled = True
-            if hasattr(group_input_001_1.outputs[112], 'hide'):
-                group_input_001_1.outputs[112].hide = False
-            if hasattr(group_input_001_1.outputs[112], 'hide_value'):
-                group_input_001_1.outputs[112].hide_value = False
-            if hasattr(group_input_001_1.outputs[112], 'name'):
-                group_input_001_1.outputs[112].name = 'Zone 7 SSS Amount'
-            if hasattr(group_input_001_1.outputs[112], 'show_expanded'):
-                group_input_001_1.outputs[112].show_expanded = False
-            if hasattr(group_input_001_1.outputs[113], 'default_value'):
-                group_input_001_1.outputs[113].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[113], 'display_shape'):
-                group_input_001_1.outputs[113].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[113], 'enabled'):
-                group_input_001_1.outputs[113].enabled = True
-            if hasattr(group_input_001_1.outputs[113], 'hide'):
-                group_input_001_1.outputs[113].hide = False
-            if hasattr(group_input_001_1.outputs[113], 'hide_value'):
-                group_input_001_1.outputs[113].hide_value = False
-            if hasattr(group_input_001_1.outputs[113], 'name'):
-                group_input_001_1.outputs[113].name = 'Zone 7 Transparency Amount'
-            if hasattr(group_input_001_1.outputs[113], 'show_expanded'):
-                group_input_001_1.outputs[113].show_expanded = False
-            if hasattr(group_input_001_1.outputs[114], 'default_value'):
-                group_input_001_1.outputs[114].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[114], 'display_shape'):
-                group_input_001_1.outputs[114].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[114], 'enabled'):
-                group_input_001_1.outputs[114].enabled = True
-            if hasattr(group_input_001_1.outputs[114], 'hide'):
-                group_input_001_1.outputs[114].hide = False
-            if hasattr(group_input_001_1.outputs[114], 'hide_value'):
-                group_input_001_1.outputs[114].hide_value = False
-            if hasattr(group_input_001_1.outputs[114], 'name'):
-                group_input_001_1.outputs[114].name = 'Zone 7 Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[114], 'show_expanded'):
-                group_input_001_1.outputs[114].show_expanded = False
-            if hasattr(group_input_001_1.outputs[115], 'default_value'):
-                group_input_001_1.outputs[115].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[115], 'display_shape'):
-                group_input_001_1.outputs[115].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[115], 'enabled'):
-                group_input_001_1.outputs[115].enabled = True
-            if hasattr(group_input_001_1.outputs[115], 'hide'):
-                group_input_001_1.outputs[115].hide = False
-            if hasattr(group_input_001_1.outputs[115], 'hide_value'):
-                group_input_001_1.outputs[115].hide_value = False
-            if hasattr(group_input_001_1.outputs[115], 'name'):
-                group_input_001_1.outputs[115].name = 'Zone 7 Top Color'
-            if hasattr(group_input_001_1.outputs[115], 'show_expanded'):
-                group_input_001_1.outputs[115].show_expanded = False
-            if hasattr(group_input_001_1.outputs[116], 'default_value'):
-                group_input_001_1.outputs[116].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[116], 'display_shape'):
-                group_input_001_1.outputs[116].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[116], 'enabled'):
-                group_input_001_1.outputs[116].enabled = True
-            if hasattr(group_input_001_1.outputs[116], 'hide'):
-                group_input_001_1.outputs[116].hide = False
-            if hasattr(group_input_001_1.outputs[116], 'hide_value'):
-                group_input_001_1.outputs[116].hide_value = False
-            if hasattr(group_input_001_1.outputs[116], 'name'):
-                group_input_001_1.outputs[116].name = 'Zone 7 Mid Color'
-            if hasattr(group_input_001_1.outputs[116], 'show_expanded'):
-                group_input_001_1.outputs[116].show_expanded = False
-            if hasattr(group_input_001_1.outputs[117], 'default_value'):
-                group_input_001_1.outputs[117].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[117], 'display_shape'):
-                group_input_001_1.outputs[117].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[117], 'enabled'):
-                group_input_001_1.outputs[117].enabled = True
-            if hasattr(group_input_001_1.outputs[117], 'hide'):
-                group_input_001_1.outputs[117].hide = False
-            if hasattr(group_input_001_1.outputs[117], 'hide_value'):
-                group_input_001_1.outputs[117].hide_value = False
-            if hasattr(group_input_001_1.outputs[117], 'name'):
-                group_input_001_1.outputs[117].name = 'Zone 7 Bot Color'
-            if hasattr(group_input_001_1.outputs[117], 'show_expanded'):
-                group_input_001_1.outputs[117].show_expanded = False
-            if hasattr(group_input_001_1.outputs[118], 'default_value'):
-                group_input_001_1.outputs[118].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[118], 'display_shape'):
-                group_input_001_1.outputs[118].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[118], 'enabled'):
-                group_input_001_1.outputs[118].enabled = True
-            if hasattr(group_input_001_1.outputs[118], 'hide'):
-                group_input_001_1.outputs[118].hide = False
-            if hasattr(group_input_001_1.outputs[118], 'hide_value'):
-                group_input_001_1.outputs[118].hide_value = False
-            if hasattr(group_input_001_1.outputs[118], 'name'):
-                group_input_001_1.outputs[118].name = 'Zone 7 ScratchColor'
-            if hasattr(group_input_001_1.outputs[118], 'show_expanded'):
-                group_input_001_1.outputs[118].show_expanded = False
-            if hasattr(group_input_001_1.outputs[119], 'default_value'):
-                group_input_001_1.outputs[119].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[119], 'display_shape'):
-                group_input_001_1.outputs[119].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[119], 'enabled'):
-                group_input_001_1.outputs[119].enabled = True
-            if hasattr(group_input_001_1.outputs[119], 'hide'):
-                group_input_001_1.outputs[119].hide = False
-            if hasattr(group_input_001_1.outputs[119], 'hide_value'):
-                group_input_001_1.outputs[119].hide_value = False
-            if hasattr(group_input_001_1.outputs[119], 'name'):
-                group_input_001_1.outputs[119].name = 'Zone 7 SSS Color'
-            if hasattr(group_input_001_1.outputs[119], 'show_expanded'):
-                group_input_001_1.outputs[119].show_expanded = False
-            if hasattr(group_input_001_1.outputs[120], 'default_value'):
-                group_input_001_1.outputs[120].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[120], 'display_shape'):
-                group_input_001_1.outputs[120].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[120], 'enabled'):
-                group_input_001_1.outputs[120].enabled = True
-            if hasattr(group_input_001_1.outputs[120], 'hide'):
-                group_input_001_1.outputs[120].hide = False
-            if hasattr(group_input_001_1.outputs[120], 'hide_value'):
-                group_input_001_1.outputs[120].hide_value = False
-            if hasattr(group_input_001_1.outputs[120], 'name'):
-                group_input_001_1.outputs[120].name = 'Grime Gradient Out'
-            if hasattr(group_input_001_1.outputs[120], 'show_expanded'):
-                group_input_001_1.outputs[120].show_expanded = False
-            if hasattr(group_input_001_1.outputs[121], 'default_value'):
-                group_input_001_1.outputs[121].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[121], 'display_shape'):
-                group_input_001_1.outputs[121].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[121], 'enabled'):
-                group_input_001_1.outputs[121].enabled = True
-            if hasattr(group_input_001_1.outputs[121], 'hide'):
-                group_input_001_1.outputs[121].hide = False
-            if hasattr(group_input_001_1.outputs[121], 'hide_value'):
-                group_input_001_1.outputs[121].hide_value = False
-            if hasattr(group_input_001_1.outputs[121], 'name'):
-                group_input_001_1.outputs[121].name = 'Grime Rough Out'
-            if hasattr(group_input_001_1.outputs[121], 'show_expanded'):
-                group_input_001_1.outputs[121].show_expanded = False
-            if hasattr(group_input_001_1.outputs[122], 'default_value'):
-                group_input_001_1.outputs[122].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[122], 'display_shape'):
-                group_input_001_1.outputs[122].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[122], 'enabled'):
-                group_input_001_1.outputs[122].enabled = True
-            if hasattr(group_input_001_1.outputs[122], 'hide'):
-                group_input_001_1.outputs[122].hide = False
-            if hasattr(group_input_001_1.outputs[122], 'hide_value'):
-                group_input_001_1.outputs[122].hide_value = False
-            if hasattr(group_input_001_1.outputs[122], 'name'):
-                group_input_001_1.outputs[122].name = 'Grime Norm Out'
-            if hasattr(group_input_001_1.outputs[122], 'show_expanded'):
-                group_input_001_1.outputs[122].show_expanded = False
-            if hasattr(group_input_001_1.outputs[123], 'default_value'):
-                group_input_001_1.outputs[123].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[123], 'display_shape'):
-                group_input_001_1.outputs[123].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[123], 'enabled'):
-                group_input_001_1.outputs[123].enabled = True
-            if hasattr(group_input_001_1.outputs[123], 'hide'):
-                group_input_001_1.outputs[123].hide = False
-            if hasattr(group_input_001_1.outputs[123], 'hide_value'):
-                group_input_001_1.outputs[123].hide_value = False
-            if hasattr(group_input_001_1.outputs[123], 'name'):
-                group_input_001_1.outputs[123].name = 'Grime Metallic'
-            if hasattr(group_input_001_1.outputs[123], 'show_expanded'):
-                group_input_001_1.outputs[123].show_expanded = False
-            if hasattr(group_input_001_1.outputs[124], 'default_value'):
-                group_input_001_1.outputs[124].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[124], 'display_shape'):
-                group_input_001_1.outputs[124].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[124], 'enabled'):
-                group_input_001_1.outputs[124].enabled = True
-            if hasattr(group_input_001_1.outputs[124], 'hide'):
-                group_input_001_1.outputs[124].hide = False
-            if hasattr(group_input_001_1.outputs[124], 'hide_value'):
-                group_input_001_1.outputs[124].hide_value = False
-            if hasattr(group_input_001_1.outputs[124], 'name'):
-                group_input_001_1.outputs[124].name = 'Grime SSS Amount'
-            if hasattr(group_input_001_1.outputs[124], 'show_expanded'):
-                group_input_001_1.outputs[124].show_expanded = False
-            if hasattr(group_input_001_1.outputs[125], 'default_value'):
-                group_input_001_1.outputs[125].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[125], 'display_shape'):
-                group_input_001_1.outputs[125].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[125], 'enabled'):
-                group_input_001_1.outputs[125].enabled = True
-            if hasattr(group_input_001_1.outputs[125], 'hide'):
-                group_input_001_1.outputs[125].hide = False
-            if hasattr(group_input_001_1.outputs[125], 'hide_value'):
-                group_input_001_1.outputs[125].hide_value = False
-            if hasattr(group_input_001_1.outputs[125], 'name'):
-                group_input_001_1.outputs[125].name = 'Grime Transparency Amount'
-            if hasattr(group_input_001_1.outputs[125], 'show_expanded'):
-                group_input_001_1.outputs[125].show_expanded = False
-            if hasattr(group_input_001_1.outputs[126], 'default_value'):
-                group_input_001_1.outputs[126].default_value = 0.0
-            if hasattr(group_input_001_1.outputs[126], 'display_shape'):
-                group_input_001_1.outputs[126].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[126], 'enabled'):
-                group_input_001_1.outputs[126].enabled = True
-            if hasattr(group_input_001_1.outputs[126], 'hide'):
-                group_input_001_1.outputs[126].hide = False
-            if hasattr(group_input_001_1.outputs[126], 'hide_value'):
-                group_input_001_1.outputs[126].hide_value = False
-            if hasattr(group_input_001_1.outputs[126], 'name'):
-                group_input_001_1.outputs[126].name = 'Grime Emmisive Amount'
-            if hasattr(group_input_001_1.outputs[126], 'show_expanded'):
-                group_input_001_1.outputs[126].show_expanded = False
-            if hasattr(group_input_001_1.outputs[127], 'default_value'):
-                group_input_001_1.outputs[127].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[127], 'display_shape'):
-                group_input_001_1.outputs[127].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[127], 'enabled'):
-                group_input_001_1.outputs[127].enabled = True
-            if hasattr(group_input_001_1.outputs[127], 'hide'):
-                group_input_001_1.outputs[127].hide = False
-            if hasattr(group_input_001_1.outputs[127], 'hide_value'):
-                group_input_001_1.outputs[127].hide_value = False
-            if hasattr(group_input_001_1.outputs[127], 'name'):
-                group_input_001_1.outputs[127].name = 'Grime Top Color'
-            if hasattr(group_input_001_1.outputs[127], 'show_expanded'):
-                group_input_001_1.outputs[127].show_expanded = False
-            if hasattr(group_input_001_1.outputs[128], 'default_value'):
-                group_input_001_1.outputs[128].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[128], 'display_shape'):
-                group_input_001_1.outputs[128].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[128], 'enabled'):
-                group_input_001_1.outputs[128].enabled = True
-            if hasattr(group_input_001_1.outputs[128], 'hide'):
-                group_input_001_1.outputs[128].hide = False
-            if hasattr(group_input_001_1.outputs[128], 'hide_value'):
-                group_input_001_1.outputs[128].hide_value = False
-            if hasattr(group_input_001_1.outputs[128], 'name'):
-                group_input_001_1.outputs[128].name = 'Grime Mid Color'
-            if hasattr(group_input_001_1.outputs[128], 'show_expanded'):
-                group_input_001_1.outputs[128].show_expanded = False
-            if hasattr(group_input_001_1.outputs[129], 'default_value'):
-                group_input_001_1.outputs[129].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[129], 'display_shape'):
-                group_input_001_1.outputs[129].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[129], 'enabled'):
-                group_input_001_1.outputs[129].enabled = True
-            if hasattr(group_input_001_1.outputs[129], 'hide'):
-                group_input_001_1.outputs[129].hide = False
-            if hasattr(group_input_001_1.outputs[129], 'hide_value'):
-                group_input_001_1.outputs[129].hide_value = False
-            if hasattr(group_input_001_1.outputs[129], 'name'):
-                group_input_001_1.outputs[129].name = 'Grime Bot Color'
-            if hasattr(group_input_001_1.outputs[129], 'show_expanded'):
-                group_input_001_1.outputs[129].show_expanded = False
-            if hasattr(group_input_001_1.outputs[130], 'default_value'):
-                group_input_001_1.outputs[130].default_value = (0.0, 0.0, 0.0, 1.0)
-            if hasattr(group_input_001_1.outputs[130], 'display_shape'):
-                group_input_001_1.outputs[130].display_shape = 'CIRCLE'
-            if hasattr(group_input_001_1.outputs[130], 'enabled'):
-                group_input_001_1.outputs[130].enabled = True
-            if hasattr(group_input_001_1.outputs[130], 'hide'):
-                group_input_001_1.outputs[130].hide = False
-            if hasattr(group_input_001_1.outputs[130], 'hide_value'):
-                group_input_001_1.outputs[130].hide_value = False
-            if hasattr(group_input_001_1.outputs[130], 'name'):
-                group_input_001_1.outputs[130].name = 'Grime SSS Color'
-            if hasattr(group_input_001_1.outputs[130], 'show_expanded'):
-                group_input_001_1.outputs[130].show_expanded = False
+                group_input_001_1 = node_tree4.nodes.new('NodeGroupInput')
+                if hasattr(group_input_001_1, 'color'):
+                    group_input_001_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(group_input_001_1, 'hide'):
+                    group_input_001_1.hide = False
+                if hasattr(group_input_001_1, 'location'):
+                    group_input_001_1.location = (-3793.19091796875, 2497.38134765625)
+                if hasattr(group_input_001_1, 'mute'):
+                    group_input_001_1.mute = False
+                if hasattr(group_input_001_1, 'name'):
+                    group_input_001_1.name = 'Group Input.001'
+                if hasattr(group_input_001_1, 'use_custom_color'):
+                    group_input_001_1.use_custom_color = False
+                if hasattr(group_input_001_1, 'width'):
+                    group_input_001_1.width = 140.0
+                if hasattr(group_input_001_1.outputs[0], 'default_value'):
+                    group_input_001_1.outputs[0].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[0], 'display_shape'):
+                    group_input_001_1.outputs[0].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[0], 'enabled'):
+                    group_input_001_1.outputs[0].enabled = True
+                if hasattr(group_input_001_1.outputs[0], 'hide'):
+                    group_input_001_1.outputs[0].hide = False
+                if hasattr(group_input_001_1.outputs[0], 'hide_value'):
+                    group_input_001_1.outputs[0].hide_value = False
+                if hasattr(group_input_001_1.outputs[0], 'name'):
+                    group_input_001_1.outputs[0].name = 'ASG'
+                if hasattr(group_input_001_1.outputs[0], 'show_expanded'):
+                    group_input_001_1.outputs[0].show_expanded = False
+                if hasattr(group_input_001_1.outputs[1], 'default_value'):
+                    group_input_001_1.outputs[1].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[1], 'display_shape'):
+                    group_input_001_1.outputs[1].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[1], 'enabled'):
+                    group_input_001_1.outputs[1].enabled = True
+                if hasattr(group_input_001_1.outputs[1], 'hide'):
+                    group_input_001_1.outputs[1].hide = False
+                if hasattr(group_input_001_1.outputs[1], 'hide_value'):
+                    group_input_001_1.outputs[1].hide_value = False
+                if hasattr(group_input_001_1.outputs[1], 'name'):
+                    group_input_001_1.outputs[1].name = 'Mask_0'
+                if hasattr(group_input_001_1.outputs[1], 'show_expanded'):
+                    group_input_001_1.outputs[1].show_expanded = False
+                if hasattr(group_input_001_1.outputs[2], 'default_value'):
+                    group_input_001_1.outputs[2].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[2], 'display_shape'):
+                    group_input_001_1.outputs[2].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[2], 'enabled'):
+                    group_input_001_1.outputs[2].enabled = True
+                if hasattr(group_input_001_1.outputs[2], 'hide'):
+                    group_input_001_1.outputs[2].hide = False
+                if hasattr(group_input_001_1.outputs[2], 'hide_value'):
+                    group_input_001_1.outputs[2].hide_value = False
+                if hasattr(group_input_001_1.outputs[2], 'name'):
+                    group_input_001_1.outputs[2].name = 'Mask_1'
+                if hasattr(group_input_001_1.outputs[2], 'show_expanded'):
+                    group_input_001_1.outputs[2].show_expanded = False
+                if hasattr(group_input_001_1.outputs[3], 'default_value'):
+                    group_input_001_1.outputs[3].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[3], 'display_shape'):
+                    group_input_001_1.outputs[3].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[3], 'enabled'):
+                    group_input_001_1.outputs[3].enabled = True
+                if hasattr(group_input_001_1.outputs[3], 'hide'):
+                    group_input_001_1.outputs[3].hide = False
+                if hasattr(group_input_001_1.outputs[3], 'hide_value'):
+                    group_input_001_1.outputs[3].hide_value = False
+                if hasattr(group_input_001_1.outputs[3], 'name'):
+                    group_input_001_1.outputs[3].name = 'Normal'
+                if hasattr(group_input_001_1.outputs[3], 'show_expanded'):
+                    group_input_001_1.outputs[3].show_expanded = False
+                if hasattr(group_input_001_1.outputs[4], 'default_value'):
+                    group_input_001_1.outputs[4].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[4], 'display_shape'):
+                    group_input_001_1.outputs[4].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[4], 'enabled'):
+                    group_input_001_1.outputs[4].enabled = True
+                if hasattr(group_input_001_1.outputs[4], 'hide'):
+                    group_input_001_1.outputs[4].hide = False
+                if hasattr(group_input_001_1.outputs[4], 'hide_value'):
+                    group_input_001_1.outputs[4].hide_value = False
+                if hasattr(group_input_001_1.outputs[4], 'name'):
+                    group_input_001_1.outputs[4].name = 'Grime Amount'
+                if hasattr(group_input_001_1.outputs[4], 'show_expanded'):
+                    group_input_001_1.outputs[4].show_expanded = False
+                if hasattr(group_input_001_1.outputs[5], 'default_value'):
+                    group_input_001_1.outputs[5].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[5], 'display_shape'):
+                    group_input_001_1.outputs[5].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[5], 'enabled'):
+                    group_input_001_1.outputs[5].enabled = True
+                if hasattr(group_input_001_1.outputs[5], 'hide'):
+                    group_input_001_1.outputs[5].hide = False
+                if hasattr(group_input_001_1.outputs[5], 'hide_value'):
+                    group_input_001_1.outputs[5].hide_value = False
+                if hasattr(group_input_001_1.outputs[5], 'name'):
+                    group_input_001_1.outputs[5].name = 'Grime Height Scale'
+                if hasattr(group_input_001_1.outputs[5], 'show_expanded'):
+                    group_input_001_1.outputs[5].show_expanded = False
+                if hasattr(group_input_001_1.outputs[6], 'default_value'):
+                    group_input_001_1.outputs[6].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[6], 'display_shape'):
+                    group_input_001_1.outputs[6].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[6], 'enabled'):
+                    group_input_001_1.outputs[6].enabled = True
+                if hasattr(group_input_001_1.outputs[6], 'hide'):
+                    group_input_001_1.outputs[6].hide = False
+                if hasattr(group_input_001_1.outputs[6], 'hide_value'):
+                    group_input_001_1.outputs[6].hide_value = False
+                if hasattr(group_input_001_1.outputs[6], 'name'):
+                    group_input_001_1.outputs[6].name = 'Grime Height'
+                if hasattr(group_input_001_1.outputs[6], 'show_expanded'):
+                    group_input_001_1.outputs[6].show_expanded = False
+                if hasattr(group_input_001_1.outputs[7], 'default_value'):
+                    group_input_001_1.outputs[7].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[7], 'display_shape'):
+                    group_input_001_1.outputs[7].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[7], 'enabled'):
+                    group_input_001_1.outputs[7].enabled = True
+                if hasattr(group_input_001_1.outputs[7], 'hide'):
+                    group_input_001_1.outputs[7].hide = False
+                if hasattr(group_input_001_1.outputs[7], 'hide_value'):
+                    group_input_001_1.outputs[7].hide_value = False
+                if hasattr(group_input_001_1.outputs[7], 'name'):
+                    group_input_001_1.outputs[7].name = 'Ambient Occlusion'
+                if hasattr(group_input_001_1.outputs[7], 'show_expanded'):
+                    group_input_001_1.outputs[7].show_expanded = False
+                if hasattr(group_input_001_1.outputs[8], 'default_value'):
+                    group_input_001_1.outputs[8].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[8], 'display_shape'):
+                    group_input_001_1.outputs[8].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[8], 'enabled'):
+                    group_input_001_1.outputs[8].enabled = True
+                if hasattr(group_input_001_1.outputs[8], 'hide'):
+                    group_input_001_1.outputs[8].hide = False
+                if hasattr(group_input_001_1.outputs[8], 'hide_value'):
+                    group_input_001_1.outputs[8].hide_value = False
+                if hasattr(group_input_001_1.outputs[8], 'name'):
+                    group_input_001_1.outputs[8].name = 'Scratch Height Amount'
+                if hasattr(group_input_001_1.outputs[8], 'show_expanded'):
+                    group_input_001_1.outputs[8].show_expanded = False
+                if hasattr(group_input_001_1.outputs[9], 'default_value'):
+                    group_input_001_1.outputs[9].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[9], 'display_shape'):
+                    group_input_001_1.outputs[9].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[9], 'enabled'):
+                    group_input_001_1.outputs[9].enabled = True
+                if hasattr(group_input_001_1.outputs[9], 'hide'):
+                    group_input_001_1.outputs[9].hide = False
+                if hasattr(group_input_001_1.outputs[9], 'hide_value'):
+                    group_input_001_1.outputs[9].hide_value = False
+                if hasattr(group_input_001_1.outputs[9], 'name'):
+                    group_input_001_1.outputs[9].name = 'Zone 1 Gradient Out'
+                if hasattr(group_input_001_1.outputs[9], 'show_expanded'):
+                    group_input_001_1.outputs[9].show_expanded = False
+                if hasattr(group_input_001_1.outputs[10], 'default_value'):
+                    group_input_001_1.outputs[10].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[10], 'display_shape'):
+                    group_input_001_1.outputs[10].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[10], 'enabled'):
+                    group_input_001_1.outputs[10].enabled = True
+                if hasattr(group_input_001_1.outputs[10], 'hide'):
+                    group_input_001_1.outputs[10].hide = False
+                if hasattr(group_input_001_1.outputs[10], 'hide_value'):
+                    group_input_001_1.outputs[10].hide_value = False
+                if hasattr(group_input_001_1.outputs[10], 'name'):
+                    group_input_001_1.outputs[10].name = 'Zone 1 Rough Out'
+                if hasattr(group_input_001_1.outputs[10], 'show_expanded'):
+                    group_input_001_1.outputs[10].show_expanded = False
+                if hasattr(group_input_001_1.outputs[11], 'default_value'):
+                    group_input_001_1.outputs[11].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[11], 'display_shape'):
+                    group_input_001_1.outputs[11].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[11], 'enabled'):
+                    group_input_001_1.outputs[11].enabled = True
+                if hasattr(group_input_001_1.outputs[11], 'hide'):
+                    group_input_001_1.outputs[11].hide = False
+                if hasattr(group_input_001_1.outputs[11], 'hide_value'):
+                    group_input_001_1.outputs[11].hide_value = False
+                if hasattr(group_input_001_1.outputs[11], 'name'):
+                    group_input_001_1.outputs[11].name = 'Zone 1 Norm Out'
+                if hasattr(group_input_001_1.outputs[11], 'show_expanded'):
+                    group_input_001_1.outputs[11].show_expanded = False
+                if hasattr(group_input_001_1.outputs[12], 'default_value'):
+                    group_input_001_1.outputs[12].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[12], 'display_shape'):
+                    group_input_001_1.outputs[12].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[12], 'enabled'):
+                    group_input_001_1.outputs[12].enabled = True
+                if hasattr(group_input_001_1.outputs[12], 'hide'):
+                    group_input_001_1.outputs[12].hide = False
+                if hasattr(group_input_001_1.outputs[12], 'hide_value'):
+                    group_input_001_1.outputs[12].hide_value = False
+                if hasattr(group_input_001_1.outputs[12], 'name'):
+                    group_input_001_1.outputs[12].name = 'Zone 1 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[12], 'show_expanded'):
+                    group_input_001_1.outputs[12].show_expanded = False
+                if hasattr(group_input_001_1.outputs[13], 'default_value'):
+                    group_input_001_1.outputs[13].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[13], 'display_shape'):
+                    group_input_001_1.outputs[13].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[13], 'enabled'):
+                    group_input_001_1.outputs[13].enabled = True
+                if hasattr(group_input_001_1.outputs[13], 'hide'):
+                    group_input_001_1.outputs[13].hide = False
+                if hasattr(group_input_001_1.outputs[13], 'hide_value'):
+                    group_input_001_1.outputs[13].hide_value = False
+                if hasattr(group_input_001_1.outputs[13], 'name'):
+                    group_input_001_1.outputs[13].name = 'Zone 1 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[13], 'show_expanded'):
+                    group_input_001_1.outputs[13].show_expanded = False
+                if hasattr(group_input_001_1.outputs[14], 'default_value'):
+                    group_input_001_1.outputs[14].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[14], 'display_shape'):
+                    group_input_001_1.outputs[14].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[14], 'enabled'):
+                    group_input_001_1.outputs[14].enabled = True
+                if hasattr(group_input_001_1.outputs[14], 'hide'):
+                    group_input_001_1.outputs[14].hide = False
+                if hasattr(group_input_001_1.outputs[14], 'hide_value'):
+                    group_input_001_1.outputs[14].hide_value = False
+                if hasattr(group_input_001_1.outputs[14], 'name'):
+                    group_input_001_1.outputs[14].name = 'Zone 1 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[14], 'show_expanded'):
+                    group_input_001_1.outputs[14].show_expanded = False
+                if hasattr(group_input_001_1.outputs[15], 'default_value'):
+                    group_input_001_1.outputs[15].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[15], 'display_shape'):
+                    group_input_001_1.outputs[15].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[15], 'enabled'):
+                    group_input_001_1.outputs[15].enabled = True
+                if hasattr(group_input_001_1.outputs[15], 'hide'):
+                    group_input_001_1.outputs[15].hide = False
+                if hasattr(group_input_001_1.outputs[15], 'hide_value'):
+                    group_input_001_1.outputs[15].hide_value = False
+                if hasattr(group_input_001_1.outputs[15], 'name'):
+                    group_input_001_1.outputs[15].name = 'Zone 1 Metallic'
+                if hasattr(group_input_001_1.outputs[15], 'show_expanded'):
+                    group_input_001_1.outputs[15].show_expanded = False
+                if hasattr(group_input_001_1.outputs[16], 'default_value'):
+                    group_input_001_1.outputs[16].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[16], 'display_shape'):
+                    group_input_001_1.outputs[16].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[16], 'enabled'):
+                    group_input_001_1.outputs[16].enabled = True
+                if hasattr(group_input_001_1.outputs[16], 'hide'):
+                    group_input_001_1.outputs[16].hide = False
+                if hasattr(group_input_001_1.outputs[16], 'hide_value'):
+                    group_input_001_1.outputs[16].hide_value = False
+                if hasattr(group_input_001_1.outputs[16], 'name'):
+                    group_input_001_1.outputs[16].name = 'Zone 1 SSS Amount'
+                if hasattr(group_input_001_1.outputs[16], 'show_expanded'):
+                    group_input_001_1.outputs[16].show_expanded = False
+                if hasattr(group_input_001_1.outputs[17], 'default_value'):
+                    group_input_001_1.outputs[17].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[17], 'display_shape'):
+                    group_input_001_1.outputs[17].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[17], 'enabled'):
+                    group_input_001_1.outputs[17].enabled = True
+                if hasattr(group_input_001_1.outputs[17], 'hide'):
+                    group_input_001_1.outputs[17].hide = False
+                if hasattr(group_input_001_1.outputs[17], 'hide_value'):
+                    group_input_001_1.outputs[17].hide_value = False
+                if hasattr(group_input_001_1.outputs[17], 'name'):
+                    group_input_001_1.outputs[17].name = 'Zone 1 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[17], 'show_expanded'):
+                    group_input_001_1.outputs[17].show_expanded = False
+                if hasattr(group_input_001_1.outputs[18], 'default_value'):
+                    group_input_001_1.outputs[18].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[18], 'display_shape'):
+                    group_input_001_1.outputs[18].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[18], 'enabled'):
+                    group_input_001_1.outputs[18].enabled = True
+                if hasattr(group_input_001_1.outputs[18], 'hide'):
+                    group_input_001_1.outputs[18].hide = False
+                if hasattr(group_input_001_1.outputs[18], 'hide_value'):
+                    group_input_001_1.outputs[18].hide_value = False
+                if hasattr(group_input_001_1.outputs[18], 'name'):
+                    group_input_001_1.outputs[18].name = 'Zone 1 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[18], 'show_expanded'):
+                    group_input_001_1.outputs[18].show_expanded = False
+                if hasattr(group_input_001_1.outputs[19], 'default_value'):
+                    group_input_001_1.outputs[19].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[19], 'display_shape'):
+                    group_input_001_1.outputs[19].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[19], 'enabled'):
+                    group_input_001_1.outputs[19].enabled = True
+                if hasattr(group_input_001_1.outputs[19], 'hide'):
+                    group_input_001_1.outputs[19].hide = False
+                if hasattr(group_input_001_1.outputs[19], 'hide_value'):
+                    group_input_001_1.outputs[19].hide_value = False
+                if hasattr(group_input_001_1.outputs[19], 'name'):
+                    group_input_001_1.outputs[19].name = 'Zone 1 Top Color'
+                if hasattr(group_input_001_1.outputs[19], 'show_expanded'):
+                    group_input_001_1.outputs[19].show_expanded = False
+                if hasattr(group_input_001_1.outputs[20], 'default_value'):
+                    group_input_001_1.outputs[20].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[20], 'display_shape'):
+                    group_input_001_1.outputs[20].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[20], 'enabled'):
+                    group_input_001_1.outputs[20].enabled = True
+                if hasattr(group_input_001_1.outputs[20], 'hide'):
+                    group_input_001_1.outputs[20].hide = False
+                if hasattr(group_input_001_1.outputs[20], 'hide_value'):
+                    group_input_001_1.outputs[20].hide_value = False
+                if hasattr(group_input_001_1.outputs[20], 'name'):
+                    group_input_001_1.outputs[20].name = 'Zone 1 Mid Color'
+                if hasattr(group_input_001_1.outputs[20], 'show_expanded'):
+                    group_input_001_1.outputs[20].show_expanded = False
+                if hasattr(group_input_001_1.outputs[21], 'default_value'):
+                    group_input_001_1.outputs[21].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[21], 'display_shape'):
+                    group_input_001_1.outputs[21].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[21], 'enabled'):
+                    group_input_001_1.outputs[21].enabled = True
+                if hasattr(group_input_001_1.outputs[21], 'hide'):
+                    group_input_001_1.outputs[21].hide = False
+                if hasattr(group_input_001_1.outputs[21], 'hide_value'):
+                    group_input_001_1.outputs[21].hide_value = False
+                if hasattr(group_input_001_1.outputs[21], 'name'):
+                    group_input_001_1.outputs[21].name = 'Zone 1 Bot Color'
+                if hasattr(group_input_001_1.outputs[21], 'show_expanded'):
+                    group_input_001_1.outputs[21].show_expanded = False
+                if hasattr(group_input_001_1.outputs[22], 'default_value'):
+                    group_input_001_1.outputs[22].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[22], 'display_shape'):
+                    group_input_001_1.outputs[22].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[22], 'enabled'):
+                    group_input_001_1.outputs[22].enabled = True
+                if hasattr(group_input_001_1.outputs[22], 'hide'):
+                    group_input_001_1.outputs[22].hide = False
+                if hasattr(group_input_001_1.outputs[22], 'hide_value'):
+                    group_input_001_1.outputs[22].hide_value = False
+                if hasattr(group_input_001_1.outputs[22], 'name'):
+                    group_input_001_1.outputs[22].name = 'Zone 1 ScratchColor'
+                if hasattr(group_input_001_1.outputs[22], 'show_expanded'):
+                    group_input_001_1.outputs[22].show_expanded = False
+                if hasattr(group_input_001_1.outputs[23], 'default_value'):
+                    group_input_001_1.outputs[23].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[23], 'display_shape'):
+                    group_input_001_1.outputs[23].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[23], 'enabled'):
+                    group_input_001_1.outputs[23].enabled = True
+                if hasattr(group_input_001_1.outputs[23], 'hide'):
+                    group_input_001_1.outputs[23].hide = False
+                if hasattr(group_input_001_1.outputs[23], 'hide_value'):
+                    group_input_001_1.outputs[23].hide_value = False
+                if hasattr(group_input_001_1.outputs[23], 'name'):
+                    group_input_001_1.outputs[23].name = 'Zone 1 SSS Color'
+                if hasattr(group_input_001_1.outputs[23], 'show_expanded'):
+                    group_input_001_1.outputs[23].show_expanded = False
+                if hasattr(group_input_001_1.outputs[24], 'default_value'):
+                    group_input_001_1.outputs[24].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[24], 'display_shape'):
+                    group_input_001_1.outputs[24].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[24], 'enabled'):
+                    group_input_001_1.outputs[24].enabled = True
+                if hasattr(group_input_001_1.outputs[24], 'hide'):
+                    group_input_001_1.outputs[24].hide = False
+                if hasattr(group_input_001_1.outputs[24], 'hide_value'):
+                    group_input_001_1.outputs[24].hide_value = False
+                if hasattr(group_input_001_1.outputs[24], 'name'):
+                    group_input_001_1.outputs[24].name = 'Zone 2 Toggle'
+                if hasattr(group_input_001_1.outputs[24], 'show_expanded'):
+                    group_input_001_1.outputs[24].show_expanded = False
+                if hasattr(group_input_001_1.outputs[25], 'default_value'):
+                    group_input_001_1.outputs[25].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[25], 'display_shape'):
+                    group_input_001_1.outputs[25].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[25], 'enabled'):
+                    group_input_001_1.outputs[25].enabled = True
+                if hasattr(group_input_001_1.outputs[25], 'hide'):
+                    group_input_001_1.outputs[25].hide = False
+                if hasattr(group_input_001_1.outputs[25], 'hide_value'):
+                    group_input_001_1.outputs[25].hide_value = False
+                if hasattr(group_input_001_1.outputs[25], 'name'):
+                    group_input_001_1.outputs[25].name = 'Zone 2 Gradient Out'
+                if hasattr(group_input_001_1.outputs[25], 'show_expanded'):
+                    group_input_001_1.outputs[25].show_expanded = False
+                if hasattr(group_input_001_1.outputs[26], 'default_value'):
+                    group_input_001_1.outputs[26].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[26], 'display_shape'):
+                    group_input_001_1.outputs[26].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[26], 'enabled'):
+                    group_input_001_1.outputs[26].enabled = True
+                if hasattr(group_input_001_1.outputs[26], 'hide'):
+                    group_input_001_1.outputs[26].hide = False
+                if hasattr(group_input_001_1.outputs[26], 'hide_value'):
+                    group_input_001_1.outputs[26].hide_value = False
+                if hasattr(group_input_001_1.outputs[26], 'name'):
+                    group_input_001_1.outputs[26].name = 'Zone 2 Rough Out'
+                if hasattr(group_input_001_1.outputs[26], 'show_expanded'):
+                    group_input_001_1.outputs[26].show_expanded = False
+                if hasattr(group_input_001_1.outputs[27], 'default_value'):
+                    group_input_001_1.outputs[27].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[27], 'display_shape'):
+                    group_input_001_1.outputs[27].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[27], 'enabled'):
+                    group_input_001_1.outputs[27].enabled = True
+                if hasattr(group_input_001_1.outputs[27], 'hide'):
+                    group_input_001_1.outputs[27].hide = False
+                if hasattr(group_input_001_1.outputs[27], 'hide_value'):
+                    group_input_001_1.outputs[27].hide_value = False
+                if hasattr(group_input_001_1.outputs[27], 'name'):
+                    group_input_001_1.outputs[27].name = 'Zone 2 Norm Out'
+                if hasattr(group_input_001_1.outputs[27], 'show_expanded'):
+                    group_input_001_1.outputs[27].show_expanded = False
+                if hasattr(group_input_001_1.outputs[28], 'default_value'):
+                    group_input_001_1.outputs[28].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[28], 'display_shape'):
+                    group_input_001_1.outputs[28].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[28], 'enabled'):
+                    group_input_001_1.outputs[28].enabled = True
+                if hasattr(group_input_001_1.outputs[28], 'hide'):
+                    group_input_001_1.outputs[28].hide = False
+                if hasattr(group_input_001_1.outputs[28], 'hide_value'):
+                    group_input_001_1.outputs[28].hide_value = False
+                if hasattr(group_input_001_1.outputs[28], 'name'):
+                    group_input_001_1.outputs[28].name = 'Zone 2 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[28], 'show_expanded'):
+                    group_input_001_1.outputs[28].show_expanded = False
+                if hasattr(group_input_001_1.outputs[29], 'default_value'):
+                    group_input_001_1.outputs[29].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[29], 'display_shape'):
+                    group_input_001_1.outputs[29].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[29], 'enabled'):
+                    group_input_001_1.outputs[29].enabled = True
+                if hasattr(group_input_001_1.outputs[29], 'hide'):
+                    group_input_001_1.outputs[29].hide = False
+                if hasattr(group_input_001_1.outputs[29], 'hide_value'):
+                    group_input_001_1.outputs[29].hide_value = False
+                if hasattr(group_input_001_1.outputs[29], 'name'):
+                    group_input_001_1.outputs[29].name = 'Zone 2 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[29], 'show_expanded'):
+                    group_input_001_1.outputs[29].show_expanded = False
+                if hasattr(group_input_001_1.outputs[30], 'default_value'):
+                    group_input_001_1.outputs[30].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[30], 'display_shape'):
+                    group_input_001_1.outputs[30].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[30], 'enabled'):
+                    group_input_001_1.outputs[30].enabled = True
+                if hasattr(group_input_001_1.outputs[30], 'hide'):
+                    group_input_001_1.outputs[30].hide = False
+                if hasattr(group_input_001_1.outputs[30], 'hide_value'):
+                    group_input_001_1.outputs[30].hide_value = False
+                if hasattr(group_input_001_1.outputs[30], 'name'):
+                    group_input_001_1.outputs[30].name = 'Zone 2 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[30], 'show_expanded'):
+                    group_input_001_1.outputs[30].show_expanded = False
+                if hasattr(group_input_001_1.outputs[31], 'default_value'):
+                    group_input_001_1.outputs[31].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[31], 'display_shape'):
+                    group_input_001_1.outputs[31].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[31], 'enabled'):
+                    group_input_001_1.outputs[31].enabled = True
+                if hasattr(group_input_001_1.outputs[31], 'hide'):
+                    group_input_001_1.outputs[31].hide = False
+                if hasattr(group_input_001_1.outputs[31], 'hide_value'):
+                    group_input_001_1.outputs[31].hide_value = False
+                if hasattr(group_input_001_1.outputs[31], 'name'):
+                    group_input_001_1.outputs[31].name = 'Zone 2 Metallic'
+                if hasattr(group_input_001_1.outputs[31], 'show_expanded'):
+                    group_input_001_1.outputs[31].show_expanded = False
+                if hasattr(group_input_001_1.outputs[32], 'default_value'):
+                    group_input_001_1.outputs[32].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[32], 'display_shape'):
+                    group_input_001_1.outputs[32].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[32], 'enabled'):
+                    group_input_001_1.outputs[32].enabled = True
+                if hasattr(group_input_001_1.outputs[32], 'hide'):
+                    group_input_001_1.outputs[32].hide = False
+                if hasattr(group_input_001_1.outputs[32], 'hide_value'):
+                    group_input_001_1.outputs[32].hide_value = False
+                if hasattr(group_input_001_1.outputs[32], 'name'):
+                    group_input_001_1.outputs[32].name = 'Zone 2 SSS Amount'
+                if hasattr(group_input_001_1.outputs[32], 'show_expanded'):
+                    group_input_001_1.outputs[32].show_expanded = False
+                if hasattr(group_input_001_1.outputs[33], 'default_value'):
+                    group_input_001_1.outputs[33].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[33], 'display_shape'):
+                    group_input_001_1.outputs[33].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[33], 'enabled'):
+                    group_input_001_1.outputs[33].enabled = True
+                if hasattr(group_input_001_1.outputs[33], 'hide'):
+                    group_input_001_1.outputs[33].hide = False
+                if hasattr(group_input_001_1.outputs[33], 'hide_value'):
+                    group_input_001_1.outputs[33].hide_value = False
+                if hasattr(group_input_001_1.outputs[33], 'name'):
+                    group_input_001_1.outputs[33].name = 'Zone 2 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[33], 'show_expanded'):
+                    group_input_001_1.outputs[33].show_expanded = False
+                if hasattr(group_input_001_1.outputs[34], 'default_value'):
+                    group_input_001_1.outputs[34].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[34], 'display_shape'):
+                    group_input_001_1.outputs[34].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[34], 'enabled'):
+                    group_input_001_1.outputs[34].enabled = True
+                if hasattr(group_input_001_1.outputs[34], 'hide'):
+                    group_input_001_1.outputs[34].hide = False
+                if hasattr(group_input_001_1.outputs[34], 'hide_value'):
+                    group_input_001_1.outputs[34].hide_value = False
+                if hasattr(group_input_001_1.outputs[34], 'name'):
+                    group_input_001_1.outputs[34].name = 'Zone 2 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[34], 'show_expanded'):
+                    group_input_001_1.outputs[34].show_expanded = False
+                if hasattr(group_input_001_1.outputs[35], 'default_value'):
+                    group_input_001_1.outputs[35].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[35], 'display_shape'):
+                    group_input_001_1.outputs[35].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[35], 'enabled'):
+                    group_input_001_1.outputs[35].enabled = True
+                if hasattr(group_input_001_1.outputs[35], 'hide'):
+                    group_input_001_1.outputs[35].hide = False
+                if hasattr(group_input_001_1.outputs[35], 'hide_value'):
+                    group_input_001_1.outputs[35].hide_value = False
+                if hasattr(group_input_001_1.outputs[35], 'name'):
+                    group_input_001_1.outputs[35].name = 'Zone 2 Top Color'
+                if hasattr(group_input_001_1.outputs[35], 'show_expanded'):
+                    group_input_001_1.outputs[35].show_expanded = False
+                if hasattr(group_input_001_1.outputs[36], 'default_value'):
+                    group_input_001_1.outputs[36].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[36], 'display_shape'):
+                    group_input_001_1.outputs[36].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[36], 'enabled'):
+                    group_input_001_1.outputs[36].enabled = True
+                if hasattr(group_input_001_1.outputs[36], 'hide'):
+                    group_input_001_1.outputs[36].hide = False
+                if hasattr(group_input_001_1.outputs[36], 'hide_value'):
+                    group_input_001_1.outputs[36].hide_value = False
+                if hasattr(group_input_001_1.outputs[36], 'name'):
+                    group_input_001_1.outputs[36].name = 'Zone 2 Mid Color'
+                if hasattr(group_input_001_1.outputs[36], 'show_expanded'):
+                    group_input_001_1.outputs[36].show_expanded = False
+                if hasattr(group_input_001_1.outputs[37], 'default_value'):
+                    group_input_001_1.outputs[37].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[37], 'display_shape'):
+                    group_input_001_1.outputs[37].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[37], 'enabled'):
+                    group_input_001_1.outputs[37].enabled = True
+                if hasattr(group_input_001_1.outputs[37], 'hide'):
+                    group_input_001_1.outputs[37].hide = False
+                if hasattr(group_input_001_1.outputs[37], 'hide_value'):
+                    group_input_001_1.outputs[37].hide_value = False
+                if hasattr(group_input_001_1.outputs[37], 'name'):
+                    group_input_001_1.outputs[37].name = 'Zone 2 Bot Color'
+                if hasattr(group_input_001_1.outputs[37], 'show_expanded'):
+                    group_input_001_1.outputs[37].show_expanded = False
+                if hasattr(group_input_001_1.outputs[38], 'default_value'):
+                    group_input_001_1.outputs[38].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[38], 'display_shape'):
+                    group_input_001_1.outputs[38].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[38], 'enabled'):
+                    group_input_001_1.outputs[38].enabled = True
+                if hasattr(group_input_001_1.outputs[38], 'hide'):
+                    group_input_001_1.outputs[38].hide = False
+                if hasattr(group_input_001_1.outputs[38], 'hide_value'):
+                    group_input_001_1.outputs[38].hide_value = False
+                if hasattr(group_input_001_1.outputs[38], 'name'):
+                    group_input_001_1.outputs[38].name = 'Zone 2 ScratchColor'
+                if hasattr(group_input_001_1.outputs[38], 'show_expanded'):
+                    group_input_001_1.outputs[38].show_expanded = False
+                if hasattr(group_input_001_1.outputs[39], 'default_value'):
+                    group_input_001_1.outputs[39].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[39], 'display_shape'):
+                    group_input_001_1.outputs[39].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[39], 'enabled'):
+                    group_input_001_1.outputs[39].enabled = True
+                if hasattr(group_input_001_1.outputs[39], 'hide'):
+                    group_input_001_1.outputs[39].hide = False
+                if hasattr(group_input_001_1.outputs[39], 'hide_value'):
+                    group_input_001_1.outputs[39].hide_value = False
+                if hasattr(group_input_001_1.outputs[39], 'name'):
+                    group_input_001_1.outputs[39].name = 'Zone 2 SSS Color'
+                if hasattr(group_input_001_1.outputs[39], 'show_expanded'):
+                    group_input_001_1.outputs[39].show_expanded = False
+                if hasattr(group_input_001_1.outputs[40], 'default_value'):
+                    group_input_001_1.outputs[40].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[40], 'display_shape'):
+                    group_input_001_1.outputs[40].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[40], 'enabled'):
+                    group_input_001_1.outputs[40].enabled = True
+                if hasattr(group_input_001_1.outputs[40], 'hide'):
+                    group_input_001_1.outputs[40].hide = False
+                if hasattr(group_input_001_1.outputs[40], 'hide_value'):
+                    group_input_001_1.outputs[40].hide_value = False
+                if hasattr(group_input_001_1.outputs[40], 'name'):
+                    group_input_001_1.outputs[40].name = 'Zone 3 Toggle'
+                if hasattr(group_input_001_1.outputs[40], 'show_expanded'):
+                    group_input_001_1.outputs[40].show_expanded = False
+                if hasattr(group_input_001_1.outputs[41], 'default_value'):
+                    group_input_001_1.outputs[41].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[41], 'display_shape'):
+                    group_input_001_1.outputs[41].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[41], 'enabled'):
+                    group_input_001_1.outputs[41].enabled = True
+                if hasattr(group_input_001_1.outputs[41], 'hide'):
+                    group_input_001_1.outputs[41].hide = False
+                if hasattr(group_input_001_1.outputs[41], 'hide_value'):
+                    group_input_001_1.outputs[41].hide_value = False
+                if hasattr(group_input_001_1.outputs[41], 'name'):
+                    group_input_001_1.outputs[41].name = 'Zone 3 Gradient Out'
+                if hasattr(group_input_001_1.outputs[41], 'show_expanded'):
+                    group_input_001_1.outputs[41].show_expanded = False
+                if hasattr(group_input_001_1.outputs[42], 'default_value'):
+                    group_input_001_1.outputs[42].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[42], 'display_shape'):
+                    group_input_001_1.outputs[42].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[42], 'enabled'):
+                    group_input_001_1.outputs[42].enabled = True
+                if hasattr(group_input_001_1.outputs[42], 'hide'):
+                    group_input_001_1.outputs[42].hide = False
+                if hasattr(group_input_001_1.outputs[42], 'hide_value'):
+                    group_input_001_1.outputs[42].hide_value = False
+                if hasattr(group_input_001_1.outputs[42], 'name'):
+                    group_input_001_1.outputs[42].name = 'Zone 3 Rough Out'
+                if hasattr(group_input_001_1.outputs[42], 'show_expanded'):
+                    group_input_001_1.outputs[42].show_expanded = False
+                if hasattr(group_input_001_1.outputs[43], 'default_value'):
+                    group_input_001_1.outputs[43].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[43], 'display_shape'):
+                    group_input_001_1.outputs[43].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[43], 'enabled'):
+                    group_input_001_1.outputs[43].enabled = True
+                if hasattr(group_input_001_1.outputs[43], 'hide'):
+                    group_input_001_1.outputs[43].hide = False
+                if hasattr(group_input_001_1.outputs[43], 'hide_value'):
+                    group_input_001_1.outputs[43].hide_value = False
+                if hasattr(group_input_001_1.outputs[43], 'name'):
+                    group_input_001_1.outputs[43].name = 'Zone 3 Norm Out'
+                if hasattr(group_input_001_1.outputs[43], 'show_expanded'):
+                    group_input_001_1.outputs[43].show_expanded = False
+                if hasattr(group_input_001_1.outputs[44], 'default_value'):
+                    group_input_001_1.outputs[44].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[44], 'display_shape'):
+                    group_input_001_1.outputs[44].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[44], 'enabled'):
+                    group_input_001_1.outputs[44].enabled = True
+                if hasattr(group_input_001_1.outputs[44], 'hide'):
+                    group_input_001_1.outputs[44].hide = False
+                if hasattr(group_input_001_1.outputs[44], 'hide_value'):
+                    group_input_001_1.outputs[44].hide_value = False
+                if hasattr(group_input_001_1.outputs[44], 'name'):
+                    group_input_001_1.outputs[44].name = 'Zone 3 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[44], 'show_expanded'):
+                    group_input_001_1.outputs[44].show_expanded = False
+                if hasattr(group_input_001_1.outputs[45], 'default_value'):
+                    group_input_001_1.outputs[45].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[45], 'display_shape'):
+                    group_input_001_1.outputs[45].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[45], 'enabled'):
+                    group_input_001_1.outputs[45].enabled = True
+                if hasattr(group_input_001_1.outputs[45], 'hide'):
+                    group_input_001_1.outputs[45].hide = False
+                if hasattr(group_input_001_1.outputs[45], 'hide_value'):
+                    group_input_001_1.outputs[45].hide_value = False
+                if hasattr(group_input_001_1.outputs[45], 'name'):
+                    group_input_001_1.outputs[45].name = 'Zone 3 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[45], 'show_expanded'):
+                    group_input_001_1.outputs[45].show_expanded = False
+                if hasattr(group_input_001_1.outputs[46], 'default_value'):
+                    group_input_001_1.outputs[46].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[46], 'display_shape'):
+                    group_input_001_1.outputs[46].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[46], 'enabled'):
+                    group_input_001_1.outputs[46].enabled = True
+                if hasattr(group_input_001_1.outputs[46], 'hide'):
+                    group_input_001_1.outputs[46].hide = False
+                if hasattr(group_input_001_1.outputs[46], 'hide_value'):
+                    group_input_001_1.outputs[46].hide_value = False
+                if hasattr(group_input_001_1.outputs[46], 'name'):
+                    group_input_001_1.outputs[46].name = 'Zone 3 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[46], 'show_expanded'):
+                    group_input_001_1.outputs[46].show_expanded = False
+                if hasattr(group_input_001_1.outputs[47], 'default_value'):
+                    group_input_001_1.outputs[47].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[47], 'display_shape'):
+                    group_input_001_1.outputs[47].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[47], 'enabled'):
+                    group_input_001_1.outputs[47].enabled = True
+                if hasattr(group_input_001_1.outputs[47], 'hide'):
+                    group_input_001_1.outputs[47].hide = False
+                if hasattr(group_input_001_1.outputs[47], 'hide_value'):
+                    group_input_001_1.outputs[47].hide_value = False
+                if hasattr(group_input_001_1.outputs[47], 'name'):
+                    group_input_001_1.outputs[47].name = 'Zone 3 Metallic'
+                if hasattr(group_input_001_1.outputs[47], 'show_expanded'):
+                    group_input_001_1.outputs[47].show_expanded = False
+                if hasattr(group_input_001_1.outputs[48], 'default_value'):
+                    group_input_001_1.outputs[48].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[48], 'display_shape'):
+                    group_input_001_1.outputs[48].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[48], 'enabled'):
+                    group_input_001_1.outputs[48].enabled = True
+                if hasattr(group_input_001_1.outputs[48], 'hide'):
+                    group_input_001_1.outputs[48].hide = False
+                if hasattr(group_input_001_1.outputs[48], 'hide_value'):
+                    group_input_001_1.outputs[48].hide_value = False
+                if hasattr(group_input_001_1.outputs[48], 'name'):
+                    group_input_001_1.outputs[48].name = 'Zone 3 SSS Amount'
+                if hasattr(group_input_001_1.outputs[48], 'show_expanded'):
+                    group_input_001_1.outputs[48].show_expanded = False
+                if hasattr(group_input_001_1.outputs[49], 'default_value'):
+                    group_input_001_1.outputs[49].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[49], 'display_shape'):
+                    group_input_001_1.outputs[49].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[49], 'enabled'):
+                    group_input_001_1.outputs[49].enabled = True
+                if hasattr(group_input_001_1.outputs[49], 'hide'):
+                    group_input_001_1.outputs[49].hide = False
+                if hasattr(group_input_001_1.outputs[49], 'hide_value'):
+                    group_input_001_1.outputs[49].hide_value = False
+                if hasattr(group_input_001_1.outputs[49], 'name'):
+                    group_input_001_1.outputs[49].name = 'Zone 3 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[49], 'show_expanded'):
+                    group_input_001_1.outputs[49].show_expanded = False
+                if hasattr(group_input_001_1.outputs[50], 'default_value'):
+                    group_input_001_1.outputs[50].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[50], 'display_shape'):
+                    group_input_001_1.outputs[50].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[50], 'enabled'):
+                    group_input_001_1.outputs[50].enabled = True
+                if hasattr(group_input_001_1.outputs[50], 'hide'):
+                    group_input_001_1.outputs[50].hide = False
+                if hasattr(group_input_001_1.outputs[50], 'hide_value'):
+                    group_input_001_1.outputs[50].hide_value = False
+                if hasattr(group_input_001_1.outputs[50], 'name'):
+                    group_input_001_1.outputs[50].name = 'Zone 3 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[50], 'show_expanded'):
+                    group_input_001_1.outputs[50].show_expanded = False
+                if hasattr(group_input_001_1.outputs[51], 'default_value'):
+                    group_input_001_1.outputs[51].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[51], 'display_shape'):
+                    group_input_001_1.outputs[51].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[51], 'enabled'):
+                    group_input_001_1.outputs[51].enabled = True
+                if hasattr(group_input_001_1.outputs[51], 'hide'):
+                    group_input_001_1.outputs[51].hide = False
+                if hasattr(group_input_001_1.outputs[51], 'hide_value'):
+                    group_input_001_1.outputs[51].hide_value = False
+                if hasattr(group_input_001_1.outputs[51], 'name'):
+                    group_input_001_1.outputs[51].name = 'Zone 3 Top Color'
+                if hasattr(group_input_001_1.outputs[51], 'show_expanded'):
+                    group_input_001_1.outputs[51].show_expanded = False
+                if hasattr(group_input_001_1.outputs[52], 'default_value'):
+                    group_input_001_1.outputs[52].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[52], 'display_shape'):
+                    group_input_001_1.outputs[52].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[52], 'enabled'):
+                    group_input_001_1.outputs[52].enabled = True
+                if hasattr(group_input_001_1.outputs[52], 'hide'):
+                    group_input_001_1.outputs[52].hide = False
+                if hasattr(group_input_001_1.outputs[52], 'hide_value'):
+                    group_input_001_1.outputs[52].hide_value = False
+                if hasattr(group_input_001_1.outputs[52], 'name'):
+                    group_input_001_1.outputs[52].name = 'Zone 3 Mid Color'
+                if hasattr(group_input_001_1.outputs[52], 'show_expanded'):
+                    group_input_001_1.outputs[52].show_expanded = False
+                if hasattr(group_input_001_1.outputs[53], 'default_value'):
+                    group_input_001_1.outputs[53].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[53], 'display_shape'):
+                    group_input_001_1.outputs[53].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[53], 'enabled'):
+                    group_input_001_1.outputs[53].enabled = True
+                if hasattr(group_input_001_1.outputs[53], 'hide'):
+                    group_input_001_1.outputs[53].hide = False
+                if hasattr(group_input_001_1.outputs[53], 'hide_value'):
+                    group_input_001_1.outputs[53].hide_value = False
+                if hasattr(group_input_001_1.outputs[53], 'name'):
+                    group_input_001_1.outputs[53].name = 'Zone 3 Bot Color'
+                if hasattr(group_input_001_1.outputs[53], 'show_expanded'):
+                    group_input_001_1.outputs[53].show_expanded = False
+                if hasattr(group_input_001_1.outputs[54], 'default_value'):
+                    group_input_001_1.outputs[54].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[54], 'display_shape'):
+                    group_input_001_1.outputs[54].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[54], 'enabled'):
+                    group_input_001_1.outputs[54].enabled = True
+                if hasattr(group_input_001_1.outputs[54], 'hide'):
+                    group_input_001_1.outputs[54].hide = False
+                if hasattr(group_input_001_1.outputs[54], 'hide_value'):
+                    group_input_001_1.outputs[54].hide_value = False
+                if hasattr(group_input_001_1.outputs[54], 'name'):
+                    group_input_001_1.outputs[54].name = 'Zone 3 ScratchColor'
+                if hasattr(group_input_001_1.outputs[54], 'show_expanded'):
+                    group_input_001_1.outputs[54].show_expanded = False
+                if hasattr(group_input_001_1.outputs[55], 'default_value'):
+                    group_input_001_1.outputs[55].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[55], 'display_shape'):
+                    group_input_001_1.outputs[55].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[55], 'enabled'):
+                    group_input_001_1.outputs[55].enabled = True
+                if hasattr(group_input_001_1.outputs[55], 'hide'):
+                    group_input_001_1.outputs[55].hide = False
+                if hasattr(group_input_001_1.outputs[55], 'hide_value'):
+                    group_input_001_1.outputs[55].hide_value = False
+                if hasattr(group_input_001_1.outputs[55], 'name'):
+                    group_input_001_1.outputs[55].name = 'Zone 3 SSS Color'
+                if hasattr(group_input_001_1.outputs[55], 'show_expanded'):
+                    group_input_001_1.outputs[55].show_expanded = False
+                if hasattr(group_input_001_1.outputs[56], 'default_value'):
+                    group_input_001_1.outputs[56].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[56], 'display_shape'):
+                    group_input_001_1.outputs[56].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[56], 'enabled'):
+                    group_input_001_1.outputs[56].enabled = True
+                if hasattr(group_input_001_1.outputs[56], 'hide'):
+                    group_input_001_1.outputs[56].hide = False
+                if hasattr(group_input_001_1.outputs[56], 'hide_value'):
+                    group_input_001_1.outputs[56].hide_value = False
+                if hasattr(group_input_001_1.outputs[56], 'name'):
+                    group_input_001_1.outputs[56].name = 'Zone 4 Toggle'
+                if hasattr(group_input_001_1.outputs[56], 'show_expanded'):
+                    group_input_001_1.outputs[56].show_expanded = False
+                if hasattr(group_input_001_1.outputs[57], 'default_value'):
+                    group_input_001_1.outputs[57].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[57], 'display_shape'):
+                    group_input_001_1.outputs[57].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[57], 'enabled'):
+                    group_input_001_1.outputs[57].enabled = True
+                if hasattr(group_input_001_1.outputs[57], 'hide'):
+                    group_input_001_1.outputs[57].hide = False
+                if hasattr(group_input_001_1.outputs[57], 'hide_value'):
+                    group_input_001_1.outputs[57].hide_value = False
+                if hasattr(group_input_001_1.outputs[57], 'name'):
+                    group_input_001_1.outputs[57].name = 'Zone 4 Gradient Out'
+                if hasattr(group_input_001_1.outputs[57], 'show_expanded'):
+                    group_input_001_1.outputs[57].show_expanded = False
+                if hasattr(group_input_001_1.outputs[58], 'default_value'):
+                    group_input_001_1.outputs[58].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[58], 'display_shape'):
+                    group_input_001_1.outputs[58].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[58], 'enabled'):
+                    group_input_001_1.outputs[58].enabled = True
+                if hasattr(group_input_001_1.outputs[58], 'hide'):
+                    group_input_001_1.outputs[58].hide = False
+                if hasattr(group_input_001_1.outputs[58], 'hide_value'):
+                    group_input_001_1.outputs[58].hide_value = False
+                if hasattr(group_input_001_1.outputs[58], 'name'):
+                    group_input_001_1.outputs[58].name = 'Zone 4 Rough Out'
+                if hasattr(group_input_001_1.outputs[58], 'show_expanded'):
+                    group_input_001_1.outputs[58].show_expanded = False
+                if hasattr(group_input_001_1.outputs[59], 'default_value'):
+                    group_input_001_1.outputs[59].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[59], 'display_shape'):
+                    group_input_001_1.outputs[59].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[59], 'enabled'):
+                    group_input_001_1.outputs[59].enabled = True
+                if hasattr(group_input_001_1.outputs[59], 'hide'):
+                    group_input_001_1.outputs[59].hide = False
+                if hasattr(group_input_001_1.outputs[59], 'hide_value'):
+                    group_input_001_1.outputs[59].hide_value = False
+                if hasattr(group_input_001_1.outputs[59], 'name'):
+                    group_input_001_1.outputs[59].name = 'Zone 4 Norm Out'
+                if hasattr(group_input_001_1.outputs[59], 'show_expanded'):
+                    group_input_001_1.outputs[59].show_expanded = False
+                if hasattr(group_input_001_1.outputs[60], 'default_value'):
+                    group_input_001_1.outputs[60].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[60], 'display_shape'):
+                    group_input_001_1.outputs[60].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[60], 'enabled'):
+                    group_input_001_1.outputs[60].enabled = True
+                if hasattr(group_input_001_1.outputs[60], 'hide'):
+                    group_input_001_1.outputs[60].hide = False
+                if hasattr(group_input_001_1.outputs[60], 'hide_value'):
+                    group_input_001_1.outputs[60].hide_value = False
+                if hasattr(group_input_001_1.outputs[60], 'name'):
+                    group_input_001_1.outputs[60].name = 'Zone 4 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[60], 'show_expanded'):
+                    group_input_001_1.outputs[60].show_expanded = False
+                if hasattr(group_input_001_1.outputs[61], 'default_value'):
+                    group_input_001_1.outputs[61].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[61], 'display_shape'):
+                    group_input_001_1.outputs[61].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[61], 'enabled'):
+                    group_input_001_1.outputs[61].enabled = True
+                if hasattr(group_input_001_1.outputs[61], 'hide'):
+                    group_input_001_1.outputs[61].hide = False
+                if hasattr(group_input_001_1.outputs[61], 'hide_value'):
+                    group_input_001_1.outputs[61].hide_value = False
+                if hasattr(group_input_001_1.outputs[61], 'name'):
+                    group_input_001_1.outputs[61].name = 'Zone 4 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[61], 'show_expanded'):
+                    group_input_001_1.outputs[61].show_expanded = False
+                if hasattr(group_input_001_1.outputs[62], 'default_value'):
+                    group_input_001_1.outputs[62].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[62], 'display_shape'):
+                    group_input_001_1.outputs[62].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[62], 'enabled'):
+                    group_input_001_1.outputs[62].enabled = True
+                if hasattr(group_input_001_1.outputs[62], 'hide'):
+                    group_input_001_1.outputs[62].hide = False
+                if hasattr(group_input_001_1.outputs[62], 'hide_value'):
+                    group_input_001_1.outputs[62].hide_value = False
+                if hasattr(group_input_001_1.outputs[62], 'name'):
+                    group_input_001_1.outputs[62].name = 'Zone 4 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[62], 'show_expanded'):
+                    group_input_001_1.outputs[62].show_expanded = False
+                if hasattr(group_input_001_1.outputs[63], 'default_value'):
+                    group_input_001_1.outputs[63].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[63], 'display_shape'):
+                    group_input_001_1.outputs[63].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[63], 'enabled'):
+                    group_input_001_1.outputs[63].enabled = True
+                if hasattr(group_input_001_1.outputs[63], 'hide'):
+                    group_input_001_1.outputs[63].hide = False
+                if hasattr(group_input_001_1.outputs[63], 'hide_value'):
+                    group_input_001_1.outputs[63].hide_value = False
+                if hasattr(group_input_001_1.outputs[63], 'name'):
+                    group_input_001_1.outputs[63].name = 'Zone 4 Metallic'
+                if hasattr(group_input_001_1.outputs[63], 'show_expanded'):
+                    group_input_001_1.outputs[63].show_expanded = False
+                if hasattr(group_input_001_1.outputs[64], 'default_value'):
+                    group_input_001_1.outputs[64].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[64], 'display_shape'):
+                    group_input_001_1.outputs[64].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[64], 'enabled'):
+                    group_input_001_1.outputs[64].enabled = True
+                if hasattr(group_input_001_1.outputs[64], 'hide'):
+                    group_input_001_1.outputs[64].hide = False
+                if hasattr(group_input_001_1.outputs[64], 'hide_value'):
+                    group_input_001_1.outputs[64].hide_value = False
+                if hasattr(group_input_001_1.outputs[64], 'name'):
+                    group_input_001_1.outputs[64].name = 'Zone 4 SSS Amount'
+                if hasattr(group_input_001_1.outputs[64], 'show_expanded'):
+                    group_input_001_1.outputs[64].show_expanded = False
+                if hasattr(group_input_001_1.outputs[65], 'default_value'):
+                    group_input_001_1.outputs[65].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[65], 'display_shape'):
+                    group_input_001_1.outputs[65].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[65], 'enabled'):
+                    group_input_001_1.outputs[65].enabled = True
+                if hasattr(group_input_001_1.outputs[65], 'hide'):
+                    group_input_001_1.outputs[65].hide = False
+                if hasattr(group_input_001_1.outputs[65], 'hide_value'):
+                    group_input_001_1.outputs[65].hide_value = False
+                if hasattr(group_input_001_1.outputs[65], 'name'):
+                    group_input_001_1.outputs[65].name = 'Zone 4 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[65], 'show_expanded'):
+                    group_input_001_1.outputs[65].show_expanded = False
+                if hasattr(group_input_001_1.outputs[66], 'default_value'):
+                    group_input_001_1.outputs[66].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[66], 'display_shape'):
+                    group_input_001_1.outputs[66].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[66], 'enabled'):
+                    group_input_001_1.outputs[66].enabled = True
+                if hasattr(group_input_001_1.outputs[66], 'hide'):
+                    group_input_001_1.outputs[66].hide = False
+                if hasattr(group_input_001_1.outputs[66], 'hide_value'):
+                    group_input_001_1.outputs[66].hide_value = False
+                if hasattr(group_input_001_1.outputs[66], 'name'):
+                    group_input_001_1.outputs[66].name = 'Zone 4 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[66], 'show_expanded'):
+                    group_input_001_1.outputs[66].show_expanded = False
+                if hasattr(group_input_001_1.outputs[67], 'default_value'):
+                    group_input_001_1.outputs[67].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[67], 'display_shape'):
+                    group_input_001_1.outputs[67].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[67], 'enabled'):
+                    group_input_001_1.outputs[67].enabled = True
+                if hasattr(group_input_001_1.outputs[67], 'hide'):
+                    group_input_001_1.outputs[67].hide = False
+                if hasattr(group_input_001_1.outputs[67], 'hide_value'):
+                    group_input_001_1.outputs[67].hide_value = False
+                if hasattr(group_input_001_1.outputs[67], 'name'):
+                    group_input_001_1.outputs[67].name = 'Zone 4 Top Color'
+                if hasattr(group_input_001_1.outputs[67], 'show_expanded'):
+                    group_input_001_1.outputs[67].show_expanded = False
+                if hasattr(group_input_001_1.outputs[68], 'default_value'):
+                    group_input_001_1.outputs[68].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[68], 'display_shape'):
+                    group_input_001_1.outputs[68].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[68], 'enabled'):
+                    group_input_001_1.outputs[68].enabled = True
+                if hasattr(group_input_001_1.outputs[68], 'hide'):
+                    group_input_001_1.outputs[68].hide = False
+                if hasattr(group_input_001_1.outputs[68], 'hide_value'):
+                    group_input_001_1.outputs[68].hide_value = False
+                if hasattr(group_input_001_1.outputs[68], 'name'):
+                    group_input_001_1.outputs[68].name = 'Zone 4 Mid Color'
+                if hasattr(group_input_001_1.outputs[68], 'show_expanded'):
+                    group_input_001_1.outputs[68].show_expanded = False
+                if hasattr(group_input_001_1.outputs[69], 'default_value'):
+                    group_input_001_1.outputs[69].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[69], 'display_shape'):
+                    group_input_001_1.outputs[69].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[69], 'enabled'):
+                    group_input_001_1.outputs[69].enabled = True
+                if hasattr(group_input_001_1.outputs[69], 'hide'):
+                    group_input_001_1.outputs[69].hide = False
+                if hasattr(group_input_001_1.outputs[69], 'hide_value'):
+                    group_input_001_1.outputs[69].hide_value = False
+                if hasattr(group_input_001_1.outputs[69], 'name'):
+                    group_input_001_1.outputs[69].name = 'Zone 4 Bot Color'
+                if hasattr(group_input_001_1.outputs[69], 'show_expanded'):
+                    group_input_001_1.outputs[69].show_expanded = False
+                if hasattr(group_input_001_1.outputs[70], 'default_value'):
+                    group_input_001_1.outputs[70].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[70], 'display_shape'):
+                    group_input_001_1.outputs[70].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[70], 'enabled'):
+                    group_input_001_1.outputs[70].enabled = True
+                if hasattr(group_input_001_1.outputs[70], 'hide'):
+                    group_input_001_1.outputs[70].hide = False
+                if hasattr(group_input_001_1.outputs[70], 'hide_value'):
+                    group_input_001_1.outputs[70].hide_value = False
+                if hasattr(group_input_001_1.outputs[70], 'name'):
+                    group_input_001_1.outputs[70].name = 'Zone 4 ScratchColor'
+                if hasattr(group_input_001_1.outputs[70], 'show_expanded'):
+                    group_input_001_1.outputs[70].show_expanded = False
+                if hasattr(group_input_001_1.outputs[71], 'default_value'):
+                    group_input_001_1.outputs[71].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[71], 'display_shape'):
+                    group_input_001_1.outputs[71].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[71], 'enabled'):
+                    group_input_001_1.outputs[71].enabled = True
+                if hasattr(group_input_001_1.outputs[71], 'hide'):
+                    group_input_001_1.outputs[71].hide = False
+                if hasattr(group_input_001_1.outputs[71], 'hide_value'):
+                    group_input_001_1.outputs[71].hide_value = False
+                if hasattr(group_input_001_1.outputs[71], 'name'):
+                    group_input_001_1.outputs[71].name = 'Zone 4 SSS Color'
+                if hasattr(group_input_001_1.outputs[71], 'show_expanded'):
+                    group_input_001_1.outputs[71].show_expanded = False
+                if hasattr(group_input_001_1.outputs[72], 'default_value'):
+                    group_input_001_1.outputs[72].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[72], 'display_shape'):
+                    group_input_001_1.outputs[72].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[72], 'enabled'):
+                    group_input_001_1.outputs[72].enabled = True
+                if hasattr(group_input_001_1.outputs[72], 'hide'):
+                    group_input_001_1.outputs[72].hide = False
+                if hasattr(group_input_001_1.outputs[72], 'hide_value'):
+                    group_input_001_1.outputs[72].hide_value = False
+                if hasattr(group_input_001_1.outputs[72], 'name'):
+                    group_input_001_1.outputs[72].name = 'Zone 5 Toggle'
+                if hasattr(group_input_001_1.outputs[72], 'show_expanded'):
+                    group_input_001_1.outputs[72].show_expanded = False
+                if hasattr(group_input_001_1.outputs[73], 'default_value'):
+                    group_input_001_1.outputs[73].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[73], 'display_shape'):
+                    group_input_001_1.outputs[73].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[73], 'enabled'):
+                    group_input_001_1.outputs[73].enabled = True
+                if hasattr(group_input_001_1.outputs[73], 'hide'):
+                    group_input_001_1.outputs[73].hide = False
+                if hasattr(group_input_001_1.outputs[73], 'hide_value'):
+                    group_input_001_1.outputs[73].hide_value = False
+                if hasattr(group_input_001_1.outputs[73], 'name'):
+                    group_input_001_1.outputs[73].name = 'Zone 5 Gradient Out'
+                if hasattr(group_input_001_1.outputs[73], 'show_expanded'):
+                    group_input_001_1.outputs[73].show_expanded = False
+                if hasattr(group_input_001_1.outputs[74], 'default_value'):
+                    group_input_001_1.outputs[74].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[74], 'display_shape'):
+                    group_input_001_1.outputs[74].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[74], 'enabled'):
+                    group_input_001_1.outputs[74].enabled = True
+                if hasattr(group_input_001_1.outputs[74], 'hide'):
+                    group_input_001_1.outputs[74].hide = False
+                if hasattr(group_input_001_1.outputs[74], 'hide_value'):
+                    group_input_001_1.outputs[74].hide_value = False
+                if hasattr(group_input_001_1.outputs[74], 'name'):
+                    group_input_001_1.outputs[74].name = 'Zone 5 Rough Out'
+                if hasattr(group_input_001_1.outputs[74], 'show_expanded'):
+                    group_input_001_1.outputs[74].show_expanded = False
+                if hasattr(group_input_001_1.outputs[75], 'default_value'):
+                    group_input_001_1.outputs[75].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[75], 'display_shape'):
+                    group_input_001_1.outputs[75].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[75], 'enabled'):
+                    group_input_001_1.outputs[75].enabled = True
+                if hasattr(group_input_001_1.outputs[75], 'hide'):
+                    group_input_001_1.outputs[75].hide = False
+                if hasattr(group_input_001_1.outputs[75], 'hide_value'):
+                    group_input_001_1.outputs[75].hide_value = False
+                if hasattr(group_input_001_1.outputs[75], 'name'):
+                    group_input_001_1.outputs[75].name = 'Zone 5 Norm Out'
+                if hasattr(group_input_001_1.outputs[75], 'show_expanded'):
+                    group_input_001_1.outputs[75].show_expanded = False
+                if hasattr(group_input_001_1.outputs[76], 'default_value'):
+                    group_input_001_1.outputs[76].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[76], 'display_shape'):
+                    group_input_001_1.outputs[76].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[76], 'enabled'):
+                    group_input_001_1.outputs[76].enabled = True
+                if hasattr(group_input_001_1.outputs[76], 'hide'):
+                    group_input_001_1.outputs[76].hide = False
+                if hasattr(group_input_001_1.outputs[76], 'hide_value'):
+                    group_input_001_1.outputs[76].hide_value = False
+                if hasattr(group_input_001_1.outputs[76], 'name'):
+                    group_input_001_1.outputs[76].name = 'Zone 5 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[76], 'show_expanded'):
+                    group_input_001_1.outputs[76].show_expanded = False
+                if hasattr(group_input_001_1.outputs[77], 'default_value'):
+                    group_input_001_1.outputs[77].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[77], 'display_shape'):
+                    group_input_001_1.outputs[77].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[77], 'enabled'):
+                    group_input_001_1.outputs[77].enabled = True
+                if hasattr(group_input_001_1.outputs[77], 'hide'):
+                    group_input_001_1.outputs[77].hide = False
+                if hasattr(group_input_001_1.outputs[77], 'hide_value'):
+                    group_input_001_1.outputs[77].hide_value = False
+                if hasattr(group_input_001_1.outputs[77], 'name'):
+                    group_input_001_1.outputs[77].name = 'Zone 5 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[77], 'show_expanded'):
+                    group_input_001_1.outputs[77].show_expanded = False
+                if hasattr(group_input_001_1.outputs[78], 'default_value'):
+                    group_input_001_1.outputs[78].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[78], 'display_shape'):
+                    group_input_001_1.outputs[78].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[78], 'enabled'):
+                    group_input_001_1.outputs[78].enabled = True
+                if hasattr(group_input_001_1.outputs[78], 'hide'):
+                    group_input_001_1.outputs[78].hide = False
+                if hasattr(group_input_001_1.outputs[78], 'hide_value'):
+                    group_input_001_1.outputs[78].hide_value = False
+                if hasattr(group_input_001_1.outputs[78], 'name'):
+                    group_input_001_1.outputs[78].name = 'Zone 5 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[78], 'show_expanded'):
+                    group_input_001_1.outputs[78].show_expanded = False
+                if hasattr(group_input_001_1.outputs[79], 'default_value'):
+                    group_input_001_1.outputs[79].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[79], 'display_shape'):
+                    group_input_001_1.outputs[79].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[79], 'enabled'):
+                    group_input_001_1.outputs[79].enabled = True
+                if hasattr(group_input_001_1.outputs[79], 'hide'):
+                    group_input_001_1.outputs[79].hide = False
+                if hasattr(group_input_001_1.outputs[79], 'hide_value'):
+                    group_input_001_1.outputs[79].hide_value = False
+                if hasattr(group_input_001_1.outputs[79], 'name'):
+                    group_input_001_1.outputs[79].name = 'Zone 5 Metallic'
+                if hasattr(group_input_001_1.outputs[79], 'show_expanded'):
+                    group_input_001_1.outputs[79].show_expanded = False
+                if hasattr(group_input_001_1.outputs[80], 'default_value'):
+                    group_input_001_1.outputs[80].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[80], 'display_shape'):
+                    group_input_001_1.outputs[80].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[80], 'enabled'):
+                    group_input_001_1.outputs[80].enabled = True
+                if hasattr(group_input_001_1.outputs[80], 'hide'):
+                    group_input_001_1.outputs[80].hide = False
+                if hasattr(group_input_001_1.outputs[80], 'hide_value'):
+                    group_input_001_1.outputs[80].hide_value = False
+                if hasattr(group_input_001_1.outputs[80], 'name'):
+                    group_input_001_1.outputs[80].name = 'Zone 5 SSS Amount'
+                if hasattr(group_input_001_1.outputs[80], 'show_expanded'):
+                    group_input_001_1.outputs[80].show_expanded = False
+                if hasattr(group_input_001_1.outputs[81], 'default_value'):
+                    group_input_001_1.outputs[81].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[81], 'display_shape'):
+                    group_input_001_1.outputs[81].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[81], 'enabled'):
+                    group_input_001_1.outputs[81].enabled = True
+                if hasattr(group_input_001_1.outputs[81], 'hide'):
+                    group_input_001_1.outputs[81].hide = False
+                if hasattr(group_input_001_1.outputs[81], 'hide_value'):
+                    group_input_001_1.outputs[81].hide_value = False
+                if hasattr(group_input_001_1.outputs[81], 'name'):
+                    group_input_001_1.outputs[81].name = 'Zone 5 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[81], 'show_expanded'):
+                    group_input_001_1.outputs[81].show_expanded = False
+                if hasattr(group_input_001_1.outputs[82], 'default_value'):
+                    group_input_001_1.outputs[82].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[82], 'display_shape'):
+                    group_input_001_1.outputs[82].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[82], 'enabled'):
+                    group_input_001_1.outputs[82].enabled = True
+                if hasattr(group_input_001_1.outputs[82], 'hide'):
+                    group_input_001_1.outputs[82].hide = False
+                if hasattr(group_input_001_1.outputs[82], 'hide_value'):
+                    group_input_001_1.outputs[82].hide_value = False
+                if hasattr(group_input_001_1.outputs[82], 'name'):
+                    group_input_001_1.outputs[82].name = 'Zone 5 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[82], 'show_expanded'):
+                    group_input_001_1.outputs[82].show_expanded = False
+                if hasattr(group_input_001_1.outputs[83], 'default_value'):
+                    group_input_001_1.outputs[83].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[83], 'display_shape'):
+                    group_input_001_1.outputs[83].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[83], 'enabled'):
+                    group_input_001_1.outputs[83].enabled = True
+                if hasattr(group_input_001_1.outputs[83], 'hide'):
+                    group_input_001_1.outputs[83].hide = False
+                if hasattr(group_input_001_1.outputs[83], 'hide_value'):
+                    group_input_001_1.outputs[83].hide_value = False
+                if hasattr(group_input_001_1.outputs[83], 'name'):
+                    group_input_001_1.outputs[83].name = 'Zone 5 Top Color'
+                if hasattr(group_input_001_1.outputs[83], 'show_expanded'):
+                    group_input_001_1.outputs[83].show_expanded = False
+                if hasattr(group_input_001_1.outputs[84], 'default_value'):
+                    group_input_001_1.outputs[84].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[84], 'display_shape'):
+                    group_input_001_1.outputs[84].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[84], 'enabled'):
+                    group_input_001_1.outputs[84].enabled = True
+                if hasattr(group_input_001_1.outputs[84], 'hide'):
+                    group_input_001_1.outputs[84].hide = False
+                if hasattr(group_input_001_1.outputs[84], 'hide_value'):
+                    group_input_001_1.outputs[84].hide_value = False
+                if hasattr(group_input_001_1.outputs[84], 'name'):
+                    group_input_001_1.outputs[84].name = 'Zone 5 Mid Color'
+                if hasattr(group_input_001_1.outputs[84], 'show_expanded'):
+                    group_input_001_1.outputs[84].show_expanded = False
+                if hasattr(group_input_001_1.outputs[85], 'default_value'):
+                    group_input_001_1.outputs[85].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[85], 'display_shape'):
+                    group_input_001_1.outputs[85].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[85], 'enabled'):
+                    group_input_001_1.outputs[85].enabled = True
+                if hasattr(group_input_001_1.outputs[85], 'hide'):
+                    group_input_001_1.outputs[85].hide = False
+                if hasattr(group_input_001_1.outputs[85], 'hide_value'):
+                    group_input_001_1.outputs[85].hide_value = False
+                if hasattr(group_input_001_1.outputs[85], 'name'):
+                    group_input_001_1.outputs[85].name = 'Zone 5 Bot Color'
+                if hasattr(group_input_001_1.outputs[85], 'show_expanded'):
+                    group_input_001_1.outputs[85].show_expanded = False
+                if hasattr(group_input_001_1.outputs[86], 'default_value'):
+                    group_input_001_1.outputs[86].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[86], 'display_shape'):
+                    group_input_001_1.outputs[86].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[86], 'enabled'):
+                    group_input_001_1.outputs[86].enabled = True
+                if hasattr(group_input_001_1.outputs[86], 'hide'):
+                    group_input_001_1.outputs[86].hide = False
+                if hasattr(group_input_001_1.outputs[86], 'hide_value'):
+                    group_input_001_1.outputs[86].hide_value = False
+                if hasattr(group_input_001_1.outputs[86], 'name'):
+                    group_input_001_1.outputs[86].name = 'Zone 5 ScratchColor'
+                if hasattr(group_input_001_1.outputs[86], 'show_expanded'):
+                    group_input_001_1.outputs[86].show_expanded = False
+                if hasattr(group_input_001_1.outputs[87], 'default_value'):
+                    group_input_001_1.outputs[87].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[87], 'display_shape'):
+                    group_input_001_1.outputs[87].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[87], 'enabled'):
+                    group_input_001_1.outputs[87].enabled = True
+                if hasattr(group_input_001_1.outputs[87], 'hide'):
+                    group_input_001_1.outputs[87].hide = False
+                if hasattr(group_input_001_1.outputs[87], 'hide_value'):
+                    group_input_001_1.outputs[87].hide_value = False
+                if hasattr(group_input_001_1.outputs[87], 'name'):
+                    group_input_001_1.outputs[87].name = 'Zone 5 SSS Color'
+                if hasattr(group_input_001_1.outputs[87], 'show_expanded'):
+                    group_input_001_1.outputs[87].show_expanded = False
+                if hasattr(group_input_001_1.outputs[88], 'default_value'):
+                    group_input_001_1.outputs[88].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[88], 'display_shape'):
+                    group_input_001_1.outputs[88].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[88], 'enabled'):
+                    group_input_001_1.outputs[88].enabled = True
+                if hasattr(group_input_001_1.outputs[88], 'hide'):
+                    group_input_001_1.outputs[88].hide = False
+                if hasattr(group_input_001_1.outputs[88], 'hide_value'):
+                    group_input_001_1.outputs[88].hide_value = False
+                if hasattr(group_input_001_1.outputs[88], 'name'):
+                    group_input_001_1.outputs[88].name = 'Zone 6 Toggle'
+                if hasattr(group_input_001_1.outputs[88], 'show_expanded'):
+                    group_input_001_1.outputs[88].show_expanded = False
+                if hasattr(group_input_001_1.outputs[89], 'default_value'):
+                    group_input_001_1.outputs[89].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[89], 'display_shape'):
+                    group_input_001_1.outputs[89].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[89], 'enabled'):
+                    group_input_001_1.outputs[89].enabled = True
+                if hasattr(group_input_001_1.outputs[89], 'hide'):
+                    group_input_001_1.outputs[89].hide = False
+                if hasattr(group_input_001_1.outputs[89], 'hide_value'):
+                    group_input_001_1.outputs[89].hide_value = False
+                if hasattr(group_input_001_1.outputs[89], 'name'):
+                    group_input_001_1.outputs[89].name = 'Zone 6 Gradient Out'
+                if hasattr(group_input_001_1.outputs[89], 'show_expanded'):
+                    group_input_001_1.outputs[89].show_expanded = False
+                if hasattr(group_input_001_1.outputs[90], 'default_value'):
+                    group_input_001_1.outputs[90].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[90], 'display_shape'):
+                    group_input_001_1.outputs[90].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[90], 'enabled'):
+                    group_input_001_1.outputs[90].enabled = True
+                if hasattr(group_input_001_1.outputs[90], 'hide'):
+                    group_input_001_1.outputs[90].hide = False
+                if hasattr(group_input_001_1.outputs[90], 'hide_value'):
+                    group_input_001_1.outputs[90].hide_value = False
+                if hasattr(group_input_001_1.outputs[90], 'name'):
+                    group_input_001_1.outputs[90].name = 'Zone 6 Rough Out'
+                if hasattr(group_input_001_1.outputs[90], 'show_expanded'):
+                    group_input_001_1.outputs[90].show_expanded = False
+                if hasattr(group_input_001_1.outputs[91], 'default_value'):
+                    group_input_001_1.outputs[91].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[91], 'display_shape'):
+                    group_input_001_1.outputs[91].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[91], 'enabled'):
+                    group_input_001_1.outputs[91].enabled = True
+                if hasattr(group_input_001_1.outputs[91], 'hide'):
+                    group_input_001_1.outputs[91].hide = False
+                if hasattr(group_input_001_1.outputs[91], 'hide_value'):
+                    group_input_001_1.outputs[91].hide_value = False
+                if hasattr(group_input_001_1.outputs[91], 'name'):
+                    group_input_001_1.outputs[91].name = 'Zone 6 Norm Out'
+                if hasattr(group_input_001_1.outputs[91], 'show_expanded'):
+                    group_input_001_1.outputs[91].show_expanded = False
+                if hasattr(group_input_001_1.outputs[92], 'default_value'):
+                    group_input_001_1.outputs[92].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[92], 'display_shape'):
+                    group_input_001_1.outputs[92].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[92], 'enabled'):
+                    group_input_001_1.outputs[92].enabled = True
+                if hasattr(group_input_001_1.outputs[92], 'hide'):
+                    group_input_001_1.outputs[92].hide = False
+                if hasattr(group_input_001_1.outputs[92], 'hide_value'):
+                    group_input_001_1.outputs[92].hide_value = False
+                if hasattr(group_input_001_1.outputs[92], 'name'):
+                    group_input_001_1.outputs[92].name = 'Zone 6 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[92], 'show_expanded'):
+                    group_input_001_1.outputs[92].show_expanded = False
+                if hasattr(group_input_001_1.outputs[93], 'default_value'):
+                    group_input_001_1.outputs[93].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[93], 'display_shape'):
+                    group_input_001_1.outputs[93].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[93], 'enabled'):
+                    group_input_001_1.outputs[93].enabled = True
+                if hasattr(group_input_001_1.outputs[93], 'hide'):
+                    group_input_001_1.outputs[93].hide = False
+                if hasattr(group_input_001_1.outputs[93], 'hide_value'):
+                    group_input_001_1.outputs[93].hide_value = False
+                if hasattr(group_input_001_1.outputs[93], 'name'):
+                    group_input_001_1.outputs[93].name = 'Zone 6 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[93], 'show_expanded'):
+                    group_input_001_1.outputs[93].show_expanded = False
+                if hasattr(group_input_001_1.outputs[94], 'default_value'):
+                    group_input_001_1.outputs[94].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[94], 'display_shape'):
+                    group_input_001_1.outputs[94].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[94], 'enabled'):
+                    group_input_001_1.outputs[94].enabled = True
+                if hasattr(group_input_001_1.outputs[94], 'hide'):
+                    group_input_001_1.outputs[94].hide = False
+                if hasattr(group_input_001_1.outputs[94], 'hide_value'):
+                    group_input_001_1.outputs[94].hide_value = False
+                if hasattr(group_input_001_1.outputs[94], 'name'):
+                    group_input_001_1.outputs[94].name = 'Zone 6 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[94], 'show_expanded'):
+                    group_input_001_1.outputs[94].show_expanded = False
+                if hasattr(group_input_001_1.outputs[95], 'default_value'):
+                    group_input_001_1.outputs[95].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[95], 'display_shape'):
+                    group_input_001_1.outputs[95].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[95], 'enabled'):
+                    group_input_001_1.outputs[95].enabled = True
+                if hasattr(group_input_001_1.outputs[95], 'hide'):
+                    group_input_001_1.outputs[95].hide = False
+                if hasattr(group_input_001_1.outputs[95], 'hide_value'):
+                    group_input_001_1.outputs[95].hide_value = False
+                if hasattr(group_input_001_1.outputs[95], 'name'):
+                    group_input_001_1.outputs[95].name = 'Zone 6 Metallic'
+                if hasattr(group_input_001_1.outputs[95], 'show_expanded'):
+                    group_input_001_1.outputs[95].show_expanded = False
+                if hasattr(group_input_001_1.outputs[96], 'default_value'):
+                    group_input_001_1.outputs[96].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[96], 'display_shape'):
+                    group_input_001_1.outputs[96].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[96], 'enabled'):
+                    group_input_001_1.outputs[96].enabled = True
+                if hasattr(group_input_001_1.outputs[96], 'hide'):
+                    group_input_001_1.outputs[96].hide = False
+                if hasattr(group_input_001_1.outputs[96], 'hide_value'):
+                    group_input_001_1.outputs[96].hide_value = False
+                if hasattr(group_input_001_1.outputs[96], 'name'):
+                    group_input_001_1.outputs[96].name = 'Zone 6 SSS Amount'
+                if hasattr(group_input_001_1.outputs[96], 'show_expanded'):
+                    group_input_001_1.outputs[96].show_expanded = False
+                if hasattr(group_input_001_1.outputs[97], 'default_value'):
+                    group_input_001_1.outputs[97].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[97], 'display_shape'):
+                    group_input_001_1.outputs[97].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[97], 'enabled'):
+                    group_input_001_1.outputs[97].enabled = True
+                if hasattr(group_input_001_1.outputs[97], 'hide'):
+                    group_input_001_1.outputs[97].hide = False
+                if hasattr(group_input_001_1.outputs[97], 'hide_value'):
+                    group_input_001_1.outputs[97].hide_value = False
+                if hasattr(group_input_001_1.outputs[97], 'name'):
+                    group_input_001_1.outputs[97].name = 'Zone 6 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[97], 'show_expanded'):
+                    group_input_001_1.outputs[97].show_expanded = False
+                if hasattr(group_input_001_1.outputs[98], 'default_value'):
+                    group_input_001_1.outputs[98].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[98], 'display_shape'):
+                    group_input_001_1.outputs[98].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[98], 'enabled'):
+                    group_input_001_1.outputs[98].enabled = True
+                if hasattr(group_input_001_1.outputs[98], 'hide'):
+                    group_input_001_1.outputs[98].hide = False
+                if hasattr(group_input_001_1.outputs[98], 'hide_value'):
+                    group_input_001_1.outputs[98].hide_value = False
+                if hasattr(group_input_001_1.outputs[98], 'name'):
+                    group_input_001_1.outputs[98].name = 'Zone 6 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[98], 'show_expanded'):
+                    group_input_001_1.outputs[98].show_expanded = False
+                if hasattr(group_input_001_1.outputs[99], 'default_value'):
+                    group_input_001_1.outputs[99].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[99], 'display_shape'):
+                    group_input_001_1.outputs[99].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[99], 'enabled'):
+                    group_input_001_1.outputs[99].enabled = True
+                if hasattr(group_input_001_1.outputs[99], 'hide'):
+                    group_input_001_1.outputs[99].hide = False
+                if hasattr(group_input_001_1.outputs[99], 'hide_value'):
+                    group_input_001_1.outputs[99].hide_value = False
+                if hasattr(group_input_001_1.outputs[99], 'name'):
+                    group_input_001_1.outputs[99].name = 'Zone 6 Top Color'
+                if hasattr(group_input_001_1.outputs[99], 'show_expanded'):
+                    group_input_001_1.outputs[99].show_expanded = False
+                if hasattr(group_input_001_1.outputs[100], 'default_value'):
+                    group_input_001_1.outputs[100].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[100], 'display_shape'):
+                    group_input_001_1.outputs[100].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[100], 'enabled'):
+                    group_input_001_1.outputs[100].enabled = True
+                if hasattr(group_input_001_1.outputs[100], 'hide'):
+                    group_input_001_1.outputs[100].hide = False
+                if hasattr(group_input_001_1.outputs[100], 'hide_value'):
+                    group_input_001_1.outputs[100].hide_value = False
+                if hasattr(group_input_001_1.outputs[100], 'name'):
+                    group_input_001_1.outputs[100].name = 'Zone 6 Mid Color'
+                if hasattr(group_input_001_1.outputs[100], 'show_expanded'):
+                    group_input_001_1.outputs[100].show_expanded = False
+                if hasattr(group_input_001_1.outputs[101], 'default_value'):
+                    group_input_001_1.outputs[101].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[101], 'display_shape'):
+                    group_input_001_1.outputs[101].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[101], 'enabled'):
+                    group_input_001_1.outputs[101].enabled = True
+                if hasattr(group_input_001_1.outputs[101], 'hide'):
+                    group_input_001_1.outputs[101].hide = False
+                if hasattr(group_input_001_1.outputs[101], 'hide_value'):
+                    group_input_001_1.outputs[101].hide_value = False
+                if hasattr(group_input_001_1.outputs[101], 'name'):
+                    group_input_001_1.outputs[101].name = 'Zone 6 Bot Color'
+                if hasattr(group_input_001_1.outputs[101], 'show_expanded'):
+                    group_input_001_1.outputs[101].show_expanded = False
+                if hasattr(group_input_001_1.outputs[102], 'default_value'):
+                    group_input_001_1.outputs[102].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[102], 'display_shape'):
+                    group_input_001_1.outputs[102].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[102], 'enabled'):
+                    group_input_001_1.outputs[102].enabled = True
+                if hasattr(group_input_001_1.outputs[102], 'hide'):
+                    group_input_001_1.outputs[102].hide = False
+                if hasattr(group_input_001_1.outputs[102], 'hide_value'):
+                    group_input_001_1.outputs[102].hide_value = False
+                if hasattr(group_input_001_1.outputs[102], 'name'):
+                    group_input_001_1.outputs[102].name = 'Zone 6 ScratchColor'
+                if hasattr(group_input_001_1.outputs[102], 'show_expanded'):
+                    group_input_001_1.outputs[102].show_expanded = False
+                if hasattr(group_input_001_1.outputs[103], 'default_value'):
+                    group_input_001_1.outputs[103].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[103], 'display_shape'):
+                    group_input_001_1.outputs[103].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[103], 'enabled'):
+                    group_input_001_1.outputs[103].enabled = True
+                if hasattr(group_input_001_1.outputs[103], 'hide'):
+                    group_input_001_1.outputs[103].hide = False
+                if hasattr(group_input_001_1.outputs[103], 'hide_value'):
+                    group_input_001_1.outputs[103].hide_value = False
+                if hasattr(group_input_001_1.outputs[103], 'name'):
+                    group_input_001_1.outputs[103].name = 'Zone 6 SSS Color'
+                if hasattr(group_input_001_1.outputs[103], 'show_expanded'):
+                    group_input_001_1.outputs[103].show_expanded = False
+                if hasattr(group_input_001_1.outputs[104], 'default_value'):
+                    group_input_001_1.outputs[104].default_value = int(self.use_damage)
+                if hasattr(group_input_001_1.outputs[104], 'display_shape'):
+                    group_input_001_1.outputs[104].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[104], 'enabled'):
+                    group_input_001_1.outputs[104].enabled = True
+                if hasattr(group_input_001_1.outputs[104], 'hide'):
+                    group_input_001_1.outputs[104].hide = False
+                if hasattr(group_input_001_1.outputs[104], 'hide_value'):
+                    group_input_001_1.outputs[104].hide_value = False
+                if hasattr(group_input_001_1.outputs[104], 'name'):
+                    group_input_001_1.outputs[104].name = 'Zone 7 Toggle'
+                if hasattr(group_input_001_1.outputs[104], 'show_expanded'):
+                    group_input_001_1.outputs[104].show_expanded = False
+                if hasattr(group_input_001_1.outputs[105], 'default_value'):
+                    group_input_001_1.outputs[105].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[105], 'display_shape'):
+                    group_input_001_1.outputs[105].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[105], 'enabled'):
+                    group_input_001_1.outputs[105].enabled = True
+                if hasattr(group_input_001_1.outputs[105], 'hide'):
+                    group_input_001_1.outputs[105].hide = False
+                if hasattr(group_input_001_1.outputs[105], 'hide_value'):
+                    group_input_001_1.outputs[105].hide_value = False
+                if hasattr(group_input_001_1.outputs[105], 'name'):
+                    group_input_001_1.outputs[105].name = 'Zone 7 Gradient Out'
+                if hasattr(group_input_001_1.outputs[105], 'show_expanded'):
+                    group_input_001_1.outputs[105].show_expanded = False
+                if hasattr(group_input_001_1.outputs[106], 'default_value'):
+                    group_input_001_1.outputs[106].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[106], 'display_shape'):
+                    group_input_001_1.outputs[106].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[106], 'enabled'):
+                    group_input_001_1.outputs[106].enabled = True
+                if hasattr(group_input_001_1.outputs[106], 'hide'):
+                    group_input_001_1.outputs[106].hide = False
+                if hasattr(group_input_001_1.outputs[106], 'hide_value'):
+                    group_input_001_1.outputs[106].hide_value = False
+                if hasattr(group_input_001_1.outputs[106], 'name'):
+                    group_input_001_1.outputs[106].name = 'Zone 7 Rough Out'
+                if hasattr(group_input_001_1.outputs[106], 'show_expanded'):
+                    group_input_001_1.outputs[106].show_expanded = False
+                if hasattr(group_input_001_1.outputs[107], 'default_value'):
+                    group_input_001_1.outputs[107].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[107], 'display_shape'):
+                    group_input_001_1.outputs[107].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[107], 'enabled'):
+                    group_input_001_1.outputs[107].enabled = True
+                if hasattr(group_input_001_1.outputs[107], 'hide'):
+                    group_input_001_1.outputs[107].hide = False
+                if hasattr(group_input_001_1.outputs[107], 'hide_value'):
+                    group_input_001_1.outputs[107].hide_value = False
+                if hasattr(group_input_001_1.outputs[107], 'name'):
+                    group_input_001_1.outputs[107].name = 'Zone 7 Norm Out'
+                if hasattr(group_input_001_1.outputs[107], 'show_expanded'):
+                    group_input_001_1.outputs[107].show_expanded = False
+                if hasattr(group_input_001_1.outputs[108], 'default_value'):
+                    group_input_001_1.outputs[108].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[108], 'display_shape'):
+                    group_input_001_1.outputs[108].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[108], 'enabled'):
+                    group_input_001_1.outputs[108].enabled = True
+                if hasattr(group_input_001_1.outputs[108], 'hide'):
+                    group_input_001_1.outputs[108].hide = False
+                if hasattr(group_input_001_1.outputs[108], 'hide_value'):
+                    group_input_001_1.outputs[108].hide_value = False
+                if hasattr(group_input_001_1.outputs[108], 'name'):
+                    group_input_001_1.outputs[108].name = 'Zone 7 Scratch Amount'
+                if hasattr(group_input_001_1.outputs[108], 'show_expanded'):
+                    group_input_001_1.outputs[108].show_expanded = False
+                if hasattr(group_input_001_1.outputs[109], 'default_value'):
+                    group_input_001_1.outputs[109].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[109], 'display_shape'):
+                    group_input_001_1.outputs[109].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[109], 'enabled'):
+                    group_input_001_1.outputs[109].enabled = True
+                if hasattr(group_input_001_1.outputs[109], 'hide'):
+                    group_input_001_1.outputs[109].hide = False
+                if hasattr(group_input_001_1.outputs[109], 'hide_value'):
+                    group_input_001_1.outputs[109].hide_value = False
+                if hasattr(group_input_001_1.outputs[109], 'name'):
+                    group_input_001_1.outputs[109].name = 'Zone 7 Scratch Roughness'
+                if hasattr(group_input_001_1.outputs[109], 'show_expanded'):
+                    group_input_001_1.outputs[109].show_expanded = False
+                if hasattr(group_input_001_1.outputs[110], 'default_value'):
+                    group_input_001_1.outputs[110].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[110], 'display_shape'):
+                    group_input_001_1.outputs[110].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[110], 'enabled'):
+                    group_input_001_1.outputs[110].enabled = True
+                if hasattr(group_input_001_1.outputs[110], 'hide'):
+                    group_input_001_1.outputs[110].hide = False
+                if hasattr(group_input_001_1.outputs[110], 'hide_value'):
+                    group_input_001_1.outputs[110].hide_value = False
+                if hasattr(group_input_001_1.outputs[110], 'name'):
+                    group_input_001_1.outputs[110].name = 'Zone 7 Scratch Metallic'
+                if hasattr(group_input_001_1.outputs[110], 'show_expanded'):
+                    group_input_001_1.outputs[110].show_expanded = False
+                if hasattr(group_input_001_1.outputs[111], 'default_value'):
+                    group_input_001_1.outputs[111].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[111], 'display_shape'):
+                    group_input_001_1.outputs[111].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[111], 'enabled'):
+                    group_input_001_1.outputs[111].enabled = True
+                if hasattr(group_input_001_1.outputs[111], 'hide'):
+                    group_input_001_1.outputs[111].hide = False
+                if hasattr(group_input_001_1.outputs[111], 'hide_value'):
+                    group_input_001_1.outputs[111].hide_value = False
+                if hasattr(group_input_001_1.outputs[111], 'name'):
+                    group_input_001_1.outputs[111].name = 'Zone 7 Metallic'
+                if hasattr(group_input_001_1.outputs[111], 'show_expanded'):
+                    group_input_001_1.outputs[111].show_expanded = False
+                if hasattr(group_input_001_1.outputs[112], 'default_value'):
+                    group_input_001_1.outputs[112].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[112], 'display_shape'):
+                    group_input_001_1.outputs[112].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[112], 'enabled'):
+                    group_input_001_1.outputs[112].enabled = True
+                if hasattr(group_input_001_1.outputs[112], 'hide'):
+                    group_input_001_1.outputs[112].hide = False
+                if hasattr(group_input_001_1.outputs[112], 'hide_value'):
+                    group_input_001_1.outputs[112].hide_value = False
+                if hasattr(group_input_001_1.outputs[112], 'name'):
+                    group_input_001_1.outputs[112].name = 'Zone 7 SSS Amount'
+                if hasattr(group_input_001_1.outputs[112], 'show_expanded'):
+                    group_input_001_1.outputs[112].show_expanded = False
+                if hasattr(group_input_001_1.outputs[113], 'default_value'):
+                    group_input_001_1.outputs[113].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[113], 'display_shape'):
+                    group_input_001_1.outputs[113].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[113], 'enabled'):
+                    group_input_001_1.outputs[113].enabled = True
+                if hasattr(group_input_001_1.outputs[113], 'hide'):
+                    group_input_001_1.outputs[113].hide = False
+                if hasattr(group_input_001_1.outputs[113], 'hide_value'):
+                    group_input_001_1.outputs[113].hide_value = False
+                if hasattr(group_input_001_1.outputs[113], 'name'):
+                    group_input_001_1.outputs[113].name = 'Zone 7 Transparency Amount'
+                if hasattr(group_input_001_1.outputs[113], 'show_expanded'):
+                    group_input_001_1.outputs[113].show_expanded = False
+                if hasattr(group_input_001_1.outputs[114], 'default_value'):
+                    group_input_001_1.outputs[114].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[114], 'display_shape'):
+                    group_input_001_1.outputs[114].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[114], 'enabled'):
+                    group_input_001_1.outputs[114].enabled = True
+                if hasattr(group_input_001_1.outputs[114], 'hide'):
+                    group_input_001_1.outputs[114].hide = False
+                if hasattr(group_input_001_1.outputs[114], 'hide_value'):
+                    group_input_001_1.outputs[114].hide_value = False
+                if hasattr(group_input_001_1.outputs[114], 'name'):
+                    group_input_001_1.outputs[114].name = 'Zone 7 Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[114], 'show_expanded'):
+                    group_input_001_1.outputs[114].show_expanded = False
+                if hasattr(group_input_001_1.outputs[115], 'default_value'):
+                    group_input_001_1.outputs[115].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[115], 'display_shape'):
+                    group_input_001_1.outputs[115].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[115], 'enabled'):
+                    group_input_001_1.outputs[115].enabled = True
+                if hasattr(group_input_001_1.outputs[115], 'hide'):
+                    group_input_001_1.outputs[115].hide = False
+                if hasattr(group_input_001_1.outputs[115], 'hide_value'):
+                    group_input_001_1.outputs[115].hide_value = False
+                if hasattr(group_input_001_1.outputs[115], 'name'):
+                    group_input_001_1.outputs[115].name = 'Zone 7 Top Color'
+                if hasattr(group_input_001_1.outputs[115], 'show_expanded'):
+                    group_input_001_1.outputs[115].show_expanded = False
+                if hasattr(group_input_001_1.outputs[116], 'default_value'):
+                    group_input_001_1.outputs[116].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[116], 'display_shape'):
+                    group_input_001_1.outputs[116].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[116], 'enabled'):
+                    group_input_001_1.outputs[116].enabled = True
+                if hasattr(group_input_001_1.outputs[116], 'hide'):
+                    group_input_001_1.outputs[116].hide = False
+                if hasattr(group_input_001_1.outputs[116], 'hide_value'):
+                    group_input_001_1.outputs[116].hide_value = False
+                if hasattr(group_input_001_1.outputs[116], 'name'):
+                    group_input_001_1.outputs[116].name = 'Zone 7 Mid Color'
+                if hasattr(group_input_001_1.outputs[116], 'show_expanded'):
+                    group_input_001_1.outputs[116].show_expanded = False
+                if hasattr(group_input_001_1.outputs[117], 'default_value'):
+                    group_input_001_1.outputs[117].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[117], 'display_shape'):
+                    group_input_001_1.outputs[117].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[117], 'enabled'):
+                    group_input_001_1.outputs[117].enabled = True
+                if hasattr(group_input_001_1.outputs[117], 'hide'):
+                    group_input_001_1.outputs[117].hide = False
+                if hasattr(group_input_001_1.outputs[117], 'hide_value'):
+                    group_input_001_1.outputs[117].hide_value = False
+                if hasattr(group_input_001_1.outputs[117], 'name'):
+                    group_input_001_1.outputs[117].name = 'Zone 7 Bot Color'
+                if hasattr(group_input_001_1.outputs[117], 'show_expanded'):
+                    group_input_001_1.outputs[117].show_expanded = False
+                if hasattr(group_input_001_1.outputs[118], 'default_value'):
+                    group_input_001_1.outputs[118].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[118], 'display_shape'):
+                    group_input_001_1.outputs[118].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[118], 'enabled'):
+                    group_input_001_1.outputs[118].enabled = True
+                if hasattr(group_input_001_1.outputs[118], 'hide'):
+                    group_input_001_1.outputs[118].hide = False
+                if hasattr(group_input_001_1.outputs[118], 'hide_value'):
+                    group_input_001_1.outputs[118].hide_value = False
+                if hasattr(group_input_001_1.outputs[118], 'name'):
+                    group_input_001_1.outputs[118].name = 'Zone 7 ScratchColor'
+                if hasattr(group_input_001_1.outputs[118], 'show_expanded'):
+                    group_input_001_1.outputs[118].show_expanded = False
+                if hasattr(group_input_001_1.outputs[119], 'default_value'):
+                    group_input_001_1.outputs[119].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[119], 'display_shape'):
+                    group_input_001_1.outputs[119].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[119], 'enabled'):
+                    group_input_001_1.outputs[119].enabled = True
+                if hasattr(group_input_001_1.outputs[119], 'hide'):
+                    group_input_001_1.outputs[119].hide = False
+                if hasattr(group_input_001_1.outputs[119], 'hide_value'):
+                    group_input_001_1.outputs[119].hide_value = False
+                if hasattr(group_input_001_1.outputs[119], 'name'):
+                    group_input_001_1.outputs[119].name = 'Zone 7 SSS Color'
+                if hasattr(group_input_001_1.outputs[119], 'show_expanded'):
+                    group_input_001_1.outputs[119].show_expanded = False
+                if hasattr(group_input_001_1.outputs[120], 'default_value'):
+                    group_input_001_1.outputs[120].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[120], 'display_shape'):
+                    group_input_001_1.outputs[120].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[120], 'enabled'):
+                    group_input_001_1.outputs[120].enabled = True
+                if hasattr(group_input_001_1.outputs[120], 'hide'):
+                    group_input_001_1.outputs[120].hide = False
+                if hasattr(group_input_001_1.outputs[120], 'hide_value'):
+                    group_input_001_1.outputs[120].hide_value = False
+                if hasattr(group_input_001_1.outputs[120], 'name'):
+                    group_input_001_1.outputs[120].name = 'Grime Gradient Out'
+                if hasattr(group_input_001_1.outputs[120], 'show_expanded'):
+                    group_input_001_1.outputs[120].show_expanded = False
+                if hasattr(group_input_001_1.outputs[121], 'default_value'):
+                    group_input_001_1.outputs[121].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[121], 'display_shape'):
+                    group_input_001_1.outputs[121].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[121], 'enabled'):
+                    group_input_001_1.outputs[121].enabled = True
+                if hasattr(group_input_001_1.outputs[121], 'hide'):
+                    group_input_001_1.outputs[121].hide = False
+                if hasattr(group_input_001_1.outputs[121], 'hide_value'):
+                    group_input_001_1.outputs[121].hide_value = False
+                if hasattr(group_input_001_1.outputs[121], 'name'):
+                    group_input_001_1.outputs[121].name = 'Grime Rough Out'
+                if hasattr(group_input_001_1.outputs[121], 'show_expanded'):
+                    group_input_001_1.outputs[121].show_expanded = False
+                if hasattr(group_input_001_1.outputs[122], 'default_value'):
+                    group_input_001_1.outputs[122].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[122], 'display_shape'):
+                    group_input_001_1.outputs[122].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[122], 'enabled'):
+                    group_input_001_1.outputs[122].enabled = True
+                if hasattr(group_input_001_1.outputs[122], 'hide'):
+                    group_input_001_1.outputs[122].hide = False
+                if hasattr(group_input_001_1.outputs[122], 'hide_value'):
+                    group_input_001_1.outputs[122].hide_value = False
+                if hasattr(group_input_001_1.outputs[122], 'name'):
+                    group_input_001_1.outputs[122].name = 'Grime Norm Out'
+                if hasattr(group_input_001_1.outputs[122], 'show_expanded'):
+                    group_input_001_1.outputs[122].show_expanded = False
+                if hasattr(group_input_001_1.outputs[123], 'default_value'):
+                    group_input_001_1.outputs[123].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[123], 'display_shape'):
+                    group_input_001_1.outputs[123].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[123], 'enabled'):
+                    group_input_001_1.outputs[123].enabled = True
+                if hasattr(group_input_001_1.outputs[123], 'hide'):
+                    group_input_001_1.outputs[123].hide = False
+                if hasattr(group_input_001_1.outputs[123], 'hide_value'):
+                    group_input_001_1.outputs[123].hide_value = False
+                if hasattr(group_input_001_1.outputs[123], 'name'):
+                    group_input_001_1.outputs[123].name = 'Grime Metallic'
+                if hasattr(group_input_001_1.outputs[123], 'show_expanded'):
+                    group_input_001_1.outputs[123].show_expanded = False
+                if hasattr(group_input_001_1.outputs[124], 'default_value'):
+                    group_input_001_1.outputs[124].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[124], 'display_shape'):
+                    group_input_001_1.outputs[124].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[124], 'enabled'):
+                    group_input_001_1.outputs[124].enabled = True
+                if hasattr(group_input_001_1.outputs[124], 'hide'):
+                    group_input_001_1.outputs[124].hide = False
+                if hasattr(group_input_001_1.outputs[124], 'hide_value'):
+                    group_input_001_1.outputs[124].hide_value = False
+                if hasattr(group_input_001_1.outputs[124], 'name'):
+                    group_input_001_1.outputs[124].name = 'Grime SSS Amount'
+                if hasattr(group_input_001_1.outputs[124], 'show_expanded'):
+                    group_input_001_1.outputs[124].show_expanded = False
+                if hasattr(group_input_001_1.outputs[125], 'default_value'):
+                    group_input_001_1.outputs[125].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[125], 'display_shape'):
+                    group_input_001_1.outputs[125].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[125], 'enabled'):
+                    group_input_001_1.outputs[125].enabled = True
+                if hasattr(group_input_001_1.outputs[125], 'hide'):
+                    group_input_001_1.outputs[125].hide = False
+                if hasattr(group_input_001_1.outputs[125], 'hide_value'):
+                    group_input_001_1.outputs[125].hide_value = False
+                if hasattr(group_input_001_1.outputs[125], 'name'):
+                    group_input_001_1.outputs[125].name = 'Grime Transparency Amount'
+                if hasattr(group_input_001_1.outputs[125], 'show_expanded'):
+                    group_input_001_1.outputs[125].show_expanded = False
+                if hasattr(group_input_001_1.outputs[126], 'default_value'):
+                    group_input_001_1.outputs[126].default_value = 0.0
+                if hasattr(group_input_001_1.outputs[126], 'display_shape'):
+                    group_input_001_1.outputs[126].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[126], 'enabled'):
+                    group_input_001_1.outputs[126].enabled = True
+                if hasattr(group_input_001_1.outputs[126], 'hide'):
+                    group_input_001_1.outputs[126].hide = False
+                if hasattr(group_input_001_1.outputs[126], 'hide_value'):
+                    group_input_001_1.outputs[126].hide_value = False
+                if hasattr(group_input_001_1.outputs[126], 'name'):
+                    group_input_001_1.outputs[126].name = 'Grime Emmisive Amount'
+                if hasattr(group_input_001_1.outputs[126], 'show_expanded'):
+                    group_input_001_1.outputs[126].show_expanded = False
+                if hasattr(group_input_001_1.outputs[127], 'default_value'):
+                    group_input_001_1.outputs[127].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[127], 'display_shape'):
+                    group_input_001_1.outputs[127].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[127], 'enabled'):
+                    group_input_001_1.outputs[127].enabled = True
+                if hasattr(group_input_001_1.outputs[127], 'hide'):
+                    group_input_001_1.outputs[127].hide = False
+                if hasattr(group_input_001_1.outputs[127], 'hide_value'):
+                    group_input_001_1.outputs[127].hide_value = False
+                if hasattr(group_input_001_1.outputs[127], 'name'):
+                    group_input_001_1.outputs[127].name = 'Grime Top Color'
+                if hasattr(group_input_001_1.outputs[127], 'show_expanded'):
+                    group_input_001_1.outputs[127].show_expanded = False
+                if hasattr(group_input_001_1.outputs[128], 'default_value'):
+                    group_input_001_1.outputs[128].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[128], 'display_shape'):
+                    group_input_001_1.outputs[128].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[128], 'enabled'):
+                    group_input_001_1.outputs[128].enabled = True
+                if hasattr(group_input_001_1.outputs[128], 'hide'):
+                    group_input_001_1.outputs[128].hide = False
+                if hasattr(group_input_001_1.outputs[128], 'hide_value'):
+                    group_input_001_1.outputs[128].hide_value = False
+                if hasattr(group_input_001_1.outputs[128], 'name'):
+                    group_input_001_1.outputs[128].name = 'Grime Mid Color'
+                if hasattr(group_input_001_1.outputs[128], 'show_expanded'):
+                    group_input_001_1.outputs[128].show_expanded = False
+                if hasattr(group_input_001_1.outputs[129], 'default_value'):
+                    group_input_001_1.outputs[129].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[129], 'display_shape'):
+                    group_input_001_1.outputs[129].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[129], 'enabled'):
+                    group_input_001_1.outputs[129].enabled = True
+                if hasattr(group_input_001_1.outputs[129], 'hide'):
+                    group_input_001_1.outputs[129].hide = False
+                if hasattr(group_input_001_1.outputs[129], 'hide_value'):
+                    group_input_001_1.outputs[129].hide_value = False
+                if hasattr(group_input_001_1.outputs[129], 'name'):
+                    group_input_001_1.outputs[129].name = 'Grime Bot Color'
+                if hasattr(group_input_001_1.outputs[129], 'show_expanded'):
+                    group_input_001_1.outputs[129].show_expanded = False
+                if hasattr(group_input_001_1.outputs[130], 'default_value'):
+                    group_input_001_1.outputs[130].default_value = (0.0, 0.0, 0.0, 1.0)
+                if hasattr(group_input_001_1.outputs[130], 'display_shape'):
+                    group_input_001_1.outputs[130].display_shape = 'CIRCLE'
+                if hasattr(group_input_001_1.outputs[130], 'enabled'):
+                    group_input_001_1.outputs[130].enabled = True
+                if hasattr(group_input_001_1.outputs[130], 'hide'):
+                    group_input_001_1.outputs[130].hide = False
+                if hasattr(group_input_001_1.outputs[130], 'hide_value'):
+                    group_input_001_1.outputs[130].hide_value = False
+                if hasattr(group_input_001_1.outputs[130], 'name'):
+                    group_input_001_1.outputs[130].name = 'Grime SSS Color'
+                if hasattr(group_input_001_1.outputs[130], 'show_expanded'):
+                    group_input_001_1.outputs[130].show_expanded = False
 
-            combine_color_1 = node_tree4.nodes.new('ShaderNodeCombineColor')
-            if hasattr(combine_color_1, 'mode'):
-                combine_color_1.mode = 'RGB'
-            if hasattr(combine_color_1, 'color'):
-                combine_color_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
-            if hasattr(combine_color_1, 'hide'):
-                combine_color_1.hide = False
-            if hasattr(combine_color_1, 'location'):
-                combine_color_1.location = (4490.357421875, -5.611602783203125)
-            if hasattr(combine_color_1, 'mute'):
-                combine_color_1.mute = False
-            if hasattr(combine_color_1, 'name'):
-                combine_color_1.name = 'Combine Color'
-            if hasattr(combine_color_1, 'use_custom_color'):
-                combine_color_1.use_custom_color = False
-            if hasattr(combine_color_1, 'width'):
-                combine_color_1.width = 140.0
-            input_ = next((input_ for input_ in combine_color_1.inputs if input_.identifier=='Red'), None)
-            if input_:
-                if hasattr(input_, 'default_value'):
-                    input_.default_value = 0.0
-                if hasattr(input_, 'display_shape'):
-                    input_.display_shape = 'CIRCLE'
-                if hasattr(input_, 'enabled'):
-                    input_.enabled = True
-                if hasattr(input_, 'hide'):
-                    input_.hide = False
-                if hasattr(input_, 'hide_value'):
-                    input_.hide_value = False
-                if hasattr(input_, 'name'):
-                    input_.name = 'Red'
-                if hasattr(input_, 'show_expanded'):
-                    input_.show_expanded = False
-            input_ = next((input_ for input_ in combine_color_1.inputs if input_.identifier=='Green'), None)
-            if input_:
-                if hasattr(input_, 'default_value'):
-                    input_.default_value = 0.0
-                if hasattr(input_, 'display_shape'):
-                    input_.display_shape = 'CIRCLE'
-                if hasattr(input_, 'enabled'):
-                    input_.enabled = True
-                if hasattr(input_, 'hide'):
-                    input_.hide = False
-                if hasattr(input_, 'hide_value'):
-                    input_.hide_value = False
-                if hasattr(input_, 'name'):
-                    input_.name = 'Green'
-                if hasattr(input_, 'show_expanded'):
-                    input_.show_expanded = False
-            input_ = next((input_ for input_ in combine_color_1.inputs if input_.identifier=='Blue'), None)
-            if input_:
-                if hasattr(input_, 'default_value'):
-                    input_.default_value = 0.0
-                if hasattr(input_, 'display_shape'):
-                    input_.display_shape = 'CIRCLE'
-                if hasattr(input_, 'enabled'):
-                    input_.enabled = True
-                if hasattr(input_, 'hide'):
-                    input_.hide = True
-                if hasattr(input_, 'hide_value'):
-                    input_.hide_value = False
-                if hasattr(input_, 'name'):
-                    input_.name = 'Blue'
-                if hasattr(input_, 'show_expanded'):
-                    input_.show_expanded = False
-            output = next((output for output in combine_color_1.outputs if output.identifier=='Color'), None)
-            if output:
-                if hasattr(output, 'default_value'):
-                    output.default_value = (0.0, 0.0, 0.0, 0.0)
-                if hasattr(output, 'display_shape'):
-                    output.display_shape = 'CIRCLE'
-                if hasattr(output, 'enabled'):
-                    output.enabled = True
-                if hasattr(output, 'hide'):
-                    output.hide = False
-                if hasattr(output, 'hide_value'):
-                    output.hide_value = False
-                if hasattr(output, 'name'):
-                    output.name = 'Color'
-                if hasattr(output, 'show_expanded'):
-                    output.show_expanded = False
+                combine_color_1 = node_tree4.nodes.new('ShaderNodeCombineColor')
+                if hasattr(combine_color_1, 'mode'):
+                    combine_color_1.mode = 'RGB'
+                if hasattr(combine_color_1, 'color'):
+                    combine_color_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+                if hasattr(combine_color_1, 'hide'):
+                    combine_color_1.hide = False
+                if hasattr(combine_color_1, 'location'):
+                    combine_color_1.location = (4490.357421875, -5.611602783203125)
+                if hasattr(combine_color_1, 'mute'):
+                    combine_color_1.mute = False
+                if hasattr(combine_color_1, 'name'):
+                    combine_color_1.name = 'Combine Color'
+                if hasattr(combine_color_1, 'use_custom_color'):
+                    combine_color_1.use_custom_color = False
+                if hasattr(combine_color_1, 'width'):
+                    combine_color_1.width = 140.0
+                input_ = next((input_ for input_ in combine_color_1.inputs if input_.identifier=='Red'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Red'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in combine_color_1.inputs if input_.identifier=='Green'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = False
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Green'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                input_ = next((input_ for input_ in combine_color_1.inputs if input_.identifier=='Blue'), None)
+                if input_:
+                    if hasattr(input_, 'default_value'):
+                        input_.default_value = 0.0
+                    if hasattr(input_, 'display_shape'):
+                        input_.display_shape = 'CIRCLE'
+                    if hasattr(input_, 'enabled'):
+                        input_.enabled = True
+                    if hasattr(input_, 'hide'):
+                        input_.hide = True
+                    if hasattr(input_, 'hide_value'):
+                        input_.hide_value = False
+                    if hasattr(input_, 'name'):
+                        input_.name = 'Blue'
+                    if hasattr(input_, 'show_expanded'):
+                        input_.show_expanded = False
+                output = next((output for output in combine_color_1.outputs if output.identifier=='Color'), None)
+                if output:
+                    if hasattr(output, 'default_value'):
+                        output.default_value = (0.0, 0.0, 0.0, 0.0)
+                    if hasattr(output, 'display_shape'):
+                        output.display_shape = 'CIRCLE'
+                    if hasattr(output, 'enabled'):
+                        output.enabled = True
+                    if hasattr(output, 'hide'):
+                        output.hide = False
+                    if hasattr(output, 'hide_value'):
+                        output.hide_value = False
+                    if hasattr(output, 'name'):
+                        output.name = 'Color'
+                    if hasattr(output, 'show_expanded'):
+                        output.show_expanded = False
 
-            # LINKS
-            node_tree4.links.new(group_002_1.outputs[0], group_1.inputs[3])
-            node_tree4.links.new(group_004_1.outputs[0], group_1.inputs[4])
-            node_tree4.links.new(group_008_1.outputs[0], group_1.inputs[5])
-            node_tree4.links.new(group_010_1.outputs[0], group_1.inputs[6])
-            node_tree4.links.new(group_011_1.outputs[0], group_1.inputs[7])
-            node_tree4.links.new(group_012_1.outputs[0], group_1.inputs[8])
-            node_tree4.links.new(group_015_1.outputs[0], group_1.inputs[10])
-            node_tree4.links.new(group_016_1.outputs[0], group_1.inputs[9])
-            node_tree4.links.new(group_014_1.outputs[0], group_1.inputs[11])
-            node_tree4.links.new(group_017_1.outputs[0], group_001_1.inputs[11])
-            node_tree4.links.new(group_018_1.outputs[0], group_009_1.inputs[11])
-            node_tree4.links.new(separate_rgb_1.outputs[0], math_001_1.inputs[0])
-            node_tree4.links.new(group_003_1.outputs[0], normal_map_1.inputs[1])
-            node_tree4.links.new(reroute_032_1.outputs[0], principled_bsdf_1.inputs[0])
-            node_tree4.links.new(reroute_014_1.outputs[0], colorramp_1.inputs[0])
-            node_tree4.links.new(group_020_1.outputs[0], group_009_1.inputs[12])
-            node_tree4.links.new(group_020_1.outputs[0], group_001_1.inputs[12])
-            node_tree4.links.new(reroute_007_1.outputs[0], bump_1.inputs[0])
-            node_tree4.links.new(group_020_1.outputs[0], group_1.inputs[16])
-            node_tree4.links.new(bump_1.outputs[0], bump_001_1.inputs[3])
-            node_tree4.links.new(mapping_1.outputs[0], image_texture_1.inputs[0])
-            node_tree4.links.new(texture_coordinate_1.outputs[2], mapping_1.inputs[0])
-            node_tree4.links.new(image_texture_1.outputs[0], separate_rgb_001_1.inputs[0])
-            node_tree4.links.new(reroute_016_1.outputs[0], colorramp_001_1.inputs[0])
-            node_tree4.links.new(math_004_1.outputs[0], bump_001_1.inputs[2])
-            node_tree4.links.new(colorramp_001_1.outputs[0], math_002_1.inputs[0])
-            node_tree4.links.new(reroute_055_1.outputs[0], math_002_1.inputs[1])
-            node_tree4.links.new(math_002_1.outputs[0], math_003_1.inputs[0])
-            node_tree4.links.new(math_003_1.outputs[0], math_004_1.inputs[0])
-            node_tree4.links.new(invert_1.outputs[0], mix_004_1.inputs[0])
-            node_tree4.links.new(reroute_057_1.outputs[0], bump_1.inputs[2])
-            node_tree4.links.new(reroute_034_1.outputs[0], principled_bsdf_1.inputs[3])
-            node_tree4.links.new(reroute_033_1.outputs[0], principled_bsdf_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[0], group_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_001_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_001_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_009_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_009_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_003_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_003_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_014_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_014_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_017_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_017_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_020_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_020_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_018_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_018_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_021_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_021_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_019_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_019_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[1], group_013_1.inputs[2])
-            node_tree4.links.new(group_022_1.outputs[0], group_013_1.inputs[1])
-            node_tree4.links.new(colorramp_1.outputs[0], math_005_1.inputs[0])
-            node_tree4.links.new(gamma_1.outputs[0], combine_color_1.inputs[0])
-            node_tree4.links.new(gamma_001_1.outputs[0], combine_color_1.inputs[1])
-            node_tree4.links.new(reroute_059_1.outputs[0], principled_bsdf_1.inputs[22])
-            node_tree4.links.new(normal_map_1.outputs[0], bump_1.inputs[3])
-            node_tree4.links.new(math_1.outputs[0], principled_bsdf_1.inputs[7])
-            node_tree4.links.new(reroute_002_1.outputs[0], reroute_1.inputs[0])
-            node_tree4.links.new(group_1.outputs[0], reroute_001_1.inputs[0])
-            node_tree4.links.new(reroute_001_1.outputs[0], reroute_002_1.inputs[0])
-            node_tree4.links.new(reroute_1.outputs[0], reroute_003_1.inputs[0])
-            node_tree4.links.new(reroute_004_1.outputs[0], mix_1.inputs[6])
-            node_tree4.links.new(reroute_003_1.outputs[0], reroute_004_1.inputs[0])
-            node_tree4.links.new(reroute_004_1.outputs[0], reroute_005_1.inputs[0])
-            node_tree4.links.new(reroute_005_1.outputs[0], mix_005_1.inputs[6])
-            node_tree4.links.new(reroute_008_1.outputs[0], reroute_009_1.inputs[0])
-            node_tree4.links.new(group_013_1.outputs[0], reroute_008_1.inputs[0])
-            node_tree4.links.new(reroute_009_1.outputs[0], mix_005_1.inputs[7])
-            node_tree4.links.new(reroute_008_1.outputs[0], reroute_011_1.inputs[0])
-            node_tree4.links.new(reroute_011_1.outputs[0], reroute_012_1.inputs[0])
-            node_tree4.links.new(reroute_012_1.outputs[0], reroute_013_1.inputs[0])
-            node_tree4.links.new(reroute_013_1.outputs[0], principled_bsdf_1.inputs[20])
-            node_tree4.links.new(group_020_1.outputs[0], reroute_006_1.inputs[0])
-            node_tree4.links.new(reroute_063_1.outputs[0], reroute_007_1.inputs[0])
-            node_tree4.links.new(separate_rgb_1.outputs[1], reroute_010_1.inputs[0])
-            node_tree4.links.new(reroute_010_1.outputs[0], reroute_014_1.inputs[0])
-            node_tree4.links.new(separate_rgb_1.outputs[2], reroute_015_1.inputs[0])
-            node_tree4.links.new(reroute_015_1.outputs[0], reroute_016_1.inputs[0])
-            node_tree4.links.new(math_001_1.outputs[0], reroute_017_1.inputs[0])
-            node_tree4.links.new(reroute_017_1.outputs[0], mix_1.inputs[7])
-            node_tree4.links.new(reroute_017_1.outputs[0], reroute_018_1.inputs[0])
-            node_tree4.links.new(reroute_019_1.outputs[0], math_1.inputs[1])
-            node_tree4.links.new(reroute_018_1.outputs[0], reroute_019_1.inputs[0])
-            node_tree4.links.new(reroute_018_1.outputs[0], reroute_020_1.inputs[0])
-            node_tree4.links.new(reroute_026_1.outputs[0], gamma_001_1.inputs[0])
-            node_tree4.links.new(reroute_003_1.outputs[0], reroute_021_1.inputs[0])
-            node_tree4.links.new(reroute_021_1.outputs[0], reroute_022_1.inputs[0])
-            node_tree4.links.new(reroute_022_1.outputs[0], reroute_023_1.inputs[0])
-            node_tree4.links.new(reroute_021_1.outputs[0], mix_004_1.inputs[6])
-            node_tree4.links.new(reroute_023_1.outputs[0], reroute_024_1.inputs[0])
-            node_tree4.links.new(reroute_024_1.outputs[0], mix_006_1.inputs[6])
-            node_tree4.links.new(reroute_022_1.outputs[0], reroute_025_1.inputs[0])
-            node_tree4.links.new(reroute_025_1.outputs[0], principled_bsdf_1.inputs[19])
-            node_tree4.links.new(reroute_027_1.outputs[0], reroute_026_1.inputs[0])
-            node_tree4.links.new(reroute_020_1.outputs[0], reroute_027_1.inputs[0])
-            node_tree4.links.new(mix_004_1.outputs[2], reroute_028_1.inputs[0])
-            node_tree4.links.new(reroute_028_1.outputs[0], reroute_029_1.inputs[0])
-            node_tree4.links.new(reroute_053_1.outputs[0], reroute_030_1.inputs[0])
-            node_tree4.links.new(mix_1.outputs[2], reroute_031_1.inputs[0])
-            node_tree4.links.new(reroute_031_1.outputs[0], reroute_032_1.inputs[0])
-            node_tree4.links.new(reroute_035_1.outputs[0], reroute_033_1.inputs[0])
-            node_tree4.links.new(reroute_036_1.outputs[0], reroute_034_1.inputs[0])
-            node_tree4.links.new(reroute_037_1.outputs[0], reroute_035_1.inputs[0])
-            node_tree4.links.new(reroute_038_1.outputs[0], reroute_036_1.inputs[0])
-            node_tree4.links.new(group_019_1.outputs[0], reroute_037_1.inputs[0])
-            node_tree4.links.new(group_021_1.outputs[0], reroute_038_1.inputs[0])
-            node_tree4.links.new(group_001_1.outputs[0], reroute_039_1.inputs[0])
-            node_tree4.links.new(reroute_039_1.outputs[0], reroute_040_1.inputs[0])
-            node_tree4.links.new(reroute_040_1.outputs[0], invert_1.inputs[1])
-            node_tree4.links.new(reroute_042_1.outputs[0], principled_bsdf_1.inputs[6])
-            node_tree4.links.new(reroute_040_1.outputs[0], reroute_041_1.inputs[0])
-            node_tree4.links.new(reroute_041_1.outputs[0], reroute_042_1.inputs[0])
-            node_tree4.links.new(reroute_041_1.outputs[0], reroute_043_1.inputs[0])
-            node_tree4.links.new(reroute_043_1.outputs[0], reroute_044_1.inputs[0])
-            node_tree4.links.new(reroute_044_1.outputs[0], mix_006_1.inputs[0])
-            node_tree4.links.new(reroute_043_1.outputs[0], reroute_045_1.inputs[0])
-            node_tree4.links.new(reroute_045_1.outputs[0], gamma_1.inputs[0])
-            node_tree4.links.new(group_009_1.outputs[0], reroute_046_1.inputs[0])
-            node_tree4.links.new(reroute_046_1.outputs[0], reroute_047_1.inputs[0])
-            node_tree4.links.new(reroute_047_1.outputs[0], principled_bsdf_1.inputs[9])
-            node_tree4.links.new(reroute_046_1.outputs[0], reroute_048_1.inputs[0])
-            node_tree4.links.new(reroute_048_1.outputs[0], reroute_049_1.inputs[0])
-            node_tree4.links.new(reroute_049_1.outputs[0], reroute_050_1.inputs[0])
-            node_tree4.links.new(reroute_050_1.outputs[0], math_006_1.inputs[1])
-            node_tree4.links.new(mix_005_1.outputs[2], reroute_051_1.inputs[0])
-            node_tree4.links.new(reroute_051_1.outputs[0], reroute_052_1.inputs[0])
-            node_tree4.links.new(principled_bsdf_1.outputs[0], reroute_053_1.inputs[0])
-            node_tree4.links.new(separate_rgb_001_1.outputs[2], reroute_054_1.inputs[0])
-            node_tree4.links.new(reroute_054_1.outputs[0], reroute_055_1.inputs[0])
-            node_tree4.links.new(math_005_1.outputs[0], reroute_056_1.inputs[0])
-            node_tree4.links.new(reroute_056_1.outputs[0], reroute_057_1.inputs[0])
-            node_tree4.links.new(bump_001_1.outputs[0], reroute_058_1.inputs[0])
-            node_tree4.links.new(reroute_058_1.outputs[0], reroute_059_1.inputs[0])
-            node_tree4.links.new(reroute_058_1.outputs[0], reroute_060_1.inputs[0])
-            node_tree4.links.new(reroute_060_1.outputs[0], reroute_061_1.inputs[0])
-            node_tree4.links.new(reroute_006_1.outputs[0], reroute_062_1.inputs[0])
-            node_tree4.links.new(reroute_062_1.outputs[0], reroute_063_1.inputs[0])
-            node_tree4.links.new(group_022_1.outputs[0], group_023_1.inputs[1])
-            node_tree4.links.new(group_022_1.outputs[1], group_023_1.inputs[2])
-            node_tree4.links.new(math_007_1.outputs[0], principled_bsdf_1.inputs[21])
-            node_tree4.links.new(group_023_1.outputs[0], reroute_064_1.inputs[0])
-            node_tree4.links.new(reroute_064_1.outputs[0], reroute_065_1.inputs[0])
-            node_tree4.links.new(reroute_065_1.outputs[0], math_007_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[19], group_002_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[9], group_002_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[20], group_002_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[21], group_002_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[25], group_004_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[35], group_004_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[36], group_004_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[37], group_004_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[41], group_008_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[51], group_008_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[52], group_008_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[53], group_008_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[57], group_010_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[67], group_010_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[68], group_010_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[69], group_010_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[73], group_011_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[83], group_011_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[84], group_011_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[85], group_011_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[89], group_012_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[99], group_012_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[100], group_012_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[101], group_012_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[105], group_015_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[115], group_015_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[116], group_015_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[117], group_015_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[120], group_016_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[127], group_016_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[128], group_016_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[129], group_016_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[1], group_022_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[2], group_022_1.inputs[1])
-            node_tree4.links.new(reroute_061_1.outputs[0], group_output_1.inputs[8])
-            node_tree4.links.new(reroute_030_1.outputs[0], group_output_1.inputs[0])
-            node_tree4.links.new(reroute_052_1.outputs[0], group_output_1.inputs[4])
-            node_tree4.links.new(mix_006_1.outputs[2], group_output_1.inputs[6])
-            node_tree4.links.new(reroute_029_1.outputs[0], group_output_1.inputs[5])
-            node_tree4.links.new(reroute_031_1.outputs[0], group_output_1.inputs[1])
-            node_tree4.links.new(reroute_044_1.outputs[0], group_output_1.inputs[2])
-            node_tree4.links.new(reroute_049_1.outputs[0], group_output_1.inputs[3])
-            node_tree4.links.new(combine_color_1.outputs[0], group_output_1.inputs[9])
-            node_tree4.links.new(math_006_1.outputs[0], group_output_1.inputs[10])
-            node_tree4.links.new(reroute_027_1.outputs[0], group_output_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_014_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_017_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_020_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_019_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_021_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_023_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_014_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_014_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_017_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_020_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_018_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_019_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_019_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_018_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_021_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_023_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_023_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_021_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[22], group_014_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[38], group_014_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[54], group_014_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[70], group_014_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[86], group_014_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[102], group_014_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[118], group_014_1.inputs[11])
-            node_tree4.links.new(group_input_001_1.outputs[30], group_017_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[14], group_017_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[46], group_017_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[62], group_017_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[78], group_017_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[94], group_017_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[110], group_017_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[12], group_020_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[28], group_020_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[44], group_020_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[60], group_020_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[76], group_020_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[92], group_020_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[108], group_020_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[13], group_018_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[29], group_018_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[45], group_018_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[61], group_018_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[77], group_018_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[93], group_018_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[109], group_018_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[16], group_019_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[32], group_019_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[48], group_019_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[64], group_019_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[80], group_019_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[96], group_019_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[112], group_019_1.inputs[12])
-            node_tree4.links.new(group_input_001_1.outputs[124], group_019_1.inputs[11])
-            node_tree4.links.new(group_input_001_1.outputs[23], group_021_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[39], group_021_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[55], group_021_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[71], group_021_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[87], group_021_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[103], group_021_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[130], group_021_1.inputs[11])
-            node_tree4.links.new(group_input_001_1.outputs[119], group_021_1.inputs[12])
-            node_tree4.links.new(group_input_001_1.outputs[17], group_023_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[33], group_023_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[49], group_023_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[65], group_023_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[81], group_023_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[97], group_023_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[125], group_023_1.inputs[11])
-            node_tree4.links.new(group_input_001_1.outputs[113], group_023_1.inputs[12])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_1.inputs[14])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_001_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_001_1.inputs[13])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_1.inputs[15])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_001_1.inputs[14])
-            node_tree4.links.new(group_input_001_1.outputs[15], group_001_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[31], group_001_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[47], group_001_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[63], group_001_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[79], group_001_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[95], group_001_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[123], group_001_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[111], group_001_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_009_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[10], group_009_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[26], group_009_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[42], group_009_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[58], group_009_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[74], group_009_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[90], group_009_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[121], group_009_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[106], group_009_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_009_1.inputs[13])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_009_1.inputs[14])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_003_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[3], group_003_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[11], group_003_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[27], group_003_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[43], group_003_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[59], group_003_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[75], group_003_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[91], group_003_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[122], group_003_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[107], group_003_1.inputs[11])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_003_1.inputs[13])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_003_1.inputs[12])
-            node_tree4.links.new(group_input_001_1.outputs[0], group_013_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[104], group_013_1.inputs[12])
-            node_tree4.links.new(group_input_001_1.outputs[4], group_013_1.inputs[11])
-            node_tree4.links.new(group_input_001_1.outputs[18], group_013_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[34], group_013_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[50], group_013_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[66], group_013_1.inputs[6])
-            node_tree4.links.new(group_input_001_1.outputs[82], group_013_1.inputs[7])
-            node_tree4.links.new(group_input_001_1.outputs[98], group_013_1.inputs[8])
-            node_tree4.links.new(group_input_001_1.outputs[126], group_013_1.inputs[9])
-            node_tree4.links.new(group_input_001_1.outputs[114], group_013_1.inputs[10])
-            node_tree4.links.new(group_input_001_1.outputs[0], separate_rgb_1.inputs[0])
-            node_tree4.links.new(group_input_001_1.outputs[7], math_001_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[8], math_005_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[4], math_003_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[5], math_004_1.inputs[1])
-            node_tree4.links.new(group_input_001_1.outputs[24], group_022_1.inputs[2])
-            node_tree4.links.new(group_input_001_1.outputs[40], group_022_1.inputs[3])
-            node_tree4.links.new(group_input_001_1.outputs[56], group_022_1.inputs[4])
-            node_tree4.links.new(group_input_001_1.outputs[72], group_022_1.inputs[5])
-            node_tree4.links.new(group_input_001_1.outputs[88], group_022_1.inputs[6])
+                # LINKS
+                node_tree4.links.new(group_002_1.outputs[0], group_1.inputs[3])
+                node_tree4.links.new(group_004_1.outputs[0], group_1.inputs[4])
+                node_tree4.links.new(group_008_1.outputs[0], group_1.inputs[5])
+                node_tree4.links.new(group_010_1.outputs[0], group_1.inputs[6])
+                node_tree4.links.new(group_011_1.outputs[0], group_1.inputs[7])
+                node_tree4.links.new(group_012_1.outputs[0], group_1.inputs[8])
+                node_tree4.links.new(group_015_1.outputs[0], group_1.inputs[10])
+                node_tree4.links.new(group_016_1.outputs[0], group_1.inputs[9])
+                node_tree4.links.new(group_014_1.outputs[0], group_1.inputs[11])
+                node_tree4.links.new(group_017_1.outputs[0], group_001_1.inputs[11])
+                node_tree4.links.new(group_018_1.outputs[0], group_009_1.inputs[11])
+                node_tree4.links.new(separate_rgb_1.outputs[0], math_001_1.inputs[0])
+                node_tree4.links.new(group_003_1.outputs[0], normal_map_1.inputs[1])
+                node_tree4.links.new(reroute_032_1.outputs[0], principled_bsdf_1.inputs[0])
+                node_tree4.links.new(reroute_014_1.outputs[0], colorramp_1.inputs[0])
+                node_tree4.links.new(group_020_1.outputs[0], group_009_1.inputs[12])
+                node_tree4.links.new(group_020_1.outputs[0], group_001_1.inputs[12])
+                node_tree4.links.new(reroute_007_1.outputs[0], bump_1.inputs[0])
+                node_tree4.links.new(group_020_1.outputs[0], group_1.inputs[16])
+                node_tree4.links.new(bump_1.outputs[0], bump_001_1.inputs[3])
+                node_tree4.links.new(mapping_1.outputs[0], image_texture_1.inputs[0])
+                node_tree4.links.new(texture_coordinate_1.outputs[2], mapping_1.inputs[0])
+                node_tree4.links.new(image_texture_1.outputs[0], separate_rgb_001_1.inputs[0])
+                node_tree4.links.new(reroute_016_1.outputs[0], colorramp_001_1.inputs[0])
+                node_tree4.links.new(math_004_1.outputs[0], bump_001_1.inputs[2])
+                node_tree4.links.new(colorramp_001_1.outputs[0], math_002_1.inputs[0])
+                node_tree4.links.new(reroute_055_1.outputs[0], math_002_1.inputs[1])
+                node_tree4.links.new(math_002_1.outputs[0], math_003_1.inputs[0])
+                node_tree4.links.new(math_003_1.outputs[0], math_004_1.inputs[0])
+                node_tree4.links.new(invert_1.outputs[0], mix_004_1.inputs[0])
+                node_tree4.links.new(reroute_057_1.outputs[0], bump_1.inputs[2])
+                node_tree4.links.new(reroute_034_1.outputs[0], principled_bsdf_1.inputs[3])
+                node_tree4.links.new(reroute_033_1.outputs[0], principled_bsdf_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[0], group_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_001_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_001_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_009_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_009_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_003_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_003_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_014_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_014_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_017_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_017_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_020_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_020_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_018_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_018_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_021_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_021_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_019_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_019_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[1], group_013_1.inputs[2])
+                node_tree4.links.new(group_022_1.outputs[0], group_013_1.inputs[1])
+                node_tree4.links.new(colorramp_1.outputs[0], math_005_1.inputs[0])
+                node_tree4.links.new(gamma_1.outputs[0], combine_color_1.inputs[0])
+                node_tree4.links.new(gamma_001_1.outputs[0], combine_color_1.inputs[1])
+                node_tree4.links.new(reroute_059_1.outputs[0], principled_bsdf_1.inputs[22])
+                node_tree4.links.new(normal_map_1.outputs[0], bump_1.inputs[3])
+                node_tree4.links.new(math_1.outputs[0], principled_bsdf_1.inputs[7])
+                node_tree4.links.new(reroute_002_1.outputs[0], reroute_1.inputs[0])
+                node_tree4.links.new(group_1.outputs[0], reroute_001_1.inputs[0])
+                node_tree4.links.new(reroute_001_1.outputs[0], reroute_002_1.inputs[0])
+                node_tree4.links.new(reroute_1.outputs[0], reroute_003_1.inputs[0])
+                node_tree4.links.new(reroute_004_1.outputs[0], mix_1.inputs[6])
+                node_tree4.links.new(reroute_003_1.outputs[0], reroute_004_1.inputs[0])
+                node_tree4.links.new(reroute_004_1.outputs[0], reroute_005_1.inputs[0])
+                node_tree4.links.new(reroute_005_1.outputs[0], mix_005_1.inputs[6])
+                node_tree4.links.new(reroute_008_1.outputs[0], reroute_009_1.inputs[0])
+                node_tree4.links.new(group_013_1.outputs[0], reroute_008_1.inputs[0])
+                node_tree4.links.new(reroute_009_1.outputs[0], mix_005_1.inputs[7])
+                node_tree4.links.new(reroute_008_1.outputs[0], reroute_011_1.inputs[0])
+                node_tree4.links.new(reroute_011_1.outputs[0], reroute_012_1.inputs[0])
+                node_tree4.links.new(reroute_012_1.outputs[0], reroute_013_1.inputs[0])
+                node_tree4.links.new(reroute_013_1.outputs[0], principled_bsdf_1.inputs[20])
+                node_tree4.links.new(group_020_1.outputs[0], reroute_006_1.inputs[0])
+                node_tree4.links.new(reroute_063_1.outputs[0], reroute_007_1.inputs[0])
+                node_tree4.links.new(separate_rgb_1.outputs[1], reroute_010_1.inputs[0])
+                node_tree4.links.new(reroute_010_1.outputs[0], reroute_014_1.inputs[0])
+                node_tree4.links.new(separate_rgb_1.outputs[2], reroute_015_1.inputs[0])
+                node_tree4.links.new(reroute_015_1.outputs[0], reroute_016_1.inputs[0])
+                node_tree4.links.new(math_001_1.outputs[0], reroute_017_1.inputs[0])
+                node_tree4.links.new(reroute_017_1.outputs[0], mix_1.inputs[7])
+                node_tree4.links.new(reroute_017_1.outputs[0], reroute_018_1.inputs[0])
+                node_tree4.links.new(reroute_019_1.outputs[0], math_1.inputs[1])
+                node_tree4.links.new(reroute_018_1.outputs[0], reroute_019_1.inputs[0])
+                node_tree4.links.new(reroute_018_1.outputs[0], reroute_020_1.inputs[0])
+                node_tree4.links.new(reroute_026_1.outputs[0], gamma_001_1.inputs[0])
+                node_tree4.links.new(reroute_003_1.outputs[0], reroute_021_1.inputs[0])
+                node_tree4.links.new(reroute_021_1.outputs[0], reroute_022_1.inputs[0])
+                node_tree4.links.new(reroute_022_1.outputs[0], reroute_023_1.inputs[0])
+                node_tree4.links.new(reroute_021_1.outputs[0], mix_004_1.inputs[6])
+                node_tree4.links.new(reroute_023_1.outputs[0], reroute_024_1.inputs[0])
+                node_tree4.links.new(reroute_024_1.outputs[0], mix_006_1.inputs[6])
+                node_tree4.links.new(reroute_022_1.outputs[0], reroute_025_1.inputs[0])
+                node_tree4.links.new(reroute_025_1.outputs[0], principled_bsdf_1.inputs[19])
+                node_tree4.links.new(reroute_027_1.outputs[0], reroute_026_1.inputs[0])
+                node_tree4.links.new(reroute_020_1.outputs[0], reroute_027_1.inputs[0])
+                node_tree4.links.new(mix_004_1.outputs[2], reroute_028_1.inputs[0])
+                node_tree4.links.new(reroute_028_1.outputs[0], reroute_029_1.inputs[0])
+                node_tree4.links.new(reroute_053_1.outputs[0], reroute_030_1.inputs[0])
+                node_tree4.links.new(mix_1.outputs[2], reroute_031_1.inputs[0])
+                node_tree4.links.new(reroute_031_1.outputs[0], reroute_032_1.inputs[0])
+                node_tree4.links.new(reroute_035_1.outputs[0], reroute_033_1.inputs[0])
+                node_tree4.links.new(reroute_036_1.outputs[0], reroute_034_1.inputs[0])
+                node_tree4.links.new(reroute_037_1.outputs[0], reroute_035_1.inputs[0])
+                node_tree4.links.new(reroute_038_1.outputs[0], reroute_036_1.inputs[0])
+                node_tree4.links.new(group_019_1.outputs[0], reroute_037_1.inputs[0])
+                node_tree4.links.new(group_021_1.outputs[0], reroute_038_1.inputs[0])
+                node_tree4.links.new(group_001_1.outputs[0], reroute_039_1.inputs[0])
+                node_tree4.links.new(reroute_039_1.outputs[0], reroute_040_1.inputs[0])
+                node_tree4.links.new(reroute_040_1.outputs[0], invert_1.inputs[1])
+                node_tree4.links.new(reroute_042_1.outputs[0], principled_bsdf_1.inputs[6])
+                node_tree4.links.new(reroute_040_1.outputs[0], reroute_041_1.inputs[0])
+                node_tree4.links.new(reroute_041_1.outputs[0], reroute_042_1.inputs[0])
+                node_tree4.links.new(reroute_041_1.outputs[0], reroute_043_1.inputs[0])
+                node_tree4.links.new(reroute_043_1.outputs[0], reroute_044_1.inputs[0])
+                node_tree4.links.new(reroute_044_1.outputs[0], mix_006_1.inputs[0])
+                node_tree4.links.new(reroute_043_1.outputs[0], reroute_045_1.inputs[0])
+                node_tree4.links.new(reroute_045_1.outputs[0], gamma_1.inputs[0])
+                node_tree4.links.new(group_009_1.outputs[0], reroute_046_1.inputs[0])
+                node_tree4.links.new(reroute_046_1.outputs[0], reroute_047_1.inputs[0])
+                node_tree4.links.new(reroute_047_1.outputs[0], principled_bsdf_1.inputs[9])
+                node_tree4.links.new(reroute_046_1.outputs[0], reroute_048_1.inputs[0])
+                node_tree4.links.new(reroute_048_1.outputs[0], reroute_049_1.inputs[0])
+                node_tree4.links.new(reroute_049_1.outputs[0], reroute_050_1.inputs[0])
+                node_tree4.links.new(reroute_050_1.outputs[0], math_006_1.inputs[1])
+                node_tree4.links.new(mix_005_1.outputs[2], reroute_051_1.inputs[0])
+                node_tree4.links.new(reroute_051_1.outputs[0], reroute_052_1.inputs[0])
+                node_tree4.links.new(principled_bsdf_1.outputs[0], reroute_053_1.inputs[0])
+                node_tree4.links.new(separate_rgb_001_1.outputs[2], reroute_054_1.inputs[0])
+                node_tree4.links.new(reroute_054_1.outputs[0], reroute_055_1.inputs[0])
+                node_tree4.links.new(math_005_1.outputs[0], reroute_056_1.inputs[0])
+                node_tree4.links.new(reroute_056_1.outputs[0], reroute_057_1.inputs[0])
+                node_tree4.links.new(bump_001_1.outputs[0], reroute_058_1.inputs[0])
+                node_tree4.links.new(reroute_058_1.outputs[0], reroute_059_1.inputs[0])
+                node_tree4.links.new(reroute_058_1.outputs[0], reroute_060_1.inputs[0])
+                node_tree4.links.new(reroute_060_1.outputs[0], reroute_061_1.inputs[0])
+                node_tree4.links.new(reroute_006_1.outputs[0], reroute_062_1.inputs[0])
+                node_tree4.links.new(reroute_062_1.outputs[0], reroute_063_1.inputs[0])
+                node_tree4.links.new(group_022_1.outputs[0], group_023_1.inputs[1])
+                node_tree4.links.new(group_022_1.outputs[1], group_023_1.inputs[2])
+                node_tree4.links.new(math_007_1.outputs[0], principled_bsdf_1.inputs[21])
+                node_tree4.links.new(group_023_1.outputs[0], reroute_064_1.inputs[0])
+                node_tree4.links.new(reroute_064_1.outputs[0], reroute_065_1.inputs[0])
+                node_tree4.links.new(reroute_065_1.outputs[0], math_007_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[19], group_002_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[9], group_002_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[20], group_002_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[21], group_002_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[25], group_004_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[35], group_004_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[36], group_004_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[37], group_004_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[41], group_008_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[51], group_008_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[52], group_008_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[53], group_008_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[57], group_010_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[67], group_010_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[68], group_010_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[69], group_010_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[73], group_011_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[83], group_011_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[84], group_011_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[85], group_011_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[89], group_012_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[99], group_012_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[100], group_012_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[101], group_012_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[105], group_015_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[115], group_015_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[116], group_015_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[117], group_015_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[120], group_016_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[127], group_016_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[128], group_016_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[129], group_016_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[1], group_022_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[2], group_022_1.inputs[1])
+                node_tree4.links.new(reroute_061_1.outputs[0], group_output_1.inputs[8])
+                node_tree4.links.new(reroute_030_1.outputs[0], group_output_1.inputs[0])
+                node_tree4.links.new(reroute_052_1.outputs[0], group_output_1.inputs[4])
+                node_tree4.links.new(mix_006_1.outputs[2], group_output_1.inputs[6])
+                node_tree4.links.new(reroute_029_1.outputs[0], group_output_1.inputs[5])
+                node_tree4.links.new(reroute_031_1.outputs[0], group_output_1.inputs[1])
+                node_tree4.links.new(reroute_044_1.outputs[0], group_output_1.inputs[2])
+                node_tree4.links.new(reroute_049_1.outputs[0], group_output_1.inputs[3])
+                node_tree4.links.new(combine_color_1.outputs[0], group_output_1.inputs[9])
+                node_tree4.links.new(math_006_1.outputs[0], group_output_1.inputs[10])
+                node_tree4.links.new(reroute_027_1.outputs[0], group_output_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_014_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_017_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_020_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_019_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_021_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_023_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_014_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_014_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_017_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_020_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_018_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_019_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_019_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_018_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_021_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_023_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_023_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_021_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[22], group_014_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[38], group_014_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[54], group_014_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[70], group_014_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[86], group_014_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[102], group_014_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[118], group_014_1.inputs[11])
+                node_tree4.links.new(group_input_001_1.outputs[30], group_017_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[14], group_017_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[46], group_017_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[62], group_017_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[78], group_017_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[94], group_017_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[110], group_017_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[12], group_020_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[28], group_020_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[44], group_020_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[60], group_020_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[76], group_020_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[92], group_020_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[108], group_020_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[13], group_018_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[29], group_018_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[45], group_018_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[61], group_018_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[77], group_018_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[93], group_018_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[109], group_018_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[16], group_019_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[32], group_019_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[48], group_019_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[64], group_019_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[80], group_019_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[96], group_019_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[112], group_019_1.inputs[12])
+                node_tree4.links.new(group_input_001_1.outputs[124], group_019_1.inputs[11])
+                node_tree4.links.new(group_input_001_1.outputs[23], group_021_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[39], group_021_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[55], group_021_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[71], group_021_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[87], group_021_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[103], group_021_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[130], group_021_1.inputs[11])
+                node_tree4.links.new(group_input_001_1.outputs[119], group_021_1.inputs[12])
+                node_tree4.links.new(group_input_001_1.outputs[17], group_023_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[33], group_023_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[49], group_023_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[65], group_023_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[81], group_023_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[97], group_023_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[125], group_023_1.inputs[11])
+                node_tree4.links.new(group_input_001_1.outputs[113], group_023_1.inputs[12])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_1.inputs[14])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_001_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_001_1.inputs[13])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_1.inputs[15])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_001_1.inputs[14])
+                node_tree4.links.new(group_input_001_1.outputs[15], group_001_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[31], group_001_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[47], group_001_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[63], group_001_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[79], group_001_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[95], group_001_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[123], group_001_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[111], group_001_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_009_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[10], group_009_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[26], group_009_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[42], group_009_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[58], group_009_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[74], group_009_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[90], group_009_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[121], group_009_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[106], group_009_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_009_1.inputs[13])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_009_1.inputs[14])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_003_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[3], group_003_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[11], group_003_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[27], group_003_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[43], group_003_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[59], group_003_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[75], group_003_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[91], group_003_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[122], group_003_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[107], group_003_1.inputs[11])
+                node_tree4.links.new(group_input_001_1.outputs[0], group_013_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_013_1.inputs[12])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_013_1.inputs[11])
+                node_tree4.links.new(group_input_001_1.outputs[18], group_013_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[34], group_013_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[50], group_013_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[66], group_013_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[82], group_013_1.inputs[7])
+                node_tree4.links.new(group_input_001_1.outputs[98], group_013_1.inputs[8])
+                node_tree4.links.new(group_input_001_1.outputs[126], group_013_1.inputs[9])
+                node_tree4.links.new(group_input_001_1.outputs[114], group_013_1.inputs[10])
+                node_tree4.links.new(group_input_001_1.outputs[0], separate_rgb_1.inputs[0])
+                node_tree4.links.new(group_input_001_1.outputs[7], math_001_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[8], math_005_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[4], math_003_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[5], math_004_1.inputs[1])
+                node_tree4.links.new(group_input_001_1.outputs[24], group_022_1.inputs[2])
+                node_tree4.links.new(group_input_001_1.outputs[40], group_022_1.inputs[3])
+                node_tree4.links.new(group_input_001_1.outputs[56], group_022_1.inputs[4])
+                node_tree4.links.new(group_input_001_1.outputs[72], group_022_1.inputs[5])
+                node_tree4.links.new(group_input_001_1.outputs[88], group_022_1.inputs[6])
+                node_tree4.links.new(group_input_001_1.outputs[104], group_003_1.inputs[14])
+                node_tree4.links.new(group_input_001_1.outputs[4], group_003_1.inputs[13])
+                node_tree4.links.new(group_input_001_1.outputs[12], group_003_1.inputs[12])
         HIMS()
         for i in range(parse_mwsy.tag_parse.rootTagInst.childs[0]['style'].childrenCount):
             temp_palette = parse_mwsy.tag_parse.rootTagInst.childs[0]['style'].childs[i]
@@ -35661,6 +36119,8 @@ class ImportCoating(bpy.types.Operator):
                                         BaseScaleY = 0.0
                                         MaterialTransformX = 0.0
                                         MaterialTransformY = 0.0
+                                        if self.use_crosscore:
+                                            materialstylename = materialstyleselection
                                         if materialstylename == materialstyleselection:
                                             for materialparameters in range(len(currentmaterial.get('MaterialParameters'))):
                                                 if currentmaterial.get('MaterialParameters')[materialparameters].get('ParameterName') == 'texel_density':
@@ -36029,7 +36489,7 @@ class ImportCoating(bpy.types.Operator):
                                                         node_tree1.links.new(group_input_1.outputs[10], group_1.inputs[3])
                                                         node_tree1.links.new(group_1.outputs[0], group_output_1.inputs[1])
                                                         
-                                                        if isGrime == False:
+                                                        if not isGrime:
                                                             inputnuminit = 8+16*int(swatches)
                                                             inputnum = 9+16*int(swatches)
                                                             inputnum1 = 10+16*int(swatches)
@@ -36067,7 +36527,7 @@ class ImportCoating(bpy.types.Operator):
                                                                 infiniteshader.inputs[inputnuminit].default_value = 1
                                                             if swatches == 6:
                                                                 infiniteshader.inputs[inputnuminit].default_value = 0
-                                                        if isGrime == True:
+                                                        if isGrime:
                                                             node_tree0.links.new(group_002_0.outputs[0], infiniteshader.inputs[120])
                                                             node_tree0.links.new(group_002_0.outputs[1], infiniteshader.inputs[121])
                                                             node_tree0.links.new(group_002_0.outputs[2], infiniteshader.inputs[122])
@@ -36087,7 +36547,9 @@ class ImportCoating(bpy.types.Operator):
                                                             isGrime = True
                                                             createSwatch(isGrime)
                                                             isGrimeDone = True
-                                                        
+                                            infiniteshader.inputs[104].default_value = int(self.use_damage)
+                
+                print('')
                 print('''                                      .,:clooxkO00KK0OOxol:^.              
                                   ^:lllccc;,,,^,,,;;cldOKXKOdc^           
                                .;ol;^^^^..             .,cx0XX0x:.        
