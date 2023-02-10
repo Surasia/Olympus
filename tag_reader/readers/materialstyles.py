@@ -38,7 +38,8 @@ class MaterialStyles(BaseTemplate):
             self.json_base["emissiveAmount"] = style_select['emissive_amount'].value
             self.json_base["grimeAmount"] = style_select['grime_amount'].value
             self.json_base["scratchAmount"] = style_select['scratch_amount'].value
-            parse_mwpl = ReaderFactory.create_reader(self.root_folder+style_select['palette'].path+".materialpalette") 
+            parse_mwpl = ReaderFactory.create_reader(self.root_folder+style_select['palette'].path+".materialpalette")
+            print(self.root_folder+style_select['palette'].path+".materialpalette")
             parse_mwpl.load()
             parse_mwpl.toJson(self.root_folder)
             self.json_base["swatches"] = parse_mwpl.json_base['swatches']

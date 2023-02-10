@@ -288,10 +288,6 @@ class ModulePanel(bpy.types.Panel):
             textureOp.norm_signed = importer_settings.norm_signed
             textureOp.use_modules = True
 
-            ImportMaterial = forceFormat.operator("infinite.infinitematerial",icon="MATERIAL",text="Material")
-            ImportMaterial.filepath = selectedPath
-            ImportMaterial.use_modules = True
-            ImportMaterial.mipmap = importer_settings.mipmap
 
 
     @classmethod

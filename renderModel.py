@@ -868,7 +868,6 @@ class renderModelImporter:
         for mesh_block in range(len(mesh_blocks)):
             src_mesh = SourceMesh()
             current_vertex_block = mesh_blocks[mesh_block].first_vblock     # start at this vertex block
-
             vblocks = [vertex_blocks[current_vertex_block]]
 
             for j in range(current_vertex_block + 1, len(vertex_blocks)):
