@@ -26,16 +26,6 @@ to install pip into blenders python environment. Then enter
 ```
 import pip
 pip.main(['install','texture2ddecoder'])
+pip.main(['install','pymmh3'])
 ```
 to install the module texture2ddecoder. Pip might complain that a newer version of pip is available, but that can just be ignored.
-## Windows
-If the platform independent method for some reason doesn't work, this one just calls the python binary instead of using the modules directly, which should allways work. For other platforms, the name of the binary may be different (python3.9 on linux), the rest should be the same though.
-```
-import subprocess
-import sys
-import os
-python_exe = os.path.join(sys.prefix, 'bin', 'python.exe')
-subprocess.call([python_exe, "-m", "ensurepip"])
-subprocess.call([python_exe, "-m", "pip", "install", "--upgrade", "pip"])
-subprocess.call([python_exe, "-m", "pip", "install", "texture2ddecoder"])
-```
