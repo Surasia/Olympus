@@ -1,7 +1,7 @@
 bl_info = {
     "name" : "Olympus",
     "blender" : (2,90,0),
-    "version" : (0,3,0),
+    "version" : (0,3,1),
     "category" : "Import/Export",
     "description" : "Imports Models, Textures, BSPs and Coatings from Halo Infinite",
     "author" : "Surasia, Coreforge, Plastered_Crab"
