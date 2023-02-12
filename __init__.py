@@ -1,10 +1,10 @@
 bl_info = {
     "name" : "Olympus",
     "blender" : (2,90,0),
-    "version" : (0,3,1),
+    "version" : (0,4,0),
     "category" : "Import/Export",
     "description" : "Imports Models, Textures, BSPs and Coatings from Halo Infinite",
-    "author" : "Surasia, Coreforge, Plastered_Crab"
+    "author" : "Surasia, Coreforge, Plastered_Crab, Urium86"
 }
 modulesNames = ["Header", "DataTable", "StringTable", "ContentTable", "renderModel", "ImportCoating"]
 

@@ -463,107 +463,115 @@ class Texture:
     def readTextureImage(self,path, import_settings, use_modules):
         import texture2ddecoder
         #with open(path,'rb') as f:
-        f = ModulesManager.ModulesManagerContainer.manager.getFileHandle(path,use_modules)
-        local_fh = Header()
-        local_det = DataTable()
-        local_strt = StringTable()
-        local_ctt = ContentTable()
-        if not local_fh.checkMagic(f):
-            print(f"File has the wrong magic")
+        try:
+            f = ModulesManager.ModulesManagerContainer.manager.getFileHandle(path,use_modules)
+            local_fh = Header()
+            local_det = DataTable()
+            local_strt = StringTable()
+            local_ctt = ContentTable()
+            if not local_fh.checkMagic(f):
+                print(f"File has the wrong magic")
 
-        local_fh.readHeader(f)
-        local_det.readTable(f,local_fh)
-        local_strt.readStrings(f,local_fh)
-        local_ctt.readTable(f,local_fh,local_det)
+            local_fh.readHeader(f)
+            local_det.readTable(f,local_fh)
+            local_strt.readStrings(f,local_fh)
+            local_ctt.readTable(f,local_fh,local_det)
 
-        handle_name = path.split('/')[-1]
-        print(f"Texture File name: {handle_name}")
-        format = -1
-        max_width = -1
-        max_height = -1
+            handle_name = path.split('/')[-1]
+            print(f"Texture File name: {handle_name}")
+            format = -1
+            max_width = -1
+            max_height = -1
 
-        for x in range(len(local_ctt.entries)):
-                content_entry = local_ctt.entries[x]
+            for x in range(len(local_ctt.entries)):
+                    content_entry = local_ctt.entries[x]
 
-                if local_ctt.entries[x].data_reference is None:
-                    # Entry has no data linked
-                    continue
-                    
-                if content_entry.hash == b'R\xab5#hBJ\xc2}\x8fr\x94#\x19m\xd3':
-                    # bitmap handle info stuff
-                    offset = content_entry.data_reference.offset
-                    f.seek(offset + 0xe4)
-                    frame_count = int.from_bytes(f.read(4),'little')
-
-                if content_entry.hash == b'*\x80\xeb\x8akA\n\xf6\x9cp\x0c\x97MU6#':
-                    # DDS Header info stuff
-                    offset = content_entry.data_reference.offset
-                    f.seek(offset + 0x14)
-                    embed_data_len = int.from_bytes(f.read(4),'little')
-                    embed_data_offset = offset + content_entry.data_reference.size
-                    f.seek(offset + 0x1d)
-                    format = int.from_bytes(f.read(2),'little')
-                    f.seek(offset + 0x40)
-                    resourceDimension = int.from_bytes(f.read(4),'little')
-
-                if content_entry.hash == b'jQ\xb0\xde\x98D\x1c\x02\xcd\xc6A\x99i\xaa\x94\xc2':
-                    f.seek(content_entry.data_reference.offset)
-                    max_width = int.from_bytes(f.read(2),'little')
-                    max_height = int.from_bytes(f.read(2),'little')
-                    pass
-
-                if content_entry.hash == b'9, \xd1\xdcH\xfc\xbdI\xde+\x81\x93\xaf\xe8\xb0':
-                    # One of these hashes per resource file
-                    nResourceFiles = content_entry.data_reference.size//0x10    # there are 0x10 bytes for each file
-                    for chunk in range(nResourceFiles):
-                        offset = content_entry.data_reference.offset + chunk * 0x10
-                        f.seek(offset + 0xa)
-                        mipmap = int.from_bytes(f.read(1),'little')
-                        if mipmap != import_settings.mipmap:
-                            continue
-                        f.seek(offset + 0xc)
-                        width = int.from_bytes(f.read(2),'little')
-                        height = int.from_bytes(f.read(2),'little')
-                        chunk_name = path + "[" + str(chunk) + "_bitmap_resource_handle.chunk" + str(chunk) + "]"
-                        print(f"Reading texture block {chunk_name}")
-                        print(f"Width: {width} Height: {height} Format: {DXGI_FORMAT[format]} {hex(format)}")
-                        #with open(chunk_name, 'rb') as chunk_file:
-
-                        chunk_file = ModulesManager.ModulesManagerContainer.manager.getFileHandle(chunk_name,use_modules)
+                    if local_ctt.entries[x].data_reference is None:
+                        # Entry has no data linked
+                        continue
                         
-                        if chunk_file is not None:
-                            img_data = chunk_file.read()
-                            chunk_file.close()
-                            #tex_obj = TextureObject()
-                            #tex_obj.width = width
-                            #tex_obj.height = height
-                            #tex_obj.texture_format = format
-                            pixels = self.readTextureData(img_data,width,height,import_settings,format)
-                            #dds_data = self.createDDSHeader(tex_obj)
-#   
-                            #if dds_data == None:
-                            #    print("Couldn't build DDS Header")
-                            #    continue
-                            #dds_data.append(img_data)
-                        else:
-                            # the file doesn't exist
-                            pixels = None
-                            print("The Chunk doesn't exist")
+                    if content_entry.hash == b'R\xab5#hBJ\xc2}\x8fr\x94#\x19m\xd3':
+                        # bitmap handle info stuff
+                        offset = content_entry.data_reference.offset
+                        f.seek(offset + 0xe4)
+                        frame_count = int.from_bytes(f.read(4),'little')
 
-        if embed_data_len != 0:
-            # if the length is not 0, that means that there is some bitmap data embedded in the main .bitmap file.
-            # This probably also means that there aren't any external chunk files, so the embedded data has to be read
-            # There don't seem to be mipmaps with these files, so that won't get checked
-            f.seek(embed_data_offset)
-            img_data = f.read(embed_data_len)
-            print(f"Bitmap with embedded data! Width: {max_width} Height: {max_height} Format: {DXGI_FORMAT[format]} {hex(format)}")
+                    if content_entry.hash == b'*\x80\xeb\x8akA\n\xf6\x9cp\x0c\x97MU6#':
+                        # DDS Header info stuff
+                        offset = content_entry.data_reference.offset
+                        f.seek(offset + 0x14)
+                        embed_data_len = int.from_bytes(f.read(4),'little')
+                        embed_data_offset = offset + content_entry.data_reference.size
+                        f.seek(offset + 0x1d)
+                        format = int.from_bytes(f.read(2),'little')
+                        f.seek(offset + 0x40)
+                        resourceDimension = int.from_bytes(f.read(4),'little')
 
-            pixels = self.readTextureData(img_data,max_width,max_height,import_settings,format)
-            width = max_width
-            height = max_height
+                    if content_entry.hash == b'jQ\xb0\xde\x98D\x1c\x02\xcd\xc6A\x99i\xaa\x94\xc2':
+                        f.seek(content_entry.data_reference.offset)
+                        max_width = int.from_bytes(f.read(2),'little')
+                        max_height = int.from_bytes(f.read(2),'little')
+                        pass
 
-        f.close()
-        return (width,height,pixels)
+                    if content_entry.hash == b'9, \xd1\xdcH\xfc\xbdI\xde+\x81\x93\xaf\xe8\xb0':
+                        # One of these hashes per resource file
+                        nResourceFiles = content_entry.data_reference.size//0x10    # there are 0x10 bytes for each file
+                        for chunk in range(nResourceFiles):
+                            offset = content_entry.data_reference.offset + chunk * 0x10
+                            f.seek(offset + 0xa)
+                            mipmap = int.from_bytes(f.read(1),'little')
+                            if mipmap != import_settings.mipmap:
+                                continue
+                            f.seek(offset + 0xc)
+                            width = int.from_bytes(f.read(2),'little')
+                            height = int.from_bytes(f.read(2),'little')
+                            chunk_name = path + "[" + str(chunk) + "_bitmap_resource_handle.chunk" + str(chunk) + "]"
+                            print(f"Reading texture block {chunk_name}")
+                            print(f"Width: {width} Height: {height} Format: {DXGI_FORMAT[format]} {hex(format)}")
+                            #with open(chunk_name, 'rb') as chunk_file:
+
+                            chunk_file = ModulesManager.ModulesManagerContainer.manager.getFileHandle(chunk_name,use_modules)
+                            
+                            if chunk_file is not None:
+                                img_data = chunk_file.read()
+                                chunk_file.close()
+                                #tex_obj = TextureObject()
+                                #tex_obj.width = width
+                                #tex_obj.height = height
+                                #tex_obj.texture_format = format
+                                pixels = self.readTextureData(img_data,width,height,import_settings,format)
+                                #dds_data = self.createDDSHeader(tex_obj)
+    #   
+                                #if dds_data == None:
+                                #    print("Couldn't build DDS Header")
+                                #    continue
+                                #dds_data.append(img_data)
+                            else:
+                                # the file doesn't exist
+                                pixels = None
+                                print("The Chunk doesn't exist")
+
+            if embed_data_len != 0:
+                # if the length is not 0, that means that there is some bitmap data embedded in the main .bitmap file.
+                # This probably also means that there aren't any external chunk files, so the embedded data has to be read
+                # There don't seem to be mipmaps with these files, so that won't get checked
+                f.seek(embed_data_offset)
+                img_data = f.read(embed_data_len)
+                print(f"Bitmap with embedded data! Width: {max_width} Height: {max_height} Format: {DXGI_FORMAT[format]} {hex(format)}")
+
+                pixels = self.readTextureData(img_data,max_width,max_height,import_settings,format)
+                width = max_width
+                height = max_height
+
+            f.close()
+            return (width,height,pixels)
+        except:
+            width=1
+            height=1
+            pixels= None
+            return (width,height,pixels)
+            print('Weird bitmap, skipping...')
+        
 
     def readTexture(self,path,name, import_settings,use_modules):
         frame_count = -1
