@@ -26,6 +26,7 @@ class MaterialPalette(BaseTemplate):
             parse_mwsw.default_color_variant = key['color'].value
             parse_mwsw.toJson()
             parse_mwsw.json_base['swatchId'] = key['name'].value
+            parse_mwsw.json_base['swatchref'] = parse_mwsw.handle
             parse_mwsw.json_base['emissiveAmount'] = key['emissiveAmount'].value
             parse_mwsw.json_base['emissiveIntensity'] = key['emissiveIntensity'].value
             parse_mwsw.json_base['roughness'] = key['roughnessOverride'].selected_index

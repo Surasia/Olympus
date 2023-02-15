@@ -540,6 +540,9 @@ class Texture:
                                 #tex_obj.height = height
                                 #tex_obj.texture_format = format
                                 pixels = self.readTextureData(img_data,width,height,import_settings,format)
+                                pixelsflipped = []
+                                [pixelsflipped.extend(pixels[(x*4*width):((x+1)*4*width)]) for x in range(height-1, -1, -1)]
+                                pixels = pixelsflipped
                                 #dds_data = self.createDDSHeader(tex_obj)
     #   
                                 #if dds_data == None:
@@ -560,8 +563,11 @@ class Texture:
                 print(f"Bitmap with embedded data! Width: {max_width} Height: {max_height} Format: {DXGI_FORMAT[format]} {hex(format)}")
 
                 pixels = self.readTextureData(img_data,max_width,max_height,import_settings,format)
+                pixelsflipped = []
                 width = max_width
                 height = max_height
+                [pixelsflipped.extend(pixels[(x*4*width):((x+1)*4*width)]) for x in range(height-1, -1, -1)]
+                pixels = pixelsflipped
 
             f.close()
             return (width,height,pixels)

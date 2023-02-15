@@ -1,7 +1,7 @@
 bl_info = {
     "name" : "Olympus",
     "blender" : (2,90,0),
-    "version" : (0,4,0),
+    "version" : (0,6,0),
     "category" : "Import/Export",
     "description" : "Imports Models, Textures, BSPs and Coatings from Halo Infinite",
     "author" : "Surasia, Coreforge, Plastered_Crab, Urium86"
@@ -60,10 +60,6 @@ class HaloInfiniteAddonPreferences(bpy.types.AddonPreferences):
         layout = self.layout
         layout.label(text="Importer Preferences")
         layout.prop(self,"root_folder")
-        layout.prop(self,"shader_file")
-        layout.prop(self,"shader_name")
-        layout.prop(self,"oodle_lib_path")
-        layout.prop(self,"module_deploy_path")
 
 
 if 'DEBUG_MODE' in sys.argv:

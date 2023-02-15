@@ -63,16 +63,15 @@ def readStringInPlace(f, start, inplace=False):
 
 def createDirAltNameID(in_dir: str):
     dict_return = {}
-    for path in pathlib.Path(in_dir).rglob('info_*.json'):
+    for path in pathlib.Path(in_dir).rglob('*.json'):
         with open(path, 'rb') as f:
             data = json.load(f)
             filename = path.stem.split('info_')[-1]
-            if data['CommonData']['Type'] != "ArmorCoating":
-                continue
             altName = data['CommonData']['AltName']
-            key = filename.split('-')[2] + "____" + altName
+            Title = data['CommonData']['Title']
+            key = altName
             if not dict_return.keys().__contains__(key):
-                dict_return[key] = filename
+                dict_return[key] = Title
             else:
                 debug = ""
 

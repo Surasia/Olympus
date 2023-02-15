@@ -166,9 +166,9 @@ class renderModelImporter:
 
         self.auto_import_dependencies = False
         self.import_uvs = True
-        self.import_weights = True
-        self.import_normals = True
-        self.reuse_textures = True
+        self.import_weights = False
+        self.import_normals = False
+        self.reuse_textures = False
         self.add_materials = True
         self.populate_shader = False
         self.import_model = True
@@ -258,7 +258,7 @@ class renderModelImporter:
                     chunk_offset = j
                     #print(f"Vertex UV0 block at {hex(chunk_offset)} stride: {hex(block.vertex_stride)}")
                     u = frombytes(chunk_data[chunk_offset:chunk_offset+2],'little') / (2 ** 16 - 1) * uv0_scale[0][-1] + uv0_scale[0][0]
-                    v = frombytes(chunk_data[chunk_offset+2:chunk_offset+4],'little') / (2 ** 16 - 1) * uv0_scale[1][-1] + uv0_scale[1][0]
+                    v = (-1.0 * frombytes(chunk_data[chunk_offset+2:chunk_offset+4],'little') / (2 ** 16 - 1) * uv0_scale[1][-1]) + uv0_scale[1][0]
                     #uv0.append([u,v])
                     uv0[current_vert] = (u,v)
                     current_vert += 1
@@ -273,7 +273,7 @@ class renderModelImporter:
                     chunk_offset = j
 
                     u = frombytes(chunk_data[chunk_offset:chunk_offset+2],'little') / (2 ** 16 - 1) * uv1_scale[0][-1] + uv1_scale[0][0]
-                    v = frombytes(chunk_data[chunk_offset+2:chunk_offset+4],'little') / (2 ** 16 - 1) * uv1_scale[1][-1] + uv1_scale[1][0]
+                    v = (-1.0 * frombytes(chunk_data[chunk_offset+2:chunk_offset+4],'little') / (2 ** 16 - 1) * uv1_scale[1][-1]) + uv1_scale[1][0]
                     #uv1.append([u,v])
                     uv1[current_vert] = [u,v]
                     current_vert += 1
@@ -940,19 +940,19 @@ class ImportRenderModel(bpy.types.Operator):
     import_weights: bpy.props.BoolProperty(
         name="Import vertex weights",
         description="imports the vertex weights and vertex groups",
-        default=True
+        default=False
     )
 
     import_normals: bpy.props.BoolProperty(
         name="(potentialy broken) Import Normals",
         description="(potentially broken) import mesh normals",
-        default=True
+        default=False
     )
 
     reuse_textures: bpy.props.BoolProperty(
         name="Reuse existing Textures",
         description="use the existing texture if a referenced Texture with the same name already exists in the file",
-        default=True
+        default=False
     )
     
     add_materials: bpy.props.BoolProperty(

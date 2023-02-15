@@ -22,8 +22,8 @@ class ReaderFactory:
         'uslg': ('stringlist', 'StringList'),
         'mwsw': ('swatch', 'Swatch'),
         'shbc': ('shader_bytecode', 'ShaderBytecode'),
-        'jmad': ('c_model_animation_graph', 'ModelAnimationGraph')
-    }
+        'jmad': ('c_model_animation_graph', 'ModelAnimationGraph'),
+        'mwvs': ('mp_visor_swatch', 'MpVisorSwatch')}
     path_import = 'Olympus.tag_reader.readers'
     pluginname = 'swatch'
 

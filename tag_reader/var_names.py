@@ -372,6 +372,6 @@ if True:
     Mmr3Hash_str = Mmr3Hash_str_iu
     #Mmr3Hash_str = Mmr3Hash_alt
 
-#map_alt_name_id = createDirAltNameID(Config.INFOS_PATH)
+map_alt_name_id = createDirAltNameID(ROOT_DIR+'/infos/')
 
 debug = ""

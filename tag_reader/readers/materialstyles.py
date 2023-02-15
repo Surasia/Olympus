@@ -2,7 +2,7 @@
 from . base_template import BaseTemplate
 from . materialpalette import MaterialPalette
 from . reader_factory import ReaderFactory
-from .. var_names import Mmr3Hash_str, getStrInMmr3Hash
+from .. var_names import Mmr3Hash_str, getStrInMmr3Hash, map_alt_name_id
 from ... import ImportCoating
 
 
@@ -22,6 +22,8 @@ class MaterialStyles(BaseTemplate):
         style_selection = roots['style'].childs[self.default_styles]
         self.naming = style_selection['name'].value
         self.palette = style_selection['palette'].path.split('\\')[-1]
+        if map_alt_name_id.keys().__contains__(self.palette):
+            self.palette = map_alt_name_id[self.palette]
 
     def toJson(self, coatingname, root_folder):
         self.root_folder = root_folder
@@ -51,10 +53,6 @@ class MaterialStyles(BaseTemplate):
                     lay_d['swatch'] = lay['name'].value
                     lay_d['ignoreTexelDensity'] = bool(lay['Ignore_Texel_Density_Scalar'].selected_index)
                     lay_d['normalBlend'] = bool(lay['Normal_Blend'].selected_index)
-                    """
-                    if lay_d['swatch'] == "00000000":
-                        lay_d['swatch'] = ""
-                    """
                     layers.append(lay_d)
                 material = root['coatingMaterialSets'].childs[entry['Coating Material Set'].value]['coatingMaterialSet'].path
                 material = material.split('\\')[-1]

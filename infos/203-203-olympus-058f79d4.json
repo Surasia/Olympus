@@ -1,0 +1,70 @@
+{
+  "TagId": 0,
+  "StyleId": {
+    "m_identifier": 140740076
+  },
+  "RegionPartId": {
+    "m_identifier": -1
+  },
+  "CommonData": {
+    "Id": "203-203-olympus-058f79d4",
+    "HideUntilOwned": true,
+    "Title": "oly_mil_springtime",
+    "Description": "oly_mil_springtime",
+    "FeatureFlag": true,
+    "ItemAvailability": "",
+    "DateReleased": {
+      "ISO8601Date": ""
+    },
+    "AltName": "oly_mil_springtime",
+    "IconStringId": {
+      "m_identifier": -1
+    },
+    "SpriteBitmap": 0,
+    "SpriteFrameIndex": 0,
+    "AltSpriteBitmap": 0,
+    "AltSpriteFrameIndex": 0,
+    "DisplayPath": {
+      "Width": 0,
+      "Height": 0,
+      "Media": {
+        "MediaUrl": {
+          "AuthorityId": "",
+          "Path": "",
+          "RetryPolicyId": "",
+          "TopicName": "",
+          "AcknowledgementTypeId": "NoAcknowledgement",
+          "AuthenticationLifetimeExtensionSupported": false,
+          "ClearanceAware": false
+        },
+        "MimeType": "",
+        "Caption": "",
+        "AlternateText": "",
+        "FolderPath": "",
+        "FileName": ""
+      }
+    },
+    "Quality": "Common",
+    "ManufacturerId": 0,
+    "Type": "WeaponCoating",
+    "RewardTrack": "",
+    "ParentPaths": [
+      {
+        "Path": "Inventory/Weapon/Themes/207-203-olympus-aa30213b.json",
+        "Type": "ArmorTheme"
+      }
+    ],
+    "SortingMetadata": {
+      "categoryWeight": 0,
+      "subCategoryWeight": 0
+    },
+    "SeasonNumber": 0,
+    "OriginalSeasonNumber": 2,
+    "Season": {
+      "status": "Test",
+      "value": "",
+      "translations": {}
+    }
+  },
+  "LightingScalarOverride": 0
+}

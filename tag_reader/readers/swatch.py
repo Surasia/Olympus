@@ -48,6 +48,10 @@ class Swatch(BaseTemplate):
         if color_variant is None:
             color_variant = root['color_variants'].childs[0]
             color_v_index = 0
+        try:
+            self.handle = root['global tag ID'].value
+        except:
+            self.handle = '00000000'
         self.json_base["default_color_variant_index"] = color_v_index
         self.json_base["scratchRoughness"] = root['scratch_roughness'].value
         self.json_base["scratchBrightness"] = root['scratch_brightness'].value
