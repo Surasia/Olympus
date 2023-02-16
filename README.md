@@ -11,7 +11,7 @@ Research and Code for BSPs: [PlasteredCrab](https://github.com/PlasteredCrab)
 ## Initial Set-Up
 - Download [InfiniteExplorer](https://github.com/Coreforge/infiniteExplorer) with Fuse
 - Install [WinFSP](https://winfsp.dev/rel/)
-- Load all modules in Halo Infinite's deploy folder, and mount to `M:`
+- Load all modules in Halo Infinite's deploy folder in InfiniteExplorer, and mount to `M:`
 - Download Olympus and install it as a Blender addon.
 - In addon settings, set "Asset Root" to `M:/`
 
