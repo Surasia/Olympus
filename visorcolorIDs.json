@@ -1,0 +1,868 @@
+{
+	"visors": [
+		{
+			"name": "Anderson Nights",
+			"colorID": 1909258974,
+			"visorID": -307894833,
+			"AltName": "dawn",
+			"Roughness": "0",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Koban",
+			"colorID": 936651188,
+			"visorID": -1612249218,
+			"AltName": "koban",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Charging Armadillo",
+			"colorID": 2109068345,
+			"visorID": 964958558,
+			"AltName": "chager",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Blood Leaf",
+			"colorID": -382869120,
+			"visorID": 936780723,
+			"AltName": "leet",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Fireblood Rift",
+			"colorID": 1547715901,
+			"visorID": 1544031111,
+			"AltName": "dinh_extra",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "eUnited",
+			"colorID": 942794366,
+			"visorID": 1544031111,
+			"AltName": "eunited",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Outrun Fate",
+			"colorID": 582312497,
+			"visorID": -151028957,
+			"AltName": "outrun",
+			"Roughness": "0",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Fnatic",
+			"colorID": 1335923041,
+			"visorID": 1544031111,
+			"AltName": "fnatic",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "OpTic Gaming",
+			"colorID": -1376865369,
+			"visorID": 1544031111,
+			"AltName": "optic",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Unyielding Will",
+			"colorID": -2142936486,
+			"visorID": 307976421,
+			"AltName": "grit",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Bay Sunset",
+			"colorID": 181344297,
+			"visorID": -307894833,
+			"AltName": "rch_em_orange",
+			"Roughness": "4",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Shibuichi",
+			"colorID": -816594964,
+			"visorID": 1263644668,
+			"AltName": "shibuichi",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Poisoned Mire",
+			"colorID": 1006740910,
+			"visorID": 861414455,
+			"AltName": "iron_eagle_default",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Scarlet Hunter",
+			"colorID": 105753811,
+			"visorID": -40377469,
+			"AltName": "scarlet",
+			"Roughness": "8",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Beltane Flame",
+			"colorID": 952344917,
+			"visorID": 1375293503,
+			"AltName": "beltane",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Biko Turquoise",
+			"colorID": -69519703,
+			"visorID": 1544031111,
+			"AltName": "turquoise",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Juice",
+			"colorID": 124497984,
+			"visorID": 680083308,
+			"AltName": "juice",
+			"Roughness": "4",
+			"Emmisive": "2"
+		},
+		{
+			"name": "Spacestation Gaming",
+			"colorID": -1632040442,
+			"visorID": 1544031111,
+			"AltName": "spacestation_gaming",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Pattern Seeker",
+			"colorID": -674911,
+			"visorID": 1263644668,
+			"AltName": "hill_country",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Grey Skull",
+			"colorID": -1062475630,
+			"visorID": 1544031111,
+			"AltName": "avery",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Ennui Splinters",
+			"colorID": 520231711,
+			"visorID": -193297465,
+			"AltName": "ennui",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "rch_em_red_2",
+			"colorID": -1002702463,
+			"visorID": -307894833,
+			"AltName": "rch_em_red_2",
+			"Roughness": "8",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Bryce",
+			"colorID": 328857776,
+			"visorID": 781623628,
+			"AltName": "bryce",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Bullfrog",
+			"colorID": -1217536558,
+			"visorID": 1544031111,
+			"AltName": "bullfrog",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Three-Five-Five",
+			"colorID": -1494180604,
+			"visorID": 780209972,
+			"AltName": "three_five_five",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Triplex Aero",
+			"colorID": -412685272,
+			"visorID": -863400357,
+			"AltName": "amber",
+			"Roughness": "0",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Sabi",
+			"colorID": -1479539747,
+			"visorID": -1612249218,
+			"AltName": "patina",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Europe Launch",
+			"colorID": -682804238,
+			"visorID": 190205315,
+			"AltName": "europe",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Necropolis Alabaster",
+			"colorID": -1646821609,
+			"visorID": -511884181,
+			"AltName": "alabaster",
+			"Roughness": "8",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Dynasty",
+			"colorID": -73508482,
+			"visorID": 680083308,
+			"AltName": "dynasty",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Graphite Soul",
+			"colorID": 1655830520,
+			"visorID": 230709318,
+			"AltName": "graphite",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Rampant",
+			"colorID": 523462254,
+			"visorID": 1806325883,
+			"AltName": "rampant",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Tempered Steel",
+			"colorID": 633023344,
+			"visorID": 780209972,
+			"AltName": "tempered_steel",
+			"Roughness": "-1",
+			"Emmisive": "0.03"
+		},
+		{
+			"name": "Slipstream Void",
+			"colorID": 7592522,
+			"visorID": 781623628,
+			"AltName": "void",
+			"Roughness": "0",
+			"Emmisive": "0.5"
+		},
+		{
+			"name": "FaZe Clan",
+			"colorID": 2134838735,
+			"visorID": 1544031111,
+			"AltName": "faze",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Seaglass Waves",
+			"colorID": -281773762,
+			"visorID": -1806852560,
+			"AltName": "seaglass",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Sigil",
+			"colorID": 363215877,
+			"visorID": 190205315,
+			"AltName": "sigil",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Wulfenite Eyes",
+			"colorID": -596177181,
+			"visorID": -1136300373,
+			"AltName": "wulfenite",
+			"Roughness": "0",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Ryuu",
+			"colorID": -505933715,
+			"visorID": -1612249218,
+			"AltName": "ryuu",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Sentinels",
+			"colorID": 117988659,
+			"visorID": 1544031111,
+			"AltName": "sentinels",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Double Zeroes",
+			"colorID": -1696642394,
+			"visorID": -15696289,
+			"AltName": "double_zeroes",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "NAVI",
+			"colorID": 931643408,
+			"visorID": 1544031111,
+			"AltName": "navi",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Desert Gold",
+			"colorID": 94954270,
+			"visorID": 230709318,
+			"AltName": "desert",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Wisteria",
+			"colorID": -1729249433,
+			"visorID": -1806852560,
+			"AltName": "metallurgy",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Vandal",
+			"colorID": 1118766568,
+			"visorID": -193297465,
+			"AltName": "vandal",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Enji-iro",
+			"colorID": 136042676,
+			"visorID": -1806852560,
+			"AltName": "enji_iro",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "rch_em_white",
+			"colorID": -1332991007,
+			"visorID": -307894833,
+			"AltName": "rch_em_white",
+			"Roughness": "4",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Blackpool",
+			"colorID": 1373861568,
+			"visorID": -1676083705,
+			"AltName": "blackpool",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Carrow Garnet",
+			"colorID": -807799332,
+			"visorID": 1544031111,
+			"AltName": "garnet",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Free Hugs",
+			"colorID": -169779560,
+			"visorID": -1676083705,
+			"AltName": "urple",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Team Envy",
+			"colorID": -659247022,
+			"visorID": 1544031111,
+			"AltName": "envy",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Stalwart",
+			"colorID": -907264711,
+			"visorID": 1544031111,
+			"AltName": "stalwart",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Royal Prelate",
+			"colorID": 1484999859,
+			"visorID": -15696289,
+			"AltName": "prelate",
+			"Roughness": "7",
+			"Emmisive": "0"
+		},
+		{
+			"name": "ANZ Launch",
+			"colorID": 1450614929,
+			"visorID": 190205315,
+			"AltName": "anz",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "peppermint_green",
+			"colorID": 1362553048,
+			"visorID": 482424204,
+			"AltName": "peppermint_green",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Night Wisp",
+			"colorID": 500810794,
+			"visorID": 286398678,
+			"AltName": "night_sight",
+			"Roughness": "4",
+			"Emmisive": "1"
+		},
+		{
+			"name": "rch_em_red",
+			"colorID": -1401857568,
+			"visorID": -307894833,
+			"AltName": "rch_em_red",
+			"Roughness": "0",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Miridem Cobalt",
+			"colorID": -1560296254,
+			"visorID": 1544031111,
+			"AltName": "cobalt",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Bell Toll",
+			"colorID": -597142303,
+			"visorID": 1544031111,
+			"AltName": "bell_toll",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Icicle Falls",
+			"colorID": 321904831,
+			"visorID": 190205315,
+			"AltName": "icebreaker",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "G2 Esports",
+			"colorID": 475828140,
+			"visorID": 1544031111,
+			"AltName": "g2",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Mithril",
+			"colorID": 290666047,
+			"visorID": 1231072715,
+			"AltName": "mithril",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Citrine Wind",
+			"colorID": 686664994,
+			"visorID": 1868629765,
+			"AltName": "citrine",
+			"Roughness": "7",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Athena's Mirror",
+			"colorID": -1439007923,
+			"visorID": -307894833,
+			"AltName": "pyrite",
+			"Roughness": "0",
+			"Emmisive": "0.3"
+		},
+		{
+			"name": "Termination Protocol",
+			"colorID": 1502207141,
+			"visorID": -151028957,
+			"AltName": "terminator",
+			"Roughness": "8",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Madrigal Aquamarine",
+			"colorID": -728442071,
+			"visorID": 1544031111,
+			"AltName": "aquamarine",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Spirit",
+			"colorID": 1323257324,
+			"visorID": 780209972,
+			"AltName": "spirit",
+			"Roughness": "-1",
+			"Emmisive": "0.5"
+		},
+		{
+			"name": "Blood of Doisac",
+			"colorID": -1085604211,
+			"visorID": 1157889888,
+			"AltName": "realgar",
+			"Roughness": "2",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Goblin",
+			"colorID": -1069007280,
+			"visorID": 964958558,
+			"AltName": "goblin",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Amber Yesterday",
+			"colorID": 1317249528,
+			"visorID": 1134429216,
+			"AltName": "sepia",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Wave",
+			"colorID": -874166076,
+			"visorID": -1612249218,
+			"AltName": "wave",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Visigoth",
+			"colorID": 1138117397,
+			"visorID": 1544031111,
+			"AltName": "visigoth",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Phalanx",
+			"colorID": 2005300120,
+			"visorID": 988054775,
+			"AltName": "phalanx",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Tactical Recursion",
+			"colorID": 1474705615,
+			"visorID": 1709616745,
+			"AltName": "dolomite",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Okane",
+			"colorID": -507518934,
+			"visorID": 936780723,
+			"AltName": "okane",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Controlled Growth",
+			"colorID": -2040194918,
+			"visorID": 286398678,
+			"AltName": "jade",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Sansar Obsidian",
+			"colorID": 267723541,
+			"visorID": 1544031111,
+			"AltName": "obsidian",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Murk",
+			"colorID": -423903718,
+			"visorID": 1544031111,
+			"AltName": "thirty_four",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "tempe",
+			"colorID": -1310186695,
+			"visorID": 0,
+			"AltName": "tempe",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "North America Launch",
+			"colorID": -1098029162,
+			"visorID": 190205315,
+			"AltName": "north_america",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Tactical Modalities",
+			"colorID": -1847487932,
+			"visorID": 1868629765,
+			"AltName": "tyro",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "MIA",
+			"colorID": 1153800188,
+			"visorID": 1544031111,
+			"AltName": "mia",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Echelon Ecto",
+			"colorID": -1228666634,
+			"visorID": -863400357,
+			"AltName": "echelon",
+			"Roughness": "8",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Legend",
+			"colorID": -1735107733,
+			"visorID": 1544031111,
+			"AltName": "legend",
+			"Roughness": "4",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Arcadian Green",
+			"colorID": 994132079,
+			"visorID": -611521361,
+			"AltName": "lone_wolves_default",
+			"Roughness": "2",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Knife Dancer",
+			"colorID": 358236245,
+			"visorID": 307976421,
+			"AltName": "dancer",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Action Lime",
+			"colorID": -1383239257,
+			"visorID": -307894833,
+			"AltName": "rch_em_green",
+			"Roughness": "4",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Victor",
+			"colorID": 1075010001,
+			"visorID": -511884181,
+			"AltName": "victor",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Sapphire Front",
+			"colorID": 976897896,
+			"visorID": -307894833,
+			"AltName": "sapphire",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Sweetsight",
+			"colorID": -1353264183,
+			"visorID": 482424204,
+			"AltName": "peppermint_red",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Will-o'-wisp",
+			"colorID": -1272972633,
+			"visorID": 1134429216,
+			"AltName": "will_o_wisp",
+			"Roughness": "4",
+			"Emmisive": "2"
+		},
+		{
+			"name": "Sardonic",
+			"colorID": 1873131344,
+			"visorID": 1544031111,
+			"AltName": "sardonic",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Mentor's Gift",
+			"colorID": -82673702,
+			"visorID": 1544031111,
+			"AltName": "eklund_extra",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Parasite Ichor",
+			"colorID": -1251751358,
+			"visorID": -525734060,
+			"AltName": "parasite",
+			"Roughness": "-1",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Sulfur",
+			"colorID": 321814511,
+			"visorID": 1544031111,
+			"AltName": "sulfur",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Latin America Launch",
+			"colorID": 121968740,
+			"visorID": 190205315,
+			"AltName": "latin_america",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Heroic Intervention",
+			"colorID": -2100416332,
+			"visorID": -15696289,
+			"AltName": "hero",
+			"Roughness": "0",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Frost",
+			"colorID": 514111201,
+			"visorID": 1263644668,
+			"AltName": "frost",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Enlisted",
+			"colorID": 1717887855,
+			"visorID": 1544031111,
+			"AltName": "conscript",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Interrupt",
+			"colorID": -805744138,
+			"visorID": -1136300373,
+			"AltName": "interrupter",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Dragoon",
+			"colorID": 701554156,
+			"visorID": 1375293503,
+			"AltName": "dragoon",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Noble",
+			"colorID": -2011446046,
+			"visorID": 1544031111,
+			"AltName": "noble",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Cloud9",
+			"colorID": 99966244,
+			"visorID": 1544031111,
+			"AltName": "cloud9",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Harvest Turquoise",
+			"colorID": -1090547116,
+			"visorID": 1544031111,
+			"AltName": "emerald",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Helljumper",
+			"colorID": -370672801,
+			"visorID": 1544031111,
+			"AltName": "helljumper",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Ultra Violent",
+			"colorID": 1098758338,
+			"visorID": -15696289,
+			"AltName": "uv",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Buckingham",
+			"colorID": -1520776479,
+			"visorID": 1868629765,
+			"AltName": "buckingham",
+			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Fateful Kinetics",
+			"colorID": -1510898467,
+			"visorID": 1758346987,
+			"AltName": "operator",
+			"Roughness": "4",
+			"Emmisive": "0"
+		}
+	]
+}

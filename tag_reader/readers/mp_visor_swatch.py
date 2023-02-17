@@ -2,37 +2,25 @@ from . base_template import BaseTemplate
 from . reader_factory import ReaderFactory
 from . swatch import Swatch
 from ... import ImportCoating
+from .. var_names import Mmr3Hash_str, getMmr3HashFrom, map_alt_name_id,getMmr3HashFromInt
 import json
+import sys
 import os
 
 class MpVisorSwatch(BaseTemplate):
 
     def __init__(self, filename):
         super().__init__(filename, 'mwvs')
-        self.json_str_base = '{"pattern_variants":[]}'
 
     def load(self):
         super().load()
-
-        
-    def toJsonNames(self):
-        super().toJson()
-        roots = self.tag_parse.rootTagInst.childs[0]
-        style_selection = roots['pattern_variants'].childs[self.default_styles]
-        self.naming = style_selection['name'].value
-        self.palette = style_selection['visorPattern'].path.split('\\')[-1]
-    def toJsonColors(self):
-        super().toJson()
-        roots = self.tag_parse.rootTagInst.childs[0]
-        style_selection = roots['color_variants'].childs[self.default_styles]
-        self.naming = style_selection['name'].value
-        path = os.path.realpath(os.path.dirname(__file__))
-        pardir = os.path.abspath(os.path.join(path, os.pardir))
-
-        
-    def toJson(self, root_folder,coatingname):
+    
+    def toJson(self, root_folder, coatingname, colorname, index):
         root = self.tag_parse.rootTagInst.childs[0]
         super().toJson()
+        self.json_base["botColor"] = {}
+        self.json_base["topColor"] = {}
+        self.json_base["midColor"] = {}
         for key in root['pattern_variants'].childs:
             path = key['visorPattern'].path
             name = key['name'].value
@@ -40,9 +28,23 @@ class MpVisorSwatch(BaseTemplate):
                 parse_mwsw = ReaderFactory.create_reader(root_folder + path + '.materialswatch')
                 parse_mwsw.load()
                 parse_mwsw.toJson()
-
-
-                    
+                self.json_base['pattern_variant'] = parse_mwsw.json_base
+                with open(os.path.dirname(__file__)+'/visorcolorIDs.json', 'r') as m:
+                    m = m.read()
+                    colorIDs = json.loads(m)
+                    ID = getMmr3HashFromInt(colorIDs['visors'][index]['colorID'])
+                    Roughness = float(colorIDs['visors'][index]['Roughness'])
+                    Emmissive = float(colorIDs['visors'][index]['Emmisive'])
+                    self.json_base["pattern_variant"]["roughness"] = Roughness
+                    self.json_base["pattern_variant"]["emissiveAmount"] = Emmissive
+                    for keys in range(len(root["color_variants"].childs)):
+                        name = root["color_variants"].childs[keys]['name'].value
+                        rootc = root["color_variants"].childs[keys]
+                        if name == ID:
+                            self.bot = ((rootc['gradient_bottom_color'].r_value)), ((rootc['gradient_bottom_color'].g_value)), ((rootc['gradient_bottom_color'].b_value))
+                            self.top = ((rootc['gradient_top_color'].r_value)), ((rootc['gradient_top_color'].g_value)), ((rootc['gradient_top_color'].b_value))
+                            self.mid = ((rootc['gradient_mid_color'].r_value)),((rootc['gradient_mid_color'].g_value)), ((rootc['gradient_mid_color'].b_value))
+                            continue
 
 
     def onInstanceLoad(self, instance):

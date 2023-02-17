@@ -74,7 +74,8 @@ class Swatch(BaseTemplate):
         #self.json_base["groupName"] = root['key'].value
         #self.json_base["emissiveIntensity"] = root['key'].value
         self.json_base["colorGradientMap"] = root['color_gradient_map'].path
-        #self.json_base["swatchId"] = root['key'].value
+        self.json_base["swatchref"] = self.handle
+        self.json_base["swatchId"] = self.handle
         #print("")
 
     def onInstanceLoad(self, instance: TagInstance):
