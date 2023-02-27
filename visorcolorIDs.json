@@ -169,14 +169,6 @@
 			"Emmisive": "0"
 		},
 		{
-			"name": "rch_em_red_2",
-			"colorID": -1002702463,
-			"visorID": -307894833,
-			"AltName": "rch_em_red_2",
-			"Roughness": "8",
-			"Emmisive": "1"
-		},
-		{
 			"name": "Bryce",
 			"colorID": 328857776,
 			"visorID": 781623628,
@@ -369,14 +361,6 @@
 			"Emmisive": "0"
 		},
 		{
-			"name": "rch_em_white",
-			"colorID": -1332991007,
-			"visorID": -307894833,
-			"AltName": "rch_em_white",
-			"Roughness": "4",
-			"Emmisive": "1"
-		},
-		{
 			"name": "Blackpool",
 			"colorID": 1373861568,
 			"visorID": -1676083705,
@@ -433,27 +417,11 @@
 			"Emmisive": "0"
 		},
 		{
-			"name": "peppermint_green",
-			"colorID": 1362553048,
-			"visorID": 482424204,
-			"AltName": "peppermint_green",
-			"Roughness": "8",
-			"Emmisive": "0"
-		},
-		{
 			"name": "Night Wisp",
 			"colorID": 500810794,
 			"visorID": 286398678,
 			"AltName": "night_sight",
 			"Roughness": "4",
-			"Emmisive": "1"
-		},
-		{
-			"name": "rch_em_red",
-			"colorID": -1401857568,
-			"visorID": -307894833,
-			"AltName": "rch_em_red",
-			"Roughness": "0",
 			"Emmisive": "1"
 		},
 		{
@@ -622,14 +590,6 @@
 			"visorID": 1544031111,
 			"AltName": "thirty_four",
 			"Roughness": "-1",
-			"Emmisive": "0"
-		},
-		{
-			"name": "tempe",
-			"colorID": -1310186695,
-			"visorID": 0,
-			"AltName": "tempe",
-			"Roughness": "4",
 			"Emmisive": "0"
 		},
 		{

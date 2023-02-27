@@ -65,10 +65,8 @@ def menu_func(self,context):
     self.layout.operator(ImportTextureOp.bl_idname,text="Halo Infinite Bitmap")
 
 def register():
-    print("loaded")
     bpy.utils.register_class(ImportTextureOp)
     bpy.types.TOPBAR_MT_file_import.append(menu_func)
     
 def unregister():
-    print("unloaded")
     bpy.utils.unregister_class(ImportTextureOp)

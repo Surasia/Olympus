@@ -86,6 +86,7 @@ class rtgo_instance:
         self.Left_Vec = []
         self.Up_Vec = []
         self.Pos_Vec = []
+        self.Negative_Scale = False
         self.MaterialCount = 0
         self.MaterialsList = [] #holds list of Material classes
         self.mesh_index = -1
@@ -116,6 +117,10 @@ class rtgo_transform_list:
         self.mesh_index_count = 0
         self.mesh_index_transform_list = []
 
+def get_bit(byte, position):
+    return (byte & (1 << position)) != 0
+
+
 class ImportBSP(bpy.types.Operator):
     bl_idname = "infinite.bsp"
     bl_label = "Import BSP"
@@ -144,7 +149,6 @@ class ImportBSP(bpy.types.Operator):
         self.shader_name = addon_prefs.shader_name
 
         # crabs BSP code
-
         total_start = perf_counter()    # not doing much profiling now, but it's still nice to have a total time
         s = ModulesManager.ModulesManagerContainer.manager.getFileHandle(self.filepath,self.use_modules)
 
@@ -153,6 +157,8 @@ class ImportBSP(bpy.types.Operator):
         DirString = []
         InstanceTransformList = []
         InstanceIndexNum = 0
+        total_negative_scale = 0
+
 
         INST_TRANSFORM_ZEROS = 0
 
@@ -225,6 +231,7 @@ class ImportBSP(bpy.types.Operator):
         
         #Base RTGO Transform Data Builder
         for rtgo_base in range(RTGOcount):
+            print("base rtgo loop " + str(rtgo_base) + "/" + str(RTGOcount))
             #clear old data
             #print("Base Transform Data " + str(rtgo_base + 1) + "/" + str(RTGOcount))
             rtgof_base_list = rtgo_transform_list()
@@ -327,7 +334,7 @@ class ImportBSP(bpy.types.Operator):
         #INSTANCE TRANSFORM DATA INDEX BUILDER
         for index in range(INST_TRANSFORM_COUNT - INST_TRANSFORM_ZEROS): #loops through total number of instance transforms                                             HARD CODED (Must be manually counted)
             s.seek(RuntimeGeoInstTransform_Offset) #seek to current listed location in memory
-            
+            print("instance trans builder " + str(index) + "/" + str(INST_TRANSFORM_COUNT - INST_TRANSFORM_ZEROS))
             #instantiates class object
             rtgoT = rtgo_instance()
             
@@ -337,6 +344,7 @@ class ImportBSP(bpy.types.Operator):
             rtgoT.Left_Vec = []
             rtgoT.Up_Vec = []
             rtgoT.Pos_Vec = []
+            rtgoT.Negative_Scale = False
             rtgoT.MaterialCount = 0
             
             #set the data for each index 
@@ -373,7 +381,33 @@ class ImportBSP(bpy.types.Operator):
             s.seek(s.tell() + 0x6) #skips RuntimeGeoMeshIndex, Unique IO Index, and flags etc
             s.seek(s.tell() + 0x18) #skips Bounds XYZ Min/Max
             s.seek(s.tell() + 0x10) #skips World Bound Sphere Center XYZ and radius
-            s.seek(s.tell() + 0x5C) #skips bunch of stuff that is likely not needed
+            # 0x4 skips BCBCBCBC buffer
+            s.seek(s.tell() + 0x4)
+            # 0x8  int64 PlacementChecksumPointer
+            s.seek(s.tell() + 0x8)
+            # 0x1  byte  PathfindingPolicy
+            s.seek(s.tell() + 0x1)
+            # 0x1  byte  StreamingPolicy
+            s.seek(s.tell() + 0x1)
+            # 0x2  short Flags2      #read these to get the bitfield of values
+            
+            #read 2 bytes as a variable, then read the 7th bit as Negative Scale flag True or False
+            test_flags21 = int.from_bytes(s.read(1), 'little')
+            test_flags22 = int.from_bytes(s.read(1), 'little')
+            
+            #WORKS
+            bit_position = 1
+            binary_string = bin(test_flags21)[2:] # remove the '0b' prefix
+            if len(binary_string) >= bit_position + 1 and binary_string[-bit_position - 1] == '1':
+                print("The bit at position", bit_position, "is set to 1")
+                print("                                                  Negative Scale True!")
+                rtgoT.Negative_Scale = True
+                total_negative_scale += 1
+            else:
+                print("The bit at position", bit_position, "is set to 0")
+            
+            # 0x50 rest of data
+            s.seek(s.tell() + 0x4C) #skips bunch of stuff that is likely not needed
                 
             rtgoT.MaterialCount = int.from_bytes(s.read(4), 'little') #adds Material Count
                 
@@ -395,6 +429,8 @@ class ImportBSP(bpy.types.Operator):
         #MAIN RUNTIME LIST BUILDER
         #for r in range(RTGOcount):
         for r in range(RTGOcount): #RTGOcount):                                             #might need to alter this for some bsps with odd index numbers
+            print("Runtime Geo List builder " + str(r) + "/" + str(RTGOcount))
+            
             #rtgo class object template
             rtgoF = rtgo_file()
             
@@ -455,13 +491,14 @@ class ImportBSP(bpy.types.Operator):
             
             #Get INSTANCE TRANSFORM INFORMATION
             for inst2 in range(rtgoF.InstanceCount):
-                
+                print("instance transform data  " + str(inst2) + "/" + str(rtgoF.InstanceCount))
                 #clear old data
                 rtgoF.Rtgo_Instances[inst2].Scale_Vec = []
                 rtgoF.Rtgo_Instances[inst2].Forward_Vec = []
                 rtgoF.Rtgo_Instances[inst2].Left_Vec = []
                 rtgoF.Rtgo_Instances[inst2].Up_Vec = []
                 rtgoF.Rtgo_Instances[inst2].Pos_Vec = []
+                rtgoF.Rtgo_Instances[inst2].Negative_Scale = False
                 
                 #saves true instance transform index to temp variable
                 instance_transform_index = rtgoF.Rtgo_Instances[inst2].Instance_Index
@@ -485,6 +522,9 @@ class ImportBSP(bpy.types.Operator):
                 
                 #print("Instance Pos: (" + str(rtgoF.Rtgo_Instances[inst2].Pos_Vec[0]) + ", " + str(rtgoF.Rtgo_Instances[inst2].Pos_Vec[1]) + ", " + str(rtgoF.Rtgo_Instances[inst2].Pos_Vec[2]) + ")")
                 
+                rtgoF.Rtgo_Instances[inst2].Negative_Scale = InstanceTransformList[instance_transform_index].Negative_Scale
+                
+                
                 #links up Material Count for each instance object
                 rtgoF.Rtgo_Instances[inst2].MaterialCount = InstanceTransformList[instance_transform_index].MaterialCount 
                                 
@@ -492,32 +532,34 @@ class ImportBSP(bpy.types.Operator):
                 
                 
                 #Material List Builder
-                for inst3 in range(rtgoF.Rtgo_Instances[inst2].MaterialCount):
-                    mat = instance_materials()
+                #Commenting this out for now                 -- UNDO LATER
+                
+                # for inst3 in range(rtgoF.Rtgo_Instances[inst2].MaterialCount):
+                    # mat = instance_materials()
                     
-                    s.seek(PerInstanceMaterial_Offset) #jump to saved location in memory
-                    s.seek(s.tell() + 0x8)
+                    # s.seek(PerInstanceMaterial_Offset) #jump to saved location in memory
+                    # s.seek(s.tell() + 0x8)
                     
-                    #BUILD LIST OF ALL BITMAP DIRECTORIES AND FIND THE BITMAP LINK TO TAG ID                    ASSETID
-                    #Get BITMAP NAME
+                    # #BUILD LIST OF ALL BITMAP DIRECTORIES AND FIND THE BITMAP LINK TO TAG ID                    ASSETID
+                    # #Get BITMAP NAME
                     
-                    #Get BITMAP DIRECTORY
+                    # #Get BITMAP DIRECTORY
                     
-                    #Get BITMAP TAG ID
-                    mat.BitmapTagID = int.from_bytes(s.read(4), 'little')
+                    # #Get BITMAP TAG ID
+                    # mat.BitmapTagID = int.from_bytes(s.read(4), 'little')
                     
-                    #Get BITMAP ASSET ID
-                    mat.BitmapAssetID = int.from_bytes(s.read(4), 'little')
+                    # #Get BITMAP ASSET ID
+                    # mat.BitmapAssetID = int.from_bytes(s.read(4), 'little')
                     
-                    s.seek(s.tell() + 0x8) 
+                    # s.seek(s.tell() + 0x8) 
                     
-                    #Handles the 4 float values that come after each section of ijstance materials
-                    if (inst3 == rtgoF.Rtgo_Instances[inst2].MaterialCount - 1):
-                        PerInstanceMaterial_Offset = (PerInstanceMaterial_Offset + 0x10) #skips 12 at end of last material section
+                    # #Handles the 4 float values that come after each section of ijstance materials
+                    # if (inst3 == rtgoF.Rtgo_Instances[inst2].MaterialCount - 1):
+                        # PerInstanceMaterial_Offset = (PerInstanceMaterial_Offset + 0x10) #skips 12 at end of last material section
                     
-                    PerInstanceMaterial_Offset = s.tell() #save location in memory
-                    rtgoF.Rtgo_Instances[inst2].MaterialsList.append
-                    #print("        Instance Materials Loaded: " + str(inst3 + 1))
+                    # PerInstanceMaterial_Offset = s.tell() #save location in memory
+                    # rtgoF.Rtgo_Instances[inst2].MaterialsList.append
+                    # #print("        Instance Materials Loaded: " + str(inst3 + 1))
             
             #BUILD LIST OF RUNTIME GEO INFORMATION
             #print("Runtime Geo Tags Loaded: " + str(r + 1))
@@ -542,6 +584,7 @@ class ImportBSP(bpy.types.Operator):
         i=0
         k=0
         for i in range(RTGOcount):
+            #print("runtime geo object:  " + str(i) + "/" + str(RTGOcount))
             #f = ModulesManager.ModulesManagerContainer.manager.getFileHandle(self.filepath,self.use_modules)
             
             #rtgo_file.file_path = UnpackDir + RuntimeGeoDirArray[i]  + "{rt}.runtime_geo"
@@ -578,6 +621,7 @@ class ImportBSP(bpy.types.Operator):
  
  
             for k in range(files[i].InstanceCount):
+                print("  Loading Instance:  " + str(k) + "/" + str(files[i].InstanceCount))
                 InstanceIndexNum += 1
                 #profiling
                 #print("Instance Index: " + str(files[i].Rtgo_Instances[k].Instance_Index))
@@ -589,6 +633,7 @@ class ImportBSP(bpy.types.Operator):
                 
                 #Create Position Offsets
                 Pos_Vectors = files[i].Rtgo_Instances[k].Pos_Vec
+
 
                 #Create Base Transform Matrix
                 Base_Scale_Vectors = rtgo_data[i].mesh_index_transform_list[0].rtgo_scale_vec
@@ -801,16 +846,78 @@ class ImportBSP(bpy.types.Operator):
                 #tries to fix Z axis issue
                 Euler = matrix.to_euler('XYZ')
                 Euler.z = Euler.z * -1
-                Euler.y *= -1
-                Euler.x *= -1
+                Euler.y = Euler.y * -1
+                #Euler.x = Euler.x * -1  # this fixes some issues with rotations, but makes others worse
 
+                
+                #USED TO SWAP ROTATIONS
+                #tries to fix Z axis issue
+                Euler2 = matrix.to_euler('XYZ')
+                Euler2.z = Euler2.z * -1
+                Euler2.y = Euler2.y * -1
+                #Euler2.x = Euler.x * -1  # this fixes some issues with rotations, but makes others worse
+                
+
+                
+                
                 Euler.x += BaseEuler.x
                 Euler.y += BaseEuler.y
                 Euler.z += BaseEuler.z
                 #inst_obj.rotation_euler = Euler
-
-                inst_obj.rotation_mode = "QUATERNION"
-                inst_obj.rotation_quaternion = matrix.to_quaternion()
+                
+                #if Negative Scale is found to be True
+                if (files[i].Rtgo_Instances[k].Negative_Scale == True):
+                    #known fixes for TRANSFORM ERRORS
+                    #--flip x and y with each other
+                    #--rotate Z by 90
+                    #--rotate Y by -45
+                    #--rotate X by -90 
+                    print(" __________--------- FLIPPING X AND Y ROTATIONS -----------_______________________________________________________")
+                    
+                    #flip x and y 
+                    Euler.x = Euler2.y
+                    Euler.y = Euler2.x
+                    
+                print("")
+                print("Instance Index: " + str(InstanceIndexNum))
+                #print("Runtime TagID: " + str(inst_obj.TagID))
+                print("Object Name: " + inst_obj.name + "  Instance: " + str(k))
+                print("Base Scale Vector: ")
+                print(Base_Scale_Vectors)
+                print("Delta Scale Vectors: ")
+                print(Scale_Vectors)
+                print("Base Position Vector: ")
+                print(Base_Pos_Vectors)
+                print("Delta Position Vector: ")
+                print(Pos_Vectors)
+                print("Base Rotation X: " + str(BaseEuler.x))
+                print("Base Rotation Y: " + str(BaseEuler.y))
+                print("Base Rotation Z: " + str(BaseEuler.z))
+                print("Delta Rotation X: " + str(Euler.x))
+                print("Delta Rotation Y: " + str(Euler.y))
+                print("Delta Rotation Z: " + str(Euler.z))
+                #print("Matrix: ")
+                #print(matrix)
+                #print("Scale Matrix: ")
+                #print(ScaleMatrix)
+                
+                #base rotation data
+                #inst_obj.rotation_euler = BaseEuler
+                
+                #delta rotation data
+                inst_obj.rotation_euler = Euler
+                #inst_obj.delta_rotation_euler = Euler
+                
+                print("Object Transform Data:")
+                loc, rot, scale = inst_obj.matrix_world.decompose()
+                print("Location: ")
+                print(str(loc))
+                print("Rotation: ")
+                print(str(rot))
+                print("scale")
+                print(str(scale))
+                # inst_obj.rotation_mode = "QUATERNION"
+                # inst_obj.rotation_quaternion = matrix.to_quaternion()
                 #inst_obj.rotation_euler = matrix.to_euler('XYZ')
 
 
@@ -833,6 +940,7 @@ class ImportBSP(bpy.types.Operator):
         s.close()
         total_end = perf_counter()
         time_total = total_end - total_start
+        print("Total Negative Scale flags found: " + str(total_negative_scale))
         print(f"Total time: {time_total}")
         print(f"Time reading bsp info: {init_time}")
         print(f"Time parsing instance data: {inst_total}")
@@ -852,7 +960,7 @@ class ImportBSP(bpy.types.Operator):
     
 def menu_func(self,context : bpy.types.Context):
     self.layout.operator_context = "INVOKE_DEFAULT"
-    self.layout.operator(ImportBSP.bl_idname,text = "Halo Infinite BSP")
+    self.layout.operator(ImportBSP.bl_idname,text = "Halo Infinte BSP")
 
 def register():
     bpy.utils.register_class(ImportBSP)

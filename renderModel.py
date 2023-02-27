@@ -1,6 +1,8 @@
 
 import bmesh
 import bpy
+import bpy_extras
+from bpy.props import BoolProperty, FloatProperty, StringProperty, EnumProperty
 import pathlib
 import os
 import struct
@@ -920,15 +922,17 @@ class renderModelImporter:
 
 class ImportRenderModel(bpy.types.Operator):
     bl_idname = "infinite.rendermodel"
-    bl_label = "Import rendermodel"
+    bl_label = "Halo Infinite Rendermodel"
     bl_description = "rendermodel"
-
+    filename_ext = ".render_model"
+    filter_glob: StringProperty(default = "*render_model",options = {'HIDDEN'})
     filepath: bpy.props.StringProperty(subtype="FILE_PATH")
 
     auto_import_dependencies: bpy.props.BoolProperty(
         name="Import dependencies",
         description="Automatically import data like Textures from the specified root path",
-        default=False
+        default=False,
+        options={"HIDDEN"}
     )
 
     import_uvs: bpy.props.BoolProperty(
@@ -940,19 +944,22 @@ class ImportRenderModel(bpy.types.Operator):
     import_weights: bpy.props.BoolProperty(
         name="Import vertex weights",
         description="imports the vertex weights and vertex groups",
-        default=False
+        default=False,
+        options={"HIDDEN"}
     )
 
     import_normals: bpy.props.BoolProperty(
         name="(potentialy broken) Import Normals",
         description="(potentially broken) import mesh normals",
-        default=False
+        default=False,
+        options={"HIDDEN"}
     )
 
     reuse_textures: bpy.props.BoolProperty(
         name="Reuse existing Textures",
         description="use the existing texture if a referenced Texture with the same name already exists in the file",
-        default=False
+        default=False,
+        options={"HIDDEN"}
     )
     
     add_materials: bpy.props.BoolProperty(
@@ -964,7 +971,8 @@ class ImportRenderModel(bpy.types.Operator):
     populate_shader: bpy.props.BoolProperty(
         name="Setup shaders",
         description="sets up textures for materials automatically (requires import dependencies)",
-        default=False
+        default=False,
+        options={"HIDDEN"}
     )
 
     import_model: bpy.props.BoolProperty(
@@ -982,25 +990,6 @@ class ImportRenderModel(bpy.types.Operator):
     root_folder = None
     shader_file = None
     shader_name = None
-
-    #root_folder: bpy.props.StringProperty(
-    #    subtype="FILE_PATH",
-    #    name="Asset Root",
-    #    description="Path to use for additional data. Uses relative path from imported file if none is specified and import dependencies is active",
-    #    default="/home/ich/haloRIP/HIMU/output"
-    #)
-#
-    #shader_file: bpy.props.StringProperty(
-    #    name="Shader library",
-    #    description="Path to the blend file containing the shader",
-    #    default="/home/ich/haloRIP/blender_plugin/shaders/Infinite_MP_Shader_v1.8_Made_by_Grand_Bacon.blend"
-    #)
-#
-    #shader_name: bpy.props.StringProperty(
-    #    name="Shader name",
-    #    description="Name of the shader within the library",
-    #    default="Infinite MP Shader v1.8 Made by Grand_Bacon"
-    #)
 
     mipmap: bpy.props.IntProperty(
         name="Mipmap level",
@@ -1024,7 +1013,22 @@ class ImportRenderModel(bpy.types.Operator):
         name="Scale Modifier",
         description="Scale that gets applied to the model to get more reasonable scaling for blender",
         default=[1.0,1.0,1.0])
+    def draw(self, context):
+        layout = self.layout
 
+        box = layout.box()
+        box.label(icon = 'MESH_CUBE', text = "Mesh")
+        box.prop(self, "import_uvs")
+        box.prop(self, "add_materials")
+        box.prop(self, "lod")
+        box.prop(self, "scale_modifier")
+
+        box = layout.box()
+        row = box.row()
+        box.label(icon = 'TEXTURE', text = "Textures")
+        box.prop(self, "mipmap")
+        box.prop(self, "norm_signed")
+        
     def execute(self, context):
 
         addon_prefs = context.preferences.addons[__package__].preferences
@@ -1073,18 +1077,17 @@ class ImportRenderModel(bpy.types.Operator):
             return {'FINISHED'}
         
 
-def menu_func(self,context):
-    self.layout.operator_context = 'INVOKE_DEFAULT'
-    self.layout.operator(ImportRenderModel.bl_idname,text="Halo Infinite Rendermodel")
 
+def draw_operator(self, context):
+    self.layout.operator(ImportRenderModel.bl_idname)    
+    
 def register():
-    print("loaded")
     bpy.utils.register_class(ImportRenderModel)
-    bpy.types.TOPBAR_MT_file_import.append(menu_func)
+    bpy.types.TOPBAR_MT_file_import.append(draw_operator)
     
 def unregister():
-    print("unloaded")
     bpy.utils.unregister_class(ImportRenderModel)
+    bpy.types.TOPBAR_MT_file_import.remove(draw_operator)
 
 if __name__ == "__main__":
     register()

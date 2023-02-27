@@ -1,8 +1,8 @@
 bl_info = {
     "name" : "Olympus",
     "blender" : (3,4,1),
-    "version" : (0,7,0),
-    "category" : "Import/Export",
+    "version" : (0,8,0),
+    "category" : "Import-Export",
     "description" : "Imports Models, Textures, BSPs and Coatings from Halo Infinite",
     "author" : "Surasia, Coreforge, Plastered_Crab, Urium86"
 }
@@ -13,7 +13,6 @@ import bpy
 
 class HaloInfiniteAddonPreferences(bpy.types.AddonPreferences):
     bl_idname = __name__
-    print(__name__)
 
     root_folder: bpy.props.StringProperty(
         subtype="FILE_PATH",
