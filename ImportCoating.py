@@ -34,7 +34,7 @@ class GrabStrings:
                 temp_palette = parse_mwsy_name.tag_parse.rootTagInst.childs[0]['style'].childs[entry]
                 parse_mwsy_name.default_styles = entry
                 parse_mwsy_name.toJsonNames()
-                coatingnames.append(parse_mwsy_name.naming,parse_mwsy_name.palette,parse_mwsy_name.naminghex))
+                coatingnames.append((parse_mwsy_name.naminghex,parse_mwsy_name.palette,parse_mwsy_name.naminghex))
             return coatingnames
     def grabvisornames(self, context):
         addon_prefs = context.preferences.addons[__package__].preferences
