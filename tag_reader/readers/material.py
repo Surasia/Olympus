@@ -5,8 +5,6 @@ class Material(BaseTemplate):
 
     def __init__(self, filepath):
         super().__init__(filepath, 'mat ')
-        self.default_style = 0
-   #     self.json_str_base = '{"material parameters":[]}'
 
     def load(self):
         super().load()
@@ -47,4 +45,23 @@ class Material(BaseTemplate):
                 styleinfo.append(lay_a)
                 self.json_base["StyleInfo"] = styleinfo
 
+            self.json_base["materialshader"] = root['material shader'].path
+            if "skin" in root['material shader'].path:
+                skinarray = []
+                for textures in root['postprocess definition'].childs[0]['textures'].childs:
+                    skin = {}
+                    if 'color' in textures['bitmap reference'].path:
+                        skin["color"] = textures['bitmap reference'].path
+                    if 'normal' in textures['bitmap reference'].path and 'pore' not in textures['bitmap reference'].path:
+                        skin["normal"] = textures['bitmap reference'].path
+                    if 'pore' in textures['bitmap reference'].path:
+                        skin["pore"] = textures['bitmap reference'].path
+                    if 'aorotr' in textures['bitmap reference'].path:
+                        skin["aorotr"] = textures['bitmap reference'].path
+                    if 'aorstr' in textures['bitmap reference'].path:
+                        skin["aorotr"] = textures['bitmap reference'].path
+                    if 'sismpm' in textures['bitmap reference'].path:
+                        skin["sismpm"] = textures['bitmap reference'].path
+                    skinarray.append(skin)
+                    self.json_base["skin"] = skinarray
 

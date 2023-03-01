@@ -34,7 +34,7 @@ class GrabStrings:
                 temp_palette = parse_mwsy_name.tag_parse.rootTagInst.childs[0]['style'].childs[entry]
                 parse_mwsy_name.default_styles = entry
                 parse_mwsy_name.toJsonNames()
-                coatingnames.append((parse_mwsy_name.naming,parse_mwsy_name.palette,parse_mwsy_name.naming))
+                coatingnames.append(parse_mwsy_name.naming,parse_mwsy_name.palette,parse_mwsy_name.naminghex))
             return coatingnames
     def grabvisornames(self, context):
         addon_prefs = context.preferences.addons[__package__].preferences
@@ -69,6 +69,8 @@ class Utilities:
         bpy.ops.mesh.remove_doubles(threshold=0.0001)
         bpy.ops.object.mode_set(mode='OBJECT')
 
+
+
 class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
     bl_idname = "infinite.infinitecoating"
     bl_label = "Halo Infinite Coating"
@@ -87,6 +89,7 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
     norm_signed: bpy.props.BoolProperty(name="Signed Texture Range",description="import texures with a signed format as signed",default=False,options={"HIDDEN"})
     selected_only: bpy.props.BoolProperty(default=False, name= "Selected Objects Only", description= 'Only imports coatings to objects selected')
     import_visor: bpy.props.BoolProperty(name="Import Visor",description="Imports visor for multiplayer spartans",default=False)
+    import_skin: bpy.props.BoolProperty(name="Import Skin",description="Imports skin if available",default=True)
     weighted_norms: bpy.props.BoolProperty(name="Weighted Normals/Clean Up",description="Merge by distance on all objects, and add Weighted Normals Modifier, also getting rid of invalid models",default=True)
     clean_up: bpy.props.BoolProperty(name="Purge Orphans",description="After each material, purge all orphans. Useful for long imports",default=True)
     use_crosscore: bpy.props.BoolProperty(default=False, name= "Cross Core", description= 'Removes style requirement to enable "cross core" coatings')
@@ -121,6 +124,7 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
         row = box.row()
         box.label(icon = 'ORPHAN_DATA', text = "Extras")
         box.prop(self, "import_visor")
+        box.prop(self, "import_skin")
         box.prop(self, "use_crosscore")
         box.prop(self, "clean_up")
         box.prop(self, "use_damage")        
@@ -199,6 +203,8 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                                     parse_mat.load()
                                     parse_mat.toJson()
                                     currentmaterial = parse_mat.json_base
+                                    if 'skin' in currentmaterial.get('materialshader'):
+                                        self.skininit(context,currentmaterial,mat_slot)
                                     if type(currentmaterial.get('StyleInfo')) == type(None): # If material has no style, skip!
                                         continue
                                     else:
@@ -367,7 +373,7 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                                                     if self.import_visor:
                                                         if materialregion == 'mp_visor' or materialregion == '580AAD54':
                                                             if not swatchID == grimeSwatch:
-                                                                mappednames = GrabStrings.grabvisornames(context)
+                                                                mappednames = GrabStrings.grabvisornames(self,context)
                                                                 for visor in range(len(mappednames)):
                                                                     visorID = mappednames[visor][2]
                                                                     colorID = mappednames[visor][0]
@@ -694,7 +700,6 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                                                 infiniteshader.inputs[93].default_value = 0
                                                 infiniteshader.inputs[109].default_value = 0
                     
-
             
         bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         print('')
@@ -730,6 +735,80 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
         print('')
         
         return {"FINISHED"}
+
+    def skininit(self,context,currentmaterial, matslot):
+        if self.import_skin:
+            Nodes.Skin()
+            node_tree0 = matslot.material.node_tree
+            for node in node_tree0.nodes:
+                node_tree0.nodes.remove(node)
+            
+            uv_map_2 = node_tree0.nodes.new('ShaderNodeUVMap')
+            uv_map_2.from_instancer = False
+            uv_map_2.location = (328, 0)
+            uv_map_2.uv_map = 'UV1'
+            
+            
+            infiniteshader = node_tree0.nodes.new('ShaderNodeGroup')
+            infiniteshader.node_tree = bpy.data.node_groups.get("Chroma's Infinite Skin Shader")
+            infiniteshader.location = (-600, -136)
+            
+            color_texture = node_tree0.nodes.new('ShaderNodeTexImage')
+            color_texture.location = (-911, -50)
+            texturepath = currentmaterial.get('skin')[1].get('color')
+            color_texture.image =  self.readTexture(context,texturepath)
+            color_texture.label = 'Base Color'
+            
+            normal_texture = node_tree0.nodes.new('ShaderNodeTexImage')
+            normal_texture.location = (-911, 50)
+            texturepath = currentmaterial.get('skin')[2].get('normal')
+            if type(texturepath) == type(None):
+                texturepath = 'shaders\\default_bitmaps\\bitmaps\\default_normal'
+            normal_texture.image =  self.readTexture(context,texturepath)
+            normal_texture.image.colorspace_settings.name = 'Non-Color'
+            normal_texture.label = 'Normal'
+            
+            aorotr_texture = node_tree0.nodes.new('ShaderNodeTexImage')
+            aorotr_texture.location = (-911, 100)
+            texturepath = currentmaterial.get('skin')[3].get('aorotr')
+            if type(texturepath) == type(None):
+                texturepath = 'shaders\\default_bitmaps\\bitmaps\\color_red'
+            aorotr_texture.image =  self.readTexture(context,texturepath)
+            aorotr_texture.image.colorspace_settings.name = 'Non-Color'
+            aorotr_texture.label = 'AOROTR'
+            
+            sismpm_texture = node_tree0.nodes.new('ShaderNodeTexImage')
+            sismpm_texture.location = (-911, 150)
+            texturepath = currentmaterial.get('skin')[4].get('sismpm')
+            if type(texturepath) == type(None):
+                texturepath = 'shaders\\default_bitmaps\\bitmaps\\color_white'
+            sismpm_texture.image =  self.readTexture(context,texturepath)
+            sismpm_texture.image.colorspace_settings.name = 'Non-Color'
+            sismpm_texture.label = 'SISMPM'
+            
+            pore_texture = node_tree0.nodes.new('ShaderNodeTexImage')
+            pore_texture.location = (-911, 200)
+            texturepath = currentmaterial.get('skin')[5].get('pore')
+            if type(texturepath) == type(None):
+                texturepath = 'shaders\\default_bitmaps\\bitmaps\\default_normal'
+            pore_texture.image =  self.readTexture(context,texturepath)
+            pore_texture.image.colorspace_settings.name = 'Non-Color'
+            pore_texture.label = 'Pore Normal'
+            
+            material_output_0 = node_tree0.nodes.new('ShaderNodeOutputMaterial')
+            material_output_0.target = 'ALL'
+            material_output_0.location = (675, 291)
+            material_output_0.is_active_output = True
+            
+            node_tree0.links.new(color_texture.outputs[0], infiniteshader.inputs[0])
+            node_tree0.links.new(aorotr_texture.outputs[0], infiniteshader.inputs[1])
+            node_tree0.links.new(sismpm_texture.outputs[0], infiniteshader.inputs[2])
+            node_tree0.links.new(normal_texture.outputs[0], infiniteshader.inputs[3])
+            node_tree0.links.new(pore_texture.outputs[0], infiniteshader.inputs[4])
+            node_tree0.links.new(uv_map_2.outputs[0], pore_texture.inputs[0])
+            if '197' in currentmaterial.get('materialshader'):
+                node_tree0.links.new(uv_map_2.outputs[0], sismpm_texture.inputs[0])
+            node_tree0.links.new(infiniteshader.outputs[0], material_output_0.inputs[0])
 
     def invoke(self,context,event):
         context.window_manager.fileselect_add(self)

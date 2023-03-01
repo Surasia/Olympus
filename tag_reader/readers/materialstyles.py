@@ -20,10 +20,11 @@ class MaterialStyles(BaseTemplate):
         super().toJson()
         roots = self.tag_parse.rootTagInst.childs[0]
         style_selection = roots['style'].childs[self.default_styles]
-        self.naming = style_selection['name'].value
-        self.palette = style_selection['palette'].path.split('\\')[-1]
-        if map_alt_name_id.keys().__contains__(self.palette):
-            self.palette = map_alt_name_id[self.palette]
+        self.naming = style_selection['name'].int_value
+        self.naminghex = style_selection['name'].value
+        self.palette = style_selection['palette'].ref_id_sub
+        if map_alt_name_id.keys().__contains__(self.naming):
+            self.palette = map_alt_name_id[self.naming]
 
     def toJson(self, coatingname, root_folder):
         self.root_folder = root_folder
@@ -64,8 +65,7 @@ class MaterialStyles(BaseTemplate):
 
             self.json_base["regionLayers"] = regionLayers
             self.done = True
-            
-        #print(root)
+
 
     def onInstanceLoad(self, instance):
         super(MaterialStyles, self).onInstanceLoad(instance)

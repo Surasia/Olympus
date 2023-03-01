@@ -44094,3 +44094,492 @@ class Nodes:
         node_tree4.links.new(reroute_027_1.outputs[0], gamma_002_1.inputs[0])
         node_tree4.links.new(reroute_049_1.outputs[0], gamma_003_1.inputs[0])
         node_tree4.links.new(reroute_044_1.outputs[0], gamma_004_1.inputs[0])
+    def Skin():
+        node_tree1 = bpy.data.node_groups.new("Chroma's Infinite Skin Shader", 'ShaderNodeTree')
+        input = node_tree1.inputs.new('NodeSocketColor', 'Base Color')
+        input = node_tree1.inputs.new('NodeSocketColor', 'AOROTR')
+        input = node_tree1.inputs.new('NodeSocketColor', 'SISMPM')
+        input = node_tree1.inputs.new('NodeSocketVector', 'Normal')
+        input.default_value = (0.5, 0.5, 1.0)
+        input = node_tree1.inputs.new('NodeSocketVector', 'Pore Normal')
+        input.default_value = (0.5, 0.5, 1.0)
+        input = node_tree1.inputs.new('NodeSocketVector', 'Subsurface Radius')
+        input.default_value = (0.029999999329447746, 0.009999999776482582, 0.009999999776482582)
+        output = node_tree1.outputs.new('NodeSocketShader', 'Shader')
+
+        mix_shader_1 = node_tree1.nodes.new('ShaderNodeMixShader')
+        mix_shader_1.location = (537.6043090820312, 506.54168701171875)
+        input_ = next((input_ for input_ in mix_shader_1.inputs if input_.identifier=='Fac'), None)
+        if input_:
+            input_.default_value = 0.5
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Fac'
+            input_.show_expanded = False
+
+        normal_map_1 = node_tree1.nodes.new('ShaderNodeNormalMap')
+        normal_map_1.location = (-61, 74)
+        normal_map_1.mute = False
+        normal_map_1.name = 'Normal Map'
+        normal_map_1.space = 'TANGENT'
+        input_ = next((input_ for input_ in normal_map_1.inputs if input_.identifier=='Strength'), None)
+        if input_:
+            input_.default_value = 1.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Strength'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in normal_map_1.inputs if input_.identifier=='Color'), None)
+        if input_:
+            input_.default_value = (0.5, 0.5, 1.0, 1.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Color'
+            input_.show_expanded = False
+        output = next((output for output in normal_map_1.outputs if output.identifier=='Normal'), None)
+        if output:
+            output.default_value = (0.0, 0.0, 0.0)
+            output.display_shape = 'CIRCLE'
+            output.enabled = True
+            output.hide = False
+            output.hide_value = False
+            output.name = 'Normal'
+            output.show_expanded = False
+
+        group_output_1 = node_tree1.nodes.new('NodeGroupOutput')
+        group_output_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+        group_output_1.hide = False
+        group_output_1.is_active_output = True
+        group_output_1.location = (727.6043090820312, -0.0)
+        group_output_1.mute = False
+        group_output_1.name = 'Group Output'
+        group_output_1.use_custom_color = False
+        group_output_1.width = 140.0
+
+        node_tree2 = bpy.data.node_groups.get('Norm Normalize')
+        node_tree2 = bpy.data.node_groups.get('NormalMap_Combine-Orientation')
+
+        group_002_1 = node_tree1.nodes.new('ShaderNodeGroup')
+        group_002_1.node_tree = bpy.data.node_groups.get('NormalMap_Combine-Orientation')
+        group_002_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+        group_002_1.hide = False
+        group_002_1.location = (-281.309326171875, -248.7335662841797)
+        group_002_1.mute = False
+        group_002_1.name = 'Group.002'
+        group_002_1.use_custom_color = False
+
+        group_1 = node_tree1.nodes.new('ShaderNodeGroup')
+        group_1.node_tree = bpy.data.node_groups.get('Norm Normalize')
+        group_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+        group_1.hide = False
+        group_1.location = (-537.6043090820312, -139.8946990966797)
+        group_1.mute = False
+        group_1.name = 'Group'
+        group_1.use_custom_color = False
+        group_1.width = 140.0
+
+        principled_bsdf_1 = node_tree1.nodes.new('ShaderNodeBsdfPrincipled')
+        principled_bsdf_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+        principled_bsdf_1.distribution = 'GGX'
+        principled_bsdf_1.hide = False
+        principled_bsdf_1.location = (260.30889892578125, 430.58447265625)
+        principled_bsdf_1.mute = False
+        principled_bsdf_1.name = 'Principled BSDF'
+        principled_bsdf_1.subsurface_method = 'RANDOM_WALK_FIXED_RADIUS'
+        principled_bsdf_1.use_custom_color = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Base Color'), None)
+        if input_:
+            input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Base Color'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Subsurface'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Subsurface'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Subsurface Radius'), None)
+        if input_:
+            input_.default_value = (0.029999999329447746, 0.009999999776482582, 0.009999999776482582)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Subsurface Radius'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Subsurface Color'), None)
+        if input_:
+            input_.default_value = (1.0, 1.0, 1.0, 1.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Subsurface Color'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Subsurface IOR'), None)
+        if input_:
+            input_.default_value = 1.399999976158142
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Subsurface IOR'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Subsurface Anisotropy'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Subsurface Anisotropy'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Metallic'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Metallic'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Specular'), None)
+        if input_:
+            input_.default_value = 0.5
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Specular'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Specular Tint'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Specular Tint'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Roughness'), None)
+        if input_:
+            input_.default_value = 0.5
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Roughness'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Anisotropic'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Anisotropic'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Anisotropic Rotation'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Anisotropic Rotation'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Sheen'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Sheen'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Sheen Tint'), None)
+        if input_:
+            input_.default_value = 0.5
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Sheen Tint'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Clearcoat'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Clearcoat'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Clearcoat Roughness'), None)
+        if input_:
+            input_.default_value = 0.029999999329447746
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Clearcoat Roughness'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='IOR'), None)
+        if input_:
+            input_.default_value = 1.399999976158142
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'IOR'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Transmission'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Transmission'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Transmission Roughness'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Transmission Roughness'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Emission'), None)
+        if input_:
+            input_.default_value = (0.0, 0.0, 0.0, 1.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Emission'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Emission Strength'), None)
+        if input_:
+            input_.default_value = 1.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Emission Strength'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Alpha'), None)
+        if input_:
+            input_.default_value = 1.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Alpha'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Normal'), None)
+        if input_:
+            input_.default_value = (0.0, 0.0, 0.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = True
+            input_.name = 'Normal'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Clearcoat Normal'), None)
+        if input_:
+            input_.default_value = (0.0, 0.0, 0.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = True
+            input_.name = 'Clearcoat Normal'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Tangent'), None)
+        if input_:
+            input_.default_value = (0.0, 0.0, 0.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = True
+            input_.name = 'Tangent'
+            input_.show_expanded = False
+        input_ = next((input_ for input_ in principled_bsdf_1.inputs if input_.identifier=='Weight'), None)
+        if input_:
+            input_.default_value = 0.0
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = False
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Weight'
+            input_.show_expanded = False
+
+        separate_color_1 = node_tree1.nodes.new('ShaderNodeSeparateColor')
+        separate_color_1.mode = 'RGB'
+        separate_color_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+        separate_color_1.hide = False
+        separate_color_1.location = (-393.93951416015625, 289.3629150390625)
+        separate_color_1.mute = False
+        separate_color_1.name = 'Separate Color'
+        separate_color_1.use_custom_color = False
+        separate_color_1.width = 140.0
+        input_ = next((input_ for input_ in separate_color_1.inputs if input_.identifier=='Color'), None)
+        if input_:
+            input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+            input_.display_shape = 'CIRCLE'
+            input_.enabled = True
+            input_.hide = False
+            input_.hide_value = False
+            input_.name = 'Color'
+            input_.show_expanded = False
+        output = next((output for output in separate_color_1.outputs if output.identifier=='Red'), None)
+        if output:
+            output.default_value = 0.0
+            output.display_shape = 'CIRCLE'
+            output.enabled = True
+            output.hide = False
+            output.hide_value = False
+            output.name = 'Red'
+            output.show_expanded = False
+        output = next((output for output in separate_color_1.outputs if output.identifier=='Green'), None)
+        if output:
+            output.default_value = 0.0
+            output.display_shape = 'CIRCLE'
+            output.enabled = True
+            output.hide = False
+            output.hide_value = False
+            output.name = 'Green'
+            output.show_expanded = False
+        output = next((output for output in separate_color_1.outputs if output.identifier=='Blue'), None)
+        if output:
+            output.default_value = 0.0
+            output.display_shape = 'CIRCLE'
+            output.enabled = True
+            output.hide = False
+            output.hide_value = False
+            output.name = 'Blue'
+            output.show_expanded = False
+
+        group_input_1 = node_tree1.nodes.new('NodeGroupInput')
+        group_input_1.color = (0.6079999804496765, 0.6079999804496765, 0.6079999804496765)
+        group_input_1.hide = False
+        group_input_1.location = (-807.7208251953125, 197.52923583984375)
+        group_input_1.mute = False
+        group_input_1.name = 'Group Input'
+        group_input_1.use_custom_color = False
+        group_input_1.width = 140.0
+        
+        group_001_1 = node_tree1.nodes.new('ShaderNodeGroup')
+        group_001_1.node_tree = bpy.data.node_groups.get('Norm Normalize')
+        group_001_1.location = (-535.3684692382812, -506.54168701171875)
+        
+        separate_color_001_1 = node_tree1.nodes.new('ShaderNodeSeparateColor')
+        separate_color_001_1.mode = 'RGB'
+        separate_color_001_1.location = (-398.9635925292969, 68.34716796875)
+        if hasattr(separate_color_001_1, 'mute'):
+            separate_color_001_1.mute = False
+        if hasattr(separate_color_001_1, 'name'):
+            separate_color_001_1.name = 'Separate Color.001'
+        if hasattr(separate_color_001_1, 'use_custom_color'):
+            separate_color_001_1.use_custom_color = False
+        if hasattr(separate_color_001_1, 'width'):
+            separate_color_001_1.width = 140.0
+        input_ = next((input_ for input_ in separate_color_001_1.inputs if input_.identifier=='Color'), None)
+        if input_:
+            if hasattr(input_, 'default_value'):
+                input_.default_value = (0.800000011920929, 0.800000011920929, 0.800000011920929, 1.0)
+            if hasattr(input_, 'display_shape'):
+                input_.display_shape = 'CIRCLE'
+            if hasattr(input_, 'enabled'):
+                input_.enabled = True
+            if hasattr(input_, 'hide'):
+                input_.hide = False
+            if hasattr(input_, 'hide_value'):
+                input_.hide_value = False
+            if hasattr(input_, 'name'):
+                input_.name = 'Color'
+            if hasattr(input_, 'show_expanded'):
+                input_.show_expanded = False
+        output = next((output for output in separate_color_001_1.outputs if output.identifier=='Red'), None)
+        if output:
+            if hasattr(output, 'default_value'):
+                output.default_value = 0.0
+            if hasattr(output, 'display_shape'):
+                output.display_shape = 'CIRCLE'
+            if hasattr(output, 'enabled'):
+                output.enabled = True
+            if hasattr(output, 'hide'):
+                output.hide = False
+            if hasattr(output, 'hide_value'):
+                output.hide_value = False
+            if hasattr(output, 'name'):
+                output.name = 'Red'
+            if hasattr(output, 'show_expanded'):
+                output.show_expanded = False
+        output = next((output for output in separate_color_001_1.outputs if output.identifier=='Green'), None)
+        if output:
+            if hasattr(output, 'default_value'):
+                output.default_value = 0.0
+            if hasattr(output, 'display_shape'):
+                output.display_shape = 'CIRCLE'
+            if hasattr(output, 'enabled'):
+                output.enabled = True
+            if hasattr(output, 'hide'):
+                output.hide = False
+            if hasattr(output, 'hide_value'):
+                output.hide_value = False
+            if hasattr(output, 'name'):
+                output.name = 'Green'
+            if hasattr(output, 'show_expanded'):
+                output.show_expanded = False
+        output = next((output for output in separate_color_001_1.outputs if output.identifier=='Blue'), None)
+        if output:
+            if hasattr(output, 'default_value'):
+                output.default_value = 0.0
+            if hasattr(output, 'display_shape'):
+                output.display_shape = 'CIRCLE'
+            if hasattr(output, 'enabled'):
+                output.enabled = True
+            if hasattr(output, 'hide'):
+                output.hide = False
+            if hasattr(output, 'hide_value'):
+                output.hide_value = False
+            if hasattr(output, 'name'):
+                output.name = 'Blue'
+            if hasattr(output, 'show_expanded'):
+                output.show_expanded = False
+        # LINKS
+        node_tree1.links.new(mix_shader_1.outputs[0], group_output_1.inputs[0])
+        node_tree1.links.new(principled_bsdf_1.outputs[0], mix_shader_1.inputs[2])
+        node_tree1.links.new(group_1.outputs[0], group_002_1.inputs[1])
+        node_tree1.links.new(group_001_1.outputs[0], group_002_1.inputs[2])
+        node_tree1.links.new(normal_map_1.outputs[0], principled_bsdf_1.inputs[22])
+        node_tree1.links.new(group_002_1.outputs[0], normal_map_1.inputs[1])
+        node_tree1.links.new(group_input_1.outputs[0], principled_bsdf_1.inputs[0])
+        node_tree1.links.new(group_input_1.outputs[0], principled_bsdf_1.inputs[3])
+        node_tree1.links.new(group_input_1.outputs[3], group_1.inputs[0])
+        node_tree1.links.new(group_input_1.outputs[4], group_001_1.inputs[0])
+        node_tree1.links.new(group_input_1.outputs[1], separate_color_1.inputs[0])
+        node_tree1.links.new(separate_color_1.outputs[0], mix_shader_1.inputs[0])
+        node_tree1.links.new(separate_color_1.outputs[1], principled_bsdf_1.inputs[9])
+        node_tree1.links.new(separate_color_1.outputs[2], principled_bsdf_1.inputs[17])
+        node_tree1.links.new(separate_color_1.outputs[1], principled_bsdf_1.inputs[18])
+        node_tree1.links.new(group_input_1.outputs[5], principled_bsdf_1.inputs[2])
+        node_tree1.links.new(group_input_1.outputs[2], separate_color_001_1.inputs[0])
+        node_tree1.links.new(separate_color_001_1.outputs[0], principled_bsdf_1.inputs[1])
+        node_tree1.links.new(separate_color_001_1.outputs[1], principled_bsdf_1.inputs[7])
+        node_tree1.links.new(separate_color_001_1.outputs[2], group_002_1.inputs[0])

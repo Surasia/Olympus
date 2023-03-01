@@ -67,7 +67,7 @@ def createDirAltNameID(in_dir: str):
         with open(path, 'rb') as f:
             data = json.load(f)
             filename = path.stem.split('info_')[-1]
-            altName = data['CommonData']['AltName']
+            altName = data['StyleId']['m_identifier']
             Title = data['CommonData']['Title']
             key = altName
             if not dict_return.keys().__contains__(key):
