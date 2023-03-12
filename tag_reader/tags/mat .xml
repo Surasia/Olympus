@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<_38 v="AnyTag">
+	<_38 v="">
 		<_7 v="vtable space" />
 		<_38 v="internal struct">
 			<_6 v="global tag ID" />
@@ -172,7 +172,7 @@
 			<Flag v="alpha_blend_max" />
 			<Flag v="opaque_alpha_blend" />
 			<Flag v="alpha_blend_additive_transparent" />
-			<Flag v="floating_shadow" />
+			<Flag v="unused0" />
 			<Flag v="decal_alpha_blend" />
 			<Flag v="decal_add_src_times_src_alpha" />
 			<Flag v="decal_multiply_add" />
@@ -240,6 +240,7 @@
 			<Flag v="is alpha clip" />
 			<Flag v="enable_taa_mask" />
 			<Flag v="has damage map" />
+			<Flag v="has per placement material constant functions" />
 		</_E>
 		<_40 v="material constants">
 			<_1A v="register" />
@@ -262,6 +263,13 @@
 			<_3C v="index" />
 			<_3B v="" />
 		</_39>
+		<_38 v="alpha clip descriptor">
+			<_3C v="textureIndex" />
+			<_3C v="textureChannel" />
+			<_34 v="generated_pad14ce" length="2" />
+			<_6 v="thresholdIndex" />
+			<_3B v="" />
+		</_38>
 		<_3B v="" />
 	</_40>
 	<_2 v="physics material name" />
@@ -288,7 +296,7 @@
 		<Flag v="alpha_blend_max" />
 		<Flag v="opaque_alpha_blend" />
 		<Flag v="alpha_blend_additive_transparent" />
-		<Flag v="floating_shadow" />
+		<Flag v="unused0" />
 		<Flag v="decal_alpha_blend" />
 		<Flag v="decal_add_src_times_src_alpha" />
 		<Flag v="decal_multiply_add" />
@@ -367,7 +375,22 @@
 	<_14 v="taa mask threshold end" />
 	<_40 v="style info">
 		<_41 v="material style" />
+		<_41 v="material style tag" />
 		<_2 v="region name" />
+		<_2 v="base intention" />
+		<_2 v="mask 0 red channel intention" />
+		<_2 v="mask 0 green channel intention" />
+		<_2 v="mask 0 blue channel intention" />
+		<_2 v="mask 1 red channel intention" />
+		<_2 v="mask 1 green channel intention" />
+		<_2 v="mask 1 blue channel intention" />
+		<_A v="Number of Supported Layers For Material Shader">
+			<Flag v="Supports1Layer" />
+			<Flag v="Supports4Layers" />
+			<Flag v="Supports7Layers" />
+			<Flag v="Supports0Layers" />
+		</_A>
+		<_34 v="generated_pada41a" length="3" />
 		<_3B v="" />
 	</_40>
 	<_3B v="" />

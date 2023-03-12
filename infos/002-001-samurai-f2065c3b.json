@@ -25,12 +25,12 @@
     "AltSpriteBitmap": 0,
     "AltSpriteFrameIndex": 0,
     "DisplayPath": {
-      "Width": 358,
-      "Height": 358,
+      "Width": 320,
+      "Height": 320,
       "Media": {
         "MediaUrl": {
           "AuthorityId": "",
-          "Path": "Progression/Inventory/Armor/Coatings/002-001-olympus-f2065c3b-SM.png",
+          "Path": "progression/Inventory/Armor/Coatings/002-001-samurai-f2065c3b-SM.png",
           "RetryPolicyId": "",
           "TopicName": "",
           "AcknowledgementTypeId": "NoAcknowledgement",
@@ -44,8 +44,8 @@
         "FileName": ""
       },
       "MimeType": "image/png",
-      "FolderPath": "Progression/Inventory/Armor/Coatings",
-      "FileName": "002-001-olympus-f2065c3b-SM.png"
+      "FolderPath": "progression/Inventory/Armor/Coatings",
+      "FileName": "002-001-samurai-f2065c3b-SM.png"
     },
     "Quality": "Common",
     "ManufacturerId": 26,
@@ -61,11 +61,11 @@
       "categoryWeight": 0,
       "subCategoryWeight": 0
     },
-    "SeasonNumber": 2,
-    "OriginalSeasonNumber": 2,
+    "SeasonNumber": 3,
+    "OriginalSeasonNumber": 3,
     "Season": {
-      "status": "Test",
-      "value": "Season 2",
+      "status": "Ready",
+      "value": "Sesason 3",
       "translations": {}
     }
   },

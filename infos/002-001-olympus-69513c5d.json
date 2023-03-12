@@ -30,7 +30,7 @@
       "Media": {
         "MediaUrl": {
           "AuthorityId": "",
-          "Path": "progression/Inventory/Weapon/Coatings/203-201-olympus-69513c5d-SM.png",
+          "Path": "progression/Inventory/Armor/Coatings/002-001-olympus-69513c5d-SM.png",
           "RetryPolicyId": "",
           "TopicName": "",
           "AcknowledgementTypeId": "NoAcknowledgement",
@@ -44,8 +44,8 @@
         "FileName": ""
       },
       "MimeType": "image/png",
-      "FolderPath": "progression/Inventory/Weapon/Coatings",
-      "FileName": "203-201-olympus-69513c5d-SM.png"
+      "FolderPath": "progression/Inventory/Armor/Coatings",
+      "FileName": "002-001-olympus-69513c5d-SM.png"
     },
     "Quality": "Epic",
     "ManufacturerId": 0,

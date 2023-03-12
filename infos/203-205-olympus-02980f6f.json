@@ -62,7 +62,12 @@
       "subCategoryWeight": 0
     },
     "SeasonNumber": 1,
-    "OriginalSeasonNumber": 1
+    "OriginalSeasonNumber": 1,
+    "Season": {
+      "status": "Test",
+      "value": "",
+      "translations": {}
+    }
   },
   "LightingScalarOverride": 0
 }

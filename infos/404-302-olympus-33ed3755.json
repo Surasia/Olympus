@@ -1,0 +1,73 @@
+{
+  "TagId": 0,
+  "StyleId": {
+    "m_identifier": 1464289498
+  },
+  "RegionPartId": {
+    "m_identifier": -1
+  },
+  "CommonData": {
+    "Id": "404-302-olympus-33ed3755",
+    "HideUntilOwned": false,
+    "Title": "Scrum Lizard",
+    "Description": "Digital intelligences have their own perspective on camouflage.",
+    "FeatureFlag": true,
+    "ItemAvailability": "",
+    "DateReleased": {
+      "ISO8601Date": ""
+    },
+    "AltName": "fwl_mil_0024",
+    "IconStringId": {
+      "m_identifier": -1
+    },
+    "SpriteBitmap": 0,
+    "SpriteFrameIndex": 0,
+    "AltSpriteBitmap": 0,
+    "AltSpriteFrameIndex": 0,
+    "DisplayPath": {
+      "Width": 320,
+      "Height": 320,
+      "Media": {
+        "MediaUrl": {
+          "AuthorityId": "",
+          "Path": "progression/Inventory/Vehicle/Coatings/404-302-olympus-33ed3755-SM.png",
+          "RetryPolicyId": "",
+          "TopicName": "",
+          "AcknowledgementTypeId": "NoAcknowledgement",
+          "AuthenticationLifetimeExtensionSupported": false,
+          "ClearanceAware": false
+        },
+        "MimeType": "",
+        "Caption": "",
+        "AlternateText": "",
+        "FolderPath": "",
+        "FileName": ""
+      },
+      "MimeType": "image/png",
+      "FolderPath": "progression/Inventory/Vehicle/Coatings",
+      "FileName": "404-302-olympus-33ed3755-SM.png"
+    },
+    "Quality": "Legendary",
+    "ManufacturerId": 39,
+    "Type": "VehicleCoating",
+    "RewardTrack": "",
+    "ParentPaths": [
+      {
+        "Path": "Inventory/Vehicle/Themes/408-302-olympus-aa30213b.json",
+        "Type": "VehicleTheme"
+      }
+    ],
+    "SortingMetadata": {
+      "categoryWeight": 0,
+      "subCategoryWeight": 0
+    },
+    "SeasonNumber": 3,
+    "OriginalSeasonNumber": 3,
+    "Season": {
+      "status": "Ready",
+      "value": "Season 3",
+      "translations": {}
+    }
+  },
+  "LightingScalarOverride": 0
+}

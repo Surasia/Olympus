@@ -8,7 +8,7 @@
   },
   "CommonData": {
     "Id": "002-001-samurai-fafacdc8",
-    "HideUntilOwned": false,
+    "HideUntilOwned": true,
     "Title": "Scarlet Empress",
     "Description": "Old enemies become new allies in the war against the Covenant.",
     "FeatureFlag": true,

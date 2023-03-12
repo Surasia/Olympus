@@ -9,8 +9,8 @@
   "CommonData": {
     "Id": "203-205-olympus-ca71b5f7",
     "HideUntilOwned": true,
-    "Title": "oly_mil_groovy_b",
-    "Description": "oly_mil_groovy_b",
+    "Title": "Groovy Duds",
+    "Description": "This mission is a trip.",
     "FeatureFlag": true,
     "ItemAvailability": "",
     "DateReleased": {
@@ -25,12 +25,12 @@
     "AltSpriteBitmap": 0,
     "AltSpriteFrameIndex": 0,
     "DisplayPath": {
-      "Width": 0,
-      "Height": 0,
+      "Width": 320,
+      "Height": 320,
       "Media": {
         "MediaUrl": {
           "AuthorityId": "",
-          "Path": "",
+          "Path": "progression/Inventory/Weapon/Coatings/203-205-olympus-ca71b5f7-SM.png",
           "RetryPolicyId": "",
           "TopicName": "",
           "AcknowledgementTypeId": "NoAcknowledgement",
@@ -42,27 +42,30 @@
         "AlternateText": "",
         "FolderPath": "",
         "FileName": ""
-      }
+      },
+      "MimeType": "image/png",
+      "FolderPath": "progression/Inventory/Weapon/Coatings",
+      "FileName": "203-205-olympus-ca71b5f7-SM.png"
     },
-    "Quality": "Common",
-    "ManufacturerId": 0,
+    "Quality": "Epic",
+    "ManufacturerId": 8,
     "Type": "WeaponCoating",
     "RewardTrack": "",
     "ParentPaths": [
       {
         "Path": "Inventory/Weapon/Themes/207-205-olympus-aa30213b.json",
-        "Type": "ArmorTheme"
+        "Type": "WeaponTheme"
       }
     ],
     "SortingMetadata": {
       "categoryWeight": 0,
       "subCategoryWeight": 0
     },
-    "SeasonNumber": 0,
-    "OriginalSeasonNumber": 2,
+    "SeasonNumber": 3,
+    "OriginalSeasonNumber": 3,
     "Season": {
-      "status": "Test",
-      "value": "",
+      "status": "Ready",
+      "value": "Season 3",
       "translations": {}
     }
   },

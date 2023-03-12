@@ -10,7 +10,7 @@
     "Id": "203-205-olympus-0a151fa9",
     "HideUntilOwned": false,
     "Title": "Praetorian Zephyr",
-    "Description": "Even pumped full of augmetic infusions, a well-aimed sniper bullet could drop a Sharquoi in one shot.",
+    "Description": "The snap-crack of bullets plays out like a symphony for those attuned to the ebb and flow of battle.",
     "FeatureFlag": true,
     "ItemAvailability": "",
     "DateReleased": {
@@ -64,7 +64,7 @@
     "SeasonNumber": 2,
     "OriginalSeasonNumber": 2,
     "Season": {
-      "status": "Test",
+      "status": "Ready",
       "value": "Season 2",
       "translations": {}
     }

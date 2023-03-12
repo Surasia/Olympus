@@ -63,7 +63,12 @@
     },
     "SeasonNumber": 1,
     "OriginalSeasonNumber": 1,
-    "CustomAvailability": "Available via Halo Infinite partners"
+    "CustomAvailability": "Available via Halo Infinite partners",
+    "Season": {
+      "status": "Test",
+      "value": "",
+      "translations": {}
+    }
   },
   "LightingScalarOverride": 0
 }

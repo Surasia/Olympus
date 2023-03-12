@@ -33,12 +33,28 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Datacore Administrator",
+			"colorID": 1495337519,
+			"visorID": -395115441,
+			"AltName": "s3_oro",
+			"Roughness": "5",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Fireblood Rift",
 			"colorID": 1547715901,
 			"visorID": 1544031111,
 			"AltName": "dinh_extra",
 			"Roughness": "4",
 			"Emmisive": "0"
+		},
+		{
+			"name": "Essence Decompilation",
+			"colorID": 1445940839,
+			"visorID": -270404979,
+			"AltName": "s3_sky_blue_black",
+			"Roughness": "3",
+			"Emmisive": "0.25"
 		},
 		{
 			"name": "eUnited",
@@ -73,12 +89,28 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Vannak-134 VISR",
+			"colorID": -1494856832,
+			"visorID": 1544031111,
+			"AltName": "silver_vannak",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Unyielding Will",
 			"colorID": -2142936486,
 			"visorID": 307976421,
 			"AltName": "grit",
 			"Roughness": "8",
 			"Emmisive": "0"
+		},
+		{
+			"name": "Master Builder",
+			"colorID": 2144261672,
+			"visorID": -13728639,
+			"AltName": "s3_forerunner_blue",
+			"Roughness": "0",
+			"Emmisive": "1"
 		},
 		{
 			"name": "Bay Sunset",
@@ -121,6 +153,30 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Riz-028 VISR",
+			"colorID": 386461999,
+			"visorID": 1544031111,
+			"AltName": "silver_riz",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "eklund",
+			"colorID": -926220165,
+			"visorID": 1544031111,
+			"AltName": "eklund",
+			"Roughness": "4",
+			"Emmisive": "0.0"
+		},
+		{
+			"name": "Tarnished Scale",
+			"colorID": -510774500,
+			"visorID": 672595546,
+			"AltName": "s3_grey_green",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Biko Turquoise",
 			"colorID": -69519703,
 			"visorID": 1544031111,
@@ -129,12 +185,28 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Stepwise",
+			"colorID": -209958167,
+			"visorID": -395115441,
+			"AltName": "s3_belgium",
+			"Roughness": "6",
+			"Emmisive": "0.5"
+		},
+		{
 			"name": "Juice",
 			"colorID": 124497984,
 			"visorID": 680083308,
 			"AltName": "juice",
 			"Roughness": "4",
 			"Emmisive": "2"
+		},
+		{
+			"name": "Violent Darkness",
+			"colorID": -1883257544,
+			"visorID": 1544031111,
+			"AltName": "s3_violet_dark",
+			"Roughness": "4",
+			"Emmisive": "0"
 		},
 		{
 			"name": "Spacestation Gaming",
@@ -201,6 +273,22 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Puzzle Palace",
+			"colorID": 986356337,
+			"visorID": -737553214,
+			"AltName": "s3_silver_and_gold",
+			"Roughness": "3",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Year 2 Complexity Launch",
+			"colorID": -1401142021,
+			"visorID": -327194606,
+			"AltName": "s3_complexity",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Sabi",
 			"colorID": -1479539747,
 			"visorID": -1612249218,
@@ -230,6 +318,14 @@
 			"visorID": 680083308,
 			"AltName": "dynasty",
 			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Orchid Cluster",
+			"colorID": -634432885,
+			"visorID": -270404979,
+			"AltName": "s3_orchid",
+			"Roughness": "4",
 			"Emmisive": "0"
 		},
 		{
@@ -305,6 +401,14 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Year 2 FaZe Launch",
+			"colorID": -1979348428,
+			"visorID": 853596451,
+			"AltName": "s3_faze",
+			"Roughness": "0",
+			"Emmisive": "1"
+		},
+		{
 			"name": "Sentinels",
 			"colorID": 117988659,
 			"visorID": 1544031111,
@@ -313,11 +417,35 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Amberweave",
+			"colorID": -7447544,
+			"visorID": -438104162,
+			"AltName": "s3_amber",
+			"Roughness": "3",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Double Zeroes",
 			"colorID": -1696642394,
 			"visorID": -15696289,
 			"AltName": "double_zeroes",
 			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Tracelines",
+			"colorID": 858029349,
+			"visorID": -270404979,
+			"AltName": "s3_bright_gold",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Year 2 eUnited Launch",
+			"colorID": -1443135183,
+			"visorID": -893596057,
+			"AltName": "s3_eunited",
+			"Roughness": "5",
 			"Emmisive": "0"
 		},
 		{
@@ -337,11 +465,27 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Year 2 OpTic Gaming Launch",
+			"colorID": -1838754344,
+			"visorID": 12429029,
+			"AltName": "s3_optic",
+			"Roughness": "5",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Wisteria",
 			"colorID": -1729249433,
 			"visorID": -1806852560,
 			"AltName": "metallurgy",
 			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Pink Pop",
+			"colorID": 262029181,
+			"visorID": 781623628,
+			"AltName": "s3_pink_pop",
+			"Roughness": "4",
 			"Emmisive": "0"
 		},
 		{
@@ -353,11 +497,51 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Year 2 Cloud9 Launch",
+			"colorID": -93550371,
+			"visorID": 1357806927,
+			"AltName": "s3_cloud9",
+			"Roughness": "4",
+			"Emmisive": "1"
+		},
+		{
+			"name": "Year 2 NAVI Launch",
+			"colorID": 1472033693,
+			"visorID": 33602950,
+			"AltName": "s3_navi",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Trion",
+			"colorID": 2025180071,
+			"visorID": -775158571,
+			"AltName": "s3_blue_green_trio",
+			"Roughness": "2",
+			"Emmisive": "0.75"
+		},
+		{
 			"name": "Enji-iro",
 			"colorID": 136042676,
 			"visorID": -1806852560,
 			"AltName": "enji_iro",
 			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Magenta Pop",
+			"colorID": -1053904835,
+			"visorID": 672595546,
+			"AltName": "s3_magenta_pop",
+			"Roughness": "3",
+			"Emmisive": "0.1"
+		},
+		{
+			"name": "Year 2 Quadrant Launch",
+			"colorID": -296813030,
+			"visorID": -954328206,
+			"AltName": "s3_quadrant",
+			"Roughness": "0",
 			"Emmisive": "0"
 		},
 		{
@@ -417,6 +601,30 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "peppermint_green",
+			"colorID": 1362553048,
+			"visorID": 482424204,
+			"AltName": "peppermint_green",
+			"Roughness": "8",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Ghostlines",
+			"colorID": -1616422679,
+			"visorID": -438104162,
+			"AltName": "s3_ghost",
+			"Roughness": "0",
+			"Emmisive": "0.25"
+		},
+		{
+			"name": "Cyan Sky",
+			"colorID": 2065788830,
+			"visorID": -40377469,
+			"AltName": "s3_cyan_sky",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Night Wisp",
 			"colorID": 500810794,
 			"visorID": 286398678,
@@ -473,6 +681,14 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Icebreaker",
+			"colorID": 18457080,
+			"visorID": 1758346987,
+			"AltName": "s3_red_static",
+			"Roughness": "0",
+			"Emmisive": "1"
+		},
+		{
 			"name": "Athena's Mirror",
 			"colorID": -1439007923,
 			"visorID": -307894833,
@@ -481,12 +697,28 @@
 			"Emmisive": "0.3"
 		},
 		{
+			"name": "Kai-125 VISR",
+			"colorID": -1012596306,
+			"visorID": 1544031111,
+			"AltName": "silver_kai",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Termination Protocol",
 			"colorID": 1502207141,
 			"visorID": -151028957,
 			"AltName": "terminator",
 			"Roughness": "8",
 			"Emmisive": "1"
+		},
+		{
+			"name": "Year 2 FNATIC Launch",
+			"colorID": 1209666931,
+			"visorID": 71265736,
+			"AltName": "s3_fnatic",
+			"Roughness": "0",
+			"Emmisive": "0"
 		},
 		{
 			"name": "Madrigal Aquamarine",
@@ -593,6 +825,22 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "tempe",
+			"colorID": -1310186695,
+			"visorID": 1544031111,
+			"AltName": "tempe",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Year 2 G2 Esports Launch",
+			"colorID": 1101505015,
+			"visorID": 766806179,
+			"AltName": "s3_g2",
+			"Roughness": "0",
+			"Emmisive": "0"
+		},
+		{
 			"name": "North America Launch",
 			"colorID": -1098029162,
 			"visorID": 190205315,
@@ -609,11 +857,27 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Alchemic Ratio",
+			"colorID": -1195057915,
+			"visorID": -1185021793,
+			"AltName": "s3_gold",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
 			"name": "MIA",
 			"colorID": 1153800188,
 			"visorID": 1544031111,
 			"AltName": "mia",
 			"Roughness": "-1",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Aqua Green",
+			"colorID": 1884418144,
+			"visorID": 835439939,
+			"AltName": "s3_aqua_green",
+			"Roughness": "5",
 			"Emmisive": "0"
 		},
 		{
@@ -681,6 +945,14 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Year 2 Sentinels Launch",
+			"colorID": -836752793,
+			"visorID": 729404207,
+			"AltName": "s3_sentinels",
+			"Roughness": "0",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Will-o'-wisp",
 			"colorID": -1272972633,
 			"visorID": 1134429216,
@@ -745,10 +1017,34 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Acid Lime",
+			"colorID": -1933676687,
+			"visorID": -1185021793,
+			"AltName": "s3_lime",
+			"Roughness": "6",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Blue Pop",
+			"colorID": 1736561856,
+			"visorID": -775158571,
+			"AltName": "s3_blue_pop",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
 			"name": "Enlisted",
 			"colorID": 1717887855,
 			"visorID": 1544031111,
 			"AltName": "conscript",
+			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Autumn Offensive",
+			"colorID": -903329675,
+			"visorID": -737553214,
+			"AltName": "s3_autumn",
 			"Roughness": "4",
 			"Emmisive": "0"
 		},
@@ -817,11 +1113,27 @@
 			"Emmisive": "0"
 		},
 		{
+			"name": "Year 2 Spacestation Gaming Launch",
+			"colorID": 600095173,
+			"visorID": -876764153,
+			"AltName": "s3_spacestation",
+			"Roughness": "0",
+			"Emmisive": "2"
+		},
+		{
 			"name": "Fateful Kinetics",
 			"colorID": -1510898467,
 			"visorID": 1758346987,
 			"AltName": "operator",
 			"Roughness": "4",
+			"Emmisive": "0"
+		},
+		{
+			"name": "Deep Ocean",
+			"colorID": -94383047,
+			"visorID": -40377469,
+			"AltName": "s3_deep_ocean",
+			"Roughness": "5",
 			"Emmisive": "0"
 		}
 	]

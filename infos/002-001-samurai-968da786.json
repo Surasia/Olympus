@@ -1,0 +1,73 @@
+{
+  "TagId": 0,
+  "StyleId": {
+    "m_identifier": -2082825051
+  },
+  "RegionPartId": {
+    "m_identifier": -1
+  },
+  "CommonData": {
+    "Id": "002-001-samurai-968da786",
+    "HideUntilOwned": true,
+    "Title": "Epsilon Autumn",
+    "Description": "Old troubles, new wars.",
+    "FeatureFlag": true,
+    "ItemAvailability": "",
+    "DateReleased": {
+      "ISO8601Date": ""
+    },
+    "AltName": "gen_mil_camo_woodland_autumn",
+    "IconStringId": {
+      "m_identifier": -1
+    },
+    "SpriteBitmap": 0,
+    "SpriteFrameIndex": 0,
+    "AltSpriteBitmap": 0,
+    "AltSpriteFrameIndex": 0,
+    "DisplayPath": {
+      "Width": 320,
+      "Height": 320,
+      "Media": {
+        "MediaUrl": {
+          "AuthorityId": "",
+          "Path": "progression/Inventory/Armor/Coatings/002-001-samurai-968da786-SM.png",
+          "RetryPolicyId": "",
+          "TopicName": "",
+          "AcknowledgementTypeId": "NoAcknowledgement",
+          "AuthenticationLifetimeExtensionSupported": false,
+          "ClearanceAware": false
+        },
+        "MimeType": "",
+        "Caption": "",
+        "AlternateText": "",
+        "FolderPath": "",
+        "FileName": ""
+      },
+      "MimeType": "image/png",
+      "FolderPath": "progression/Inventory/Armor/Coatings",
+      "FileName": "002-001-samurai-968da786-SM.png"
+    },
+    "Quality": "Epic",
+    "ManufacturerId": 26,
+    "Type": "ArmorCoating",
+    "RewardTrack": "",
+    "ParentPaths": [
+      {
+        "Path": "Inventory/Armor/Themes/007-001-samurai-55badb14.json",
+        "Type": "ArmorTheme"
+      }
+    ],
+    "SortingMetadata": {
+      "categoryWeight": 0,
+      "subCategoryWeight": 0
+    },
+    "SeasonNumber": 3,
+    "OriginalSeasonNumber": 3,
+    "Season": {
+      "status": "Ready",
+      "value": "Season 3",
+      "translations": {}
+    }
+  },
+  "LightingScalarOverride": 0
+}

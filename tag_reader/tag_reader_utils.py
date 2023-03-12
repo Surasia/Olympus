@@ -44,7 +44,10 @@ def readStringInPlace(f, start, inplace=False):
     f.seek(start)
     string = []
     while True:
-        char = f.read(1)
+        try:
+            char = f.read(1)
+        except:
+            char = b'\x00'
         if char == b'\x00':
             if inplace:
                 f.seek(toBack)

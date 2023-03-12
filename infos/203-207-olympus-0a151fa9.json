@@ -10,7 +10,7 @@
     "Id": "203-207-olympus-0a151fa9",
     "HideUntilOwned": false,
     "Title": "Praetorian Zephyr",
-    "Description": "Cloudjumpers were enthusiastic early adopters of the Hydra, though not for roles intended by the Ordnance Committee.",
+    "Description": "The snap-crack of bullets plays out like a symphony for those attuned to the ebb and flow of battle.",
     "FeatureFlag": true,
     "ItemAvailability": "",
     "DateReleased": {
@@ -64,7 +64,7 @@
     "SeasonNumber": 2,
     "OriginalSeasonNumber": 2,
     "Season": {
-      "status": "Test",
+      "status": "Ready",
       "value": "Season 2",
       "translations": {}
     }

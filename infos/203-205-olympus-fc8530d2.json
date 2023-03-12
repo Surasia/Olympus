@@ -1,0 +1,73 @@
+{
+  "TagId": 0,
+  "StyleId": {
+    "m_identifier": 944240906
+  },
+  "RegionPartId": {
+    "m_identifier": -1
+  },
+  "CommonData": {
+    "Id": "203-205-olympus-fc8530d2",
+    "HideUntilOwned": false,
+    "Title": "Year 2 FaZe Launch",
+    "Description": "Stare into the void\u2026 FaZe Clan\u2019s SPI Armor and S7 Sniper bring out-of-this-world gameplay to the battlefield. Give your enemies an existential crisis as they can\u2019t even look you in the eyes - all they can see is dark matter.",
+    "FeatureFlag": true,
+    "ItemAvailability": "",
+    "DateReleased": {
+      "ISO8601Date": ""
+    },
+    "AltName": "oly_esports_faze_s3",
+    "IconStringId": {
+      "m_identifier": -1
+    },
+    "SpriteBitmap": 0,
+    "SpriteFrameIndex": 0,
+    "AltSpriteBitmap": 0,
+    "AltSpriteFrameIndex": 0,
+    "DisplayPath": {
+      "Width": 320,
+      "Height": 320,
+      "Media": {
+        "MediaUrl": {
+          "AuthorityId": "",
+          "Path": "progression/Inventory/Weapon/Coatings/203-205-olympus-fc8530d2-SM.png",
+          "RetryPolicyId": "",
+          "TopicName": "",
+          "AcknowledgementTypeId": "NoAcknowledgement",
+          "AuthenticationLifetimeExtensionSupported": false,
+          "ClearanceAware": false
+        },
+        "MimeType": "",
+        "Caption": "",
+        "AlternateText": "",
+        "FolderPath": "",
+        "FileName": ""
+      },
+      "MimeType": "image/png",
+      "FolderPath": "progression/Inventory/Weapon/Coatings",
+      "FileName": "203-205-olympus-fc8530d2-SM.png"
+    },
+    "Quality": "Epic",
+    "ManufacturerId": 0,
+    "Type": "WeaponCoating",
+    "RewardTrack": "",
+    "ParentPaths": [
+      {
+        "Path": "Inventory/Weapon/Themes/207-205-olympus-aa30213b.json",
+        "Type": "WeaponTheme"
+      }
+    ],
+    "SortingMetadata": {
+      "categoryWeight": 0,
+      "subCategoryWeight": 0
+    },
+    "SeasonNumber": 3,
+    "OriginalSeasonNumber": 3,
+    "Season": {
+      "status": "Ready",
+      "value": "Season 3",
+      "translations": {}
+    }
+  },
+  "LightingScalarOverride": 0
+}

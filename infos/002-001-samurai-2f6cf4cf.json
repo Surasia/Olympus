@@ -1,0 +1,73 @@
+{
+  "TagId": 0,
+  "StyleId": {
+    "m_identifier": 253109785
+  },
+  "RegionPartId": {
+    "m_identifier": -1
+  },
+  "CommonData": {
+    "Id": "002-001-samurai-2f6cf4cf",
+    "HideUntilOwned": true,
+    "Title": "Resonant Element",
+    "Description": "Parade-ready.",
+    "FeatureFlag": true,
+    "ItemAvailability": "",
+    "DateReleased": {
+      "ISO8601Date": ""
+    },
+    "AltName": "sam_mil_resonant",
+    "IconStringId": {
+      "m_identifier": -1
+    },
+    "SpriteBitmap": 0,
+    "SpriteFrameIndex": 0,
+    "AltSpriteBitmap": 0,
+    "AltSpriteFrameIndex": 0,
+    "DisplayPath": {
+      "Width": 320,
+      "Height": 320,
+      "Media": {
+        "MediaUrl": {
+          "AuthorityId": "",
+          "Path": "progression/Inventory/Armor/Coatings/002-001-samurai-2f6cf4cf-SM.png",
+          "RetryPolicyId": "",
+          "TopicName": "",
+          "AcknowledgementTypeId": "NoAcknowledgement",
+          "AuthenticationLifetimeExtensionSupported": false,
+          "ClearanceAware": false
+        },
+        "MimeType": "",
+        "Caption": "",
+        "AlternateText": "",
+        "FolderPath": "",
+        "FileName": ""
+      },
+      "MimeType": "image/png",
+      "FolderPath": "progression/Inventory/Armor/Coatings",
+      "FileName": "002-001-samurai-2f6cf4cf-SM.png"
+    },
+    "Quality": "Rare",
+    "ManufacturerId": 26,
+    "Type": "ArmorCoating",
+    "RewardTrack": "",
+    "ParentPaths": [
+      {
+        "Path": "Inventory/Armor/Themes/007-001-samurai-55badb14.json",
+        "Type": "ArmorTheme"
+      }
+    ],
+    "SortingMetadata": {
+      "categoryWeight": 0,
+      "subCategoryWeight": 0
+    },
+    "SeasonNumber": 3,
+    "OriginalSeasonNumber": 3,
+    "Season": {
+      "status": "Ready",
+      "value": "Season 3",
+      "translations": {}
+    }
+  },
+  "LightingScalarOverride": 0
+}

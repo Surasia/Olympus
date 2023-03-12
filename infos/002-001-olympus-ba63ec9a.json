@@ -8,7 +8,7 @@
   },
   "CommonData": {
     "Id": "002-001-olympus-ba63ec9a",
-    "HideUntilOwned": true,
+    "HideUntilOwned": false,
     "Title": "Scorpion Punch",
     "Description": "Ooh! It stings!",
     "FeatureFlag": true,
@@ -47,7 +47,7 @@
       "FolderPath": "Progression/Inventory/Armor/Coatings",
       "FileName": "002-001-olympus-ba63ec9a-SM.png"
     },
-    "Quality": "Epic",
+    "Quality": "Rare",
     "ManufacturerId": 26,
     "Type": "ArmorCoating",
     "RewardTrack": "RewardTracks/Operations/Flighting.json",

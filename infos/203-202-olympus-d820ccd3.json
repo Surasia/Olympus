@@ -53,10 +53,6 @@
     "RewardTrack": "",
     "ParentPaths": [
       {
-        "Path": "Inventory/Weapon/Themes/207-202-olympus-aa30213b.json",
-        "Type": "WeaponTheme"
-      },
-      {
         "Path": "Inventory/Weapon/Themes/207-000-spacestation-24fe39cf.json",
         "Type": "WeaponTheme"
       }
@@ -66,7 +62,12 @@
       "subCategoryWeight": 0
     },
     "SeasonNumber": 1,
-    "OriginalSeasonNumber": 1
+    "OriginalSeasonNumber": 1,
+    "Season": {
+      "status": "Test",
+      "value": "",
+      "translations": {}
+    }
   },
   "LightingScalarOverride": 0
 }

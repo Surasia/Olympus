@@ -2,6 +2,7 @@ import sys
 import os
 import math
 from io import BytesIO
+from pathlib import Path
 
 #from numpy.lib.function_base import append
 
@@ -525,7 +526,7 @@ class Texture:
                             f.seek(offset + 0xc)
                             width = int.from_bytes(f.read(2),'little')
                             height = int.from_bytes(f.read(2),'little')
-                            chunk_name = path + "[" + str(chunk) + "_bitmap_resource_handle.chunk" + str(chunk) + "]"
+                            chunk_name = path + '/' + Path(path).stem + '.resources/' + str(chunk)
                             print(f"Reading texture block {chunk_name}")
                             print(f"Width: {width} Height: {height} Format: {DXGI_FORMAT[format]} {hex(format)}")
                             #with open(chunk_name, 'rb') as chunk_file:

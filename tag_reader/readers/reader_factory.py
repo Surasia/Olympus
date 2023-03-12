@@ -6,6 +6,8 @@ from ... commons.share_mem import parse_dict
 from ... commons.tag_group_extension_map import map_ext
 from . interfaces import IBaseTemplate
 from . import generic
+from pathlib import Path
+
 
 
 class ReaderFactory:
@@ -13,19 +15,21 @@ class ReaderFactory:
         'bitm': ('bitmap', 'Bitmap'),
         'bipd': ('biped', 'Biped'),
         'ocad': ('i343.ObjectCustomization.AttachmentConfiguration', 'AttachmentConfiguration'),
-        'mat ': ('material', 'Material'),
-        'mwpl': ('materialpalette', 'MaterialPalette'),
-        'mwsy': ('materialstyles', 'MaterialStyles'),
+        'mat ': ('mat', 'Mat'),
+        'mwpl': ('mwpl', 'Mwpl'),
+        'mwsy': ('mwsy', 'Mwsy'),
         'hlmt': ('model', 'Model'),
         'unic': ('multilingual_unicode_string_list', 'MultilingualUnicodeStringList'),
         'mode': ('render_model', 'RenderModel'),
         'uslg': ('stringlist', 'StringList'),
-        'mwsw': ('swatch', 'Swatch'),
+        'mwsw': ('mwsw', 'Mwsw'),
         'shbc': ('shader_bytecode', 'ShaderBytecode'),
         'jmad': ('c_model_animation_graph', 'ModelAnimationGraph'),
-        'mwvs': ('mp_visor_swatch', 'MpVisorSwatch')}
+        'mwvs': ('mwvs', 'Mwvs')
+    }
     path_import = 'Olympus.tag_reader.readers'
     pluginname = 'swatch'
+
 
     def iter_namespace(ns_pkg):
         # Specifying the second argument (prefix) to iter_modules makes the
@@ -36,10 +40,10 @@ class ReaderFactory:
 
     @staticmethod
     def create_reader(relative_path: str) -> IBaseTemplate:
-        file_ext = os.path.splitext(relative_path)[1].replace('.', '')
+        file_ext = os.path.basename(os.path.dirname(relative_path))
         tag_group = ''
         for key in map_ext.keys():
-            if map_ext[key] == file_ext:
+            if key == file_ext:
                 tag_group = str(key)
                 break
         path_import = 'Olympus.tag_reader.readers'
