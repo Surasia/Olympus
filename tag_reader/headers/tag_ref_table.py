@@ -36,8 +36,8 @@ class TagDependencyTable:
             if entry.tagGroup != b'\xff\xff\xff\xff':
                 entry.tagGroupRev = entry.tagGroup[::-1].decode("utf-8")
             entry.name_offset = struct.unpack('i', f.read(4))[0]#int.from_bytes(buffer, 'little')
-            entry.ref_id_sub = f.read(4).hex().lower()
-            entry.ref_id_center = f.read(4).hex().lower()
+            entry.ref_id_sub = f.read(4).hex().upper()
+            entry.ref_id_center = f.read(4).hex().upper()
             entry.global_id = f.read(4).hex().upper()
             entry.unknown_property = struct.unpack('i', f.read(4))[0]
             if entry.unknown_property !=-1:

@@ -43,7 +43,7 @@ class ReaderFactory:
         file_ext = os.path.basename(os.path.dirname(relative_path))
         tag_group = ''
         for key in map_ext.keys():
-            if key == file_ext:
+            if map_ext[key] == file_ext:
                 tag_group = str(key)
                 break
         path_import = 'Olympus.tag_reader.readers'

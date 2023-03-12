@@ -325,13 +325,16 @@ class TagRef(TagInstance):
         self.ref_id = self.ref_id.hex().upper()
         self.ref_id_sub = f.read(4)
         self.ref_id_sub_int = struct.unpack('i', self.ref_id_sub)[0]
-        self.ref_id_sub = self.ref_id_sub.hex().lower()
+        self.ref_id_sub = self.ref_id_sub.hex().upper()
         big_endian_bytes = bytes.fromhex(self.ref_id_sub)
         little_endian_bytes = big_endian_bytes[::-1]
         self.ref_id_sub = little_endian_bytes.hex()
+        if self.ref_id_sub == 'ffffffff':
+            print('broken')
         self.ref_id_center = f.read(4)
         self.ref_id_center_int = struct.unpack('i', self.ref_id_center)[0]
-        self.ref_id_center = self.ref_id_center.hex().lower()
+        self.ref_id_center = self.ref_id_center.hex().upper()
+        print(self.ref_id_sub)
         self.tagGroup = struct.unpack('4s', f.read(4))[0]
 
         if self.ref_id_int == 801559339:

@@ -60,7 +60,8 @@ class Mwsw(BaseTemplate):
         self.json_base["colorVariant"]["botColor"] = [color_variant['gradient_bottom_color'].r_value, color_variant['gradient_bottom_color'].g_value, color_variant['gradient_bottom_color'].b_value]
         self.json_base["colorVariant"]["topColor"] = [color_variant['gradient_top_color'].r_value, color_variant['gradient_top_color'].g_value, color_variant['gradient_top_color'].b_value]
         self.json_base["colorVariant"]["midColor"] = [color_variant['gradient_mid_color'].r_value, color_variant['gradient_mid_color'].g_value, color_variant['gradient_mid_color'].b_value]
-        self.json_base["normalPath"] = root['normal_detail_map'].ref_id_sub
+        if not root['normal_detail_map'].ref_id_sub == 'ffffffff':
+            self.json_base["normalPath"] = root['normal_detail_map'].ref_id_sub
         self.json_base["normalTextureTransform"] = [root['normalTextureTransform'].x,root['normalTextureTransform'].y]
         self.json_base["colorAndRoughnessTextureTransform"] = [root['colorAndRoughnessTextureTransform'].x,root['colorAndRoughnessTextureTransform'].y]
         self.json_base["scratchAlbedoTint"] = root['scratch_albedo_tint_spec'].value
@@ -71,7 +72,8 @@ class Mwsw(BaseTemplate):
         self.json_base["colorVariantId"] = color_variant['name'].value
         self.json_base["scratchIor"] = root['scratch_ior'].value
         self.json_base["roughnessWhite"] = root['roughness_white'].value
-        self.json_base["colorGradientMap"] = root['color_gradient_map'].ref_id_sub
+        if not root['colorGradientMap'].ref_id_sub == 'ffffffff':
+            self.json_base["colorGradientMap"] = root['color_gradient_map'].ref_id_sub
         self.json_base["swatchref"] = self.handle
         self.json_base["swatchId"] = self.handle
 

@@ -22,6 +22,8 @@ class Mwpl(BaseTemplate):
         i = 0
         swatches = []
         for key in self.tag_parse.rootTagInst.childs[0]['swatches'].childs:
+            if key['swatch'].ref_id_sub == 'ffffffff':
+                continue
             print('loading swatch: ' + key['swatch'].ref_id_sub)
             parse_mwsw = ReaderFactory.create_reader(root_folder + 'mwsw/' + key['swatch'].ref_id_sub)
             parse_mwsw.load()

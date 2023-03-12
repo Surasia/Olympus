@@ -38,33 +38,33 @@ class Mwsy(BaseTemplate):
         if style_select['palette'].ref_id_sub == coatingname:
             print('W')
             self.json_base["grimeSwatch"] = style_select['grime_type'].value
-            self.json_base["name"] = style_select['palette'].ref_id_center
             self.json_base["emissiveAmount"] = style_select['emissive_amount'].value
             self.json_base["grimeAmount"] = style_select['grime_amount'].value
             self.json_base["scratchAmount"] = style_select['scratch_amount'].value
-            parse_mwpl = ReaderFactory.create_reader(self.root_folder+ 'mwpl/'+style_select['palette'].ref_id_sub)
-            parse_mwpl.load()
-            parse_mwpl.toJson(self.root_folder)
-            print('palette loaded')
-            self.json_base["swatches"] = parse_mwpl.json_base['swatches']
-            regionLayers = {}
-            for entry in style_select['regions'].childs:
-                layers = []
-                for lay in entry['layers'].childs:
-                    lay_d = {}
-                    lay_d['colorBlend'] = bool(lay['Color_Blend'].selected_index)
-                    lay_d['swatch'] = lay['name'].value
-                    lay_d['ignoreTexelDensity'] = bool(lay['Ignore_Texel_Density_Scalar'].selected_index)
-                    lay_d['normalBlend'] = bool(lay['Normal_Blend'].selected_index)
-                    layers.append(lay_d)
-                material = root['coatingMaterialSets'].childs[entry['Coating Material Set'].value]['coatingMaterialSet'].ref_id_sub
-                self.r_name = entry['name'].str_value
-                regionLayers[self.r_name] = {"layers": layers,
-                                            "material": material,
-                                            "bodyPart": self.r_name,
-                                            }
+            if not style_select['palette'].ref_id_sub == 'ffffffff':
+                parse_mwpl = ReaderFactory.create_reader(self.root_folder+ 'mwpl/'+style_select['palette'].ref_id_sub)
+                parse_mwpl.load()
+                parse_mwpl.toJson(self.root_folder)
+                print('palette loaded')
+                self.json_base["swatches"] = parse_mwpl.json_base['swatches']
+                regionLayers = {}
+                for entry in style_select['regions'].childs:
+                    layers = []
+                    for lay in entry['layers'].childs:
+                        lay_d = {}
+                        lay_d['colorBlend'] = bool(lay['Color_Blend'].selected_index)
+                        lay_d['swatch'] = lay['name'].value
+                        lay_d['ignoreTexelDensity'] = bool(lay['Ignore_Texel_Density_Scalar'].selected_index)
+                        lay_d['normalBlend'] = bool(lay['Normal_Blend'].selected_index)
+                        layers.append(lay_d)
+                    material = root['coatingMaterialSets'].childs[entry['Coating Material Set'].value]['coatingMaterialSet'].ref_id_sub
+                    self.r_name = entry['name'].str_value
+                    regionLayers[self.r_name] = {"layers": layers,
+                                                "material": material,
+                                                "bodyPart": self.r_name,
+                                                }
 
-            self.json_base["regionLayers"] = regionLayers
+                self.json_base["regionLayers"] = regionLayers
             self.done = True
 
 
