@@ -6,8 +6,6 @@ from ... commons.share_mem import parse_dict
 from ... commons.tag_group_extension_map import map_ext
 from . interfaces import IBaseTemplate
 from . import generic
-from pathlib import Path
-
 
 
 class ReaderFactory:
@@ -15,21 +13,19 @@ class ReaderFactory:
         'bitm': ('bitmap', 'Bitmap'),
         'bipd': ('biped', 'Biped'),
         'ocad': ('i343.ObjectCustomization.AttachmentConfiguration', 'AttachmentConfiguration'),
-        'mat ': ('mat', 'Mat'),
-        'mwpl': ('mwpl', 'Mwpl'),
-        'mwsy': ('mwsy', 'Mwsy'),
+        'mat ': ('material', 'Material'),
+        'mwpl': ('materialpalette', 'MaterialPalette'),
+        'mwsy': ('materialstyles', 'MaterialStyles'),
         'hlmt': ('model', 'Model'),
         'unic': ('multilingual_unicode_string_list', 'MultilingualUnicodeStringList'),
         'mode': ('render_model', 'RenderModel'),
         'uslg': ('stringlist', 'StringList'),
-        'mwsw': ('mwsw', 'Mwsw'),
+        'mwsw': ('swatch', 'Swatch'),
         'shbc': ('shader_bytecode', 'ShaderBytecode'),
         'jmad': ('c_model_animation_graph', 'ModelAnimationGraph'),
-        'mwvs': ('mwvs', 'Mwvs')
-    }
+        'mwvs': ('mp_visor_swatch', 'MpVisorSwatch')}
     path_import = 'Olympus.tag_reader.readers'
     pluginname = 'swatch'
-
 
     def iter_namespace(ns_pkg):
         # Specifying the second argument (prefix) to iter_modules makes the

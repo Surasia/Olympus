@@ -56,22 +56,23 @@ class TagParseControl:
 
     def readFile(self):
         try:
-            with open(self.filename, 'rb') as self.f:
-                self.full_header.readIn(self.f)
-                analizarCabecera(self.full_header)
-                if self.tagLayout is None:
-                    self.tagLayout = TagLayouts.Tags(self.tagLayoutTemplate)
-                root_tag = TagLayouts.C('TagStructBlock', 'Root', self.tagLayout, p_P={"g": "true"})
-                self.rootTagInst = TagInstance(tag=root_tag, addressStart=self.full_header.tag_struct_table.entries
-                [0].field_data_block.offset_plus, offset=0)
-                self.rootTagInst.content_entry = self.full_header.tag_struct_table.entries[0]
-                self.readTagsAndCreateInstances(self.rootTagInst)
-                self.f.close()
-                if self.hasFunction == 0:
-                    assert self.full_header.file_header.data_reference_count == 0
-                else:
-                    assert self.hasFunction <= self.full_header.file_header.data_reference_count
-                    assert self.hasFunction == self.full_header.file_header.data_reference_count
+            if not self.filename == 'M:/mwsy/':
+                with open(self.filename, 'rb') as self.f:
+                    self.full_header.readIn(self.f)
+                    analizarCabecera(self.full_header)
+                    if self.tagLayout is None:
+                        self.tagLayout = TagLayouts.Tags(self.tagLayoutTemplate)
+                    root_tag = TagLayouts.C('TagStructBlock', 'Root', self.tagLayout, p_P={"g": "true"})
+                    self.rootTagInst = TagInstance(tag=root_tag, addressStart=self.full_header.tag_struct_table.entries
+                    [0].field_data_block.offset_plus, offset=0)
+                    self.rootTagInst.content_entry = self.full_header.tag_struct_table.entries[0]
+                    self.readTagsAndCreateInstances(self.rootTagInst)
+                    self.f.close()
+                    if self.hasFunction == 0:
+                        assert self.full_header.file_header.data_reference_count == 0
+                    else:
+                        assert self.hasFunction <= self.full_header.file_header.data_reference_count
+                        assert self.hasFunction == self.full_header.file_header.data_reference_count
         except FileNotFoundError as e:
             print("file not found!")
 
