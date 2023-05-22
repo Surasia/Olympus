@@ -526,7 +526,7 @@ class Texture:
                             f.seek(offset + 0xc)
                             width = int.from_bytes(f.read(2),'little')
                             height = int.from_bytes(f.read(2),'little')
-                            chunk_name = path + '/' + Path(path).stem + '.resources/' + str(chunk)
+                            chunk_name = path.replace(path.split('/')[-1],'') + '/' + Path(path).stem + '.resources/' + str(chunk+1)
                             print(f"Reading texture block {chunk_name}")
                             print(f"Width: {width} Height: {height} Format: {DXGI_FORMAT[format]} {hex(format)}")
                             #with open(chunk_name, 'rb') as chunk_file:
