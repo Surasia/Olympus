@@ -6,7 +6,6 @@ This plugin is based on [HIME](https://github.com/MontagueM/HaloInfiniteModelExt
 Module support is based on [HIMU](https://github.com/MontagueM/HaloInfiniteModuleUnpacker) by MontagueM and parts of [Adjutant](https://github.com/Gravemind2401/Adjutant).  
 Research and Code for BSPs: [PlasteredCrab](https://github.com/PlasteredCrab)  
 [HaloInfiniteTagEditor](https://github.com/Z-15/Halo-Infinite-Tag-Editor) by Z-15, very useful for research  
-[IRTV](https://github.com/Gamergotten/Infinite-runtime-tagviewer), tag definitions
 [HIMS](https://github.com/AverageTrapEnthusiast/Halo-Infinite-Shader-Resources) by AGE and ChromaCore
 
 ## Initial Set-Up
