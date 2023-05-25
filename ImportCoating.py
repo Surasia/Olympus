@@ -178,7 +178,7 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                         materialname = str(mat_slot.material.name)
                         if '.' in materialname: 
                             materialname = materialname.split('.',1)[0] 
-                        for path in pathlib.Path(self.materialuserpath).rglob(materialname + '*_mat.json'): 
+                        for path in pathlib.Path(self.materialuserpath).rglob(materialname + '*_mat .json'): 
                             materialpath = str(path).replace(self.root_folder, '')
                             parse_mat = open(materialpath,'r')
                             parse_mat = json.load(parse_mat)
@@ -217,8 +217,10 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                                             mask1 = materialparameters['bitmap']['Value']['Ref_id_int']
                                         elif materialparameters['parameter name']['Value'] == -1677269129:
                                             mask1 = materialparameters['bitmap']['Value']['Ref_id_int']
-
-                                    layers = coating["regionLayers"][str(materialregion)]["layers"]
+                                    try:
+                                        layers = coating["regionLayers"][str(materialregion)]["layers"]
+                                    except:
+                                        continue
                                     materialshader = coating["regionLayers"][str(materialregion)]["material"]
                                     
                                     node_tree0 = mat_slot.material.node_tree
@@ -323,9 +325,11 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
 
                                 for swatch in layers:
                                     swatchnum = str(swatch.get("swatch"))
-                                    if swatchnum == '0':
-                                        swatchnum = coating["regionLayers"][str(materialregion)]["layers"][0]
-
+                                    try:
+                                        if swatchnum == '0':
+                                            swatchnum = coating["regionLayers"][str(materialregion)]["layers"][0]
+                                    except:
+                                        continue
                                     for item in coating["swatches"]:
                                         EmissiveAmount = item.get("emissiveAmount")
                                         BotColor = item.get("colorVariant").get("gradient_bottom_color")
