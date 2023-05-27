@@ -36,7 +36,6 @@ class Utilities:
         bpy.ops.object.mode_set(mode='OBJECT')
 
 class GrabStrings:
-
     def grabvisornames(self, context):
         addon_prefs = context.preferences.addons[__package__].preferences
         root_folder = addon_prefs.root_folder
@@ -66,7 +65,7 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
     filter_glob: StringProperty(default = "*.json",options = {'HIDDEN'})
 
     filepath: bpy.props.StringProperty(subtype="FILE_PATH")
-    visor_selection: bpy.props.EnumProperty(items=GrabStrings.grabvisornames, name = "Visor",  description = "Visor To Import",)
+    #visor_selection: bpy.props.EnumProperty(items=GrabStrings.grabvisornames, name = "Visor",  description = "Visor To Import",)
     materialuserpath: bpy.props.StringProperty(name = "Material Path", description = "Path To Use For .material",default = "G:\\materials\\")    
     use_modules: bpy.props.BoolProperty(default=False,name="use modules",options={"HIDDEN"})
     mipmap: bpy.props.IntProperty(name="Mipmap level",description="Mipmap level of the textures to import",default=0,options={"HIDDEN"})
@@ -85,7 +84,7 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
 
         box = layout.box()
         box.label(icon = 'MATERIAL', text = "Settings")
-        box.prop(self, "visor_selection")
+        #box.prop(self, "visor_selection")
         box.prop(self, "materialuserpath")
 
         box = layout.box()
