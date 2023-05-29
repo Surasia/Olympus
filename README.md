@@ -11,7 +11,7 @@
 
 # Setting up
 
-## Installing Required modules
+## Installing Texture2DDecoder
 To install python modules for blender, they have to be installed into blenders python environment, not the system environment. To do this, go to the python console in blender (for example in the scripting workspace) and enter
 ```
 import ensurepip
@@ -21,7 +21,6 @@ to install pip into blenders python environment. Then enter
 ```
 import pip
 pip.main(['install','texture2ddecoder'])
-pip.main(['install','pymmh3'])
 ```
 
 ## Installation
@@ -38,7 +37,7 @@ After you've done with the installation and prerequisites, you can now navigate 
 
 ## Downloading Coatings and Materials
 - Coatings use special JSON files which can be found in [My Olympus Coatings repository](https://github.com/Surasia/OlympusCoatings). The files are named appropriately, and can be stored anywhere.
-- Materials also require a download, available in this [link](https://mega.nz/file/8uBBWLjD#hR561kILaWgHCsENda5Dtvqis_pRPE9x63oUEiPSfeA). Unzip and place this anywhere you want, and this will be your "material path" in the coming sections.
+- Materials also require a download, available in this [link](https://mega.nz/file/JugA3bJI#W4w-EfTCNpQUFxJErOCkjL5Q7n04ZvKZIYgKoMipaC8). Unzip and place this anywhere you want, and this will be your "material path" in the coming sections.
 
 # Usage
 
