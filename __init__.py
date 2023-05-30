@@ -1,7 +1,7 @@
 bl_info = {
     "name" : "Olympus",
     "blender" : (3,4,1),
-    "version" : (0,9,5),
+    "version" : (0,9,6),
     "category" : "Import-Export",
     "description" : "Imports Models, Textures, BSPs and Coatings from Halo Infinite",
     "author" : "Surasia, Coreforge, Plastered_Crab, Urium86"
@@ -67,24 +67,18 @@ else:
     from . import renderModel
     from . import TextureOp
     from . import ImportCoating
-    from . import ModulePanel
-    from . import bsp
 
 def register():
     bpy.utils.register_class(HaloInfiniteAddonPreferences)
     TextureOp.register()
     ImportCoating.register()
     renderModel.register()
-    ModulePanel.register()
-    bsp.register()
  
 def unregister():
     bpy.utils.unregister_class(HaloInfiniteAddonPreferences)
     TextureOp.unregister()
     ImportCoating.unregister()
     renderModel.unregister()
-    ModulePanel.unregister()
-    bsp.unregister()
  
 if __name__ == "__main__":
     register()

@@ -922,7 +922,7 @@ class renderModelImporter:
 
 class ImportRenderModel(bpy.types.Operator):
     bl_idname = "infinite.rendermodel"
-    bl_label = "Halo Infinite Rendermodel"
+    bl_label = "Halo Infinite Rendermodel (Season 2)"
     bl_description = "rendermodel"
     filename_ext = ".render_model"
     filter_glob: StringProperty(default = "*render_model",options = {'HIDDEN'})

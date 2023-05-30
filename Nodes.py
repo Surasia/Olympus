@@ -53,7 +53,6 @@ class Nodes:
         uv_map_2 = node_tree2.nodes.new('ShaderNodeUVMap')
         uv_map_2.from_instancer = False
         uv_map_2.location = (328, 0)
-        uv_map_2.uv_map = 'UV0'
 
         math_004_2 = node_tree2.nodes.new('ShaderNodeMath')
         math_004_2.location = (-492, -293)

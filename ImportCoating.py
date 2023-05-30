@@ -182,7 +182,11 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                             parse_mat = open(materialpath,'r')
                             parse_mat = json.load(parse_mat)
                             currentmaterial = parse_mat
-                            if type(currentmaterial["style info"][0]) == type(None): # If material has no style, skip!
+                            try:
+                                hmmmh = type(currentmaterial["style info"][0]) == type(None)
+                            except:
+                                continue
+                            if hmmmh: # If material has no style, skip!
                                 continue
                             else:
                                 materialregion = currentmaterial.get("style info")[0]["region name"]["Value"]
@@ -323,12 +327,10 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                                 self.swwww = 0
 
                                 for swatch in layers:
-                                    swatchnum = str(swatch.get("swatch"))
-                                    try:
-                                        if swatchnum == '0':
-                                            swatchnum = coating["regionLayers"][str(materialregion)]["layers"][0]
-                                    except:
-                                        continue
+                                    swatchnum = str(swatch["swatch"])
+                                    if swatchnum == "0":
+                                        swatchnum = str(coating["regionLayers"][str(materialregion)]["layers"][0]["swatch"])
+                                        print(swatchnum)
                                     for item in coating["swatches"]:
                                         EmissiveAmount = item.get("emissiveAmount")
                                         BotColor = item.get("colorVariant").get("gradient_bottom_color")
@@ -347,34 +349,6 @@ class ImportCoating(bpy.types.Operator, bpy_extras.io_utils.ImportHelper):
                                         ColorGradientMap = item.get("colorGradientMap")
                                         swatchID = str(item.get("swatchId"))
                                         swatchRef = str(item.get("swatchref"))
-                                        # if self.import_visor:
-                                            # if materialregion == '1420626520':
-                                                # if not swatchID == grimeSwatch:
-                                                    # mappednames = GrabStrings.grabvisornames(self,context)
-                                                    # for visor in range(len(mappednames)):
-                                                        # visorID = mappednames[visor][2]
-                                                        # colorID = mappednames[visor][0]
-                                                        # if colorID == self.visor_selection:
-                                                            # with open("E:\OlympusDev\-1260457915_mwvs.json","r") as hmmm:
-                                                                # parse_mvsw = json.load(hmm)
-                                                            # root = parse_mvsw['pattern_variants']
-                                                            # EmissiveAmount = root['emissiveAmount']
-                                                            # BotColor = parse_mvsw.bot
-                                                            # MidColor = parse_mvsw.mid
-                                                            # TopColor = parse_mvsw.top
-                                                            # ScratchColor = root['scratchColor']
-                                                            # ScratchMetallic = root['scratchMetallic']
-                                                            # ScratchRoughness = root['scratchRoughness']
-                                                            # Metallic = root['metallic']    
-                                                            # Roughness = root['roughness']
-                                                            # RoughnessBlack = root['roughnessBlack']
-                                                            # RoughnessWhite = root['roughnessWhite']
-                                                            # NormalPath = root['normalPath']
-                                                            # NormalScale = root['normalTextureTransform']
-                                                            # ColorGradientScale  = root['colorAndRoughnessTextureTransform']
-                                                            # ColorGradientMap = root['colorGradientMap']
-                                                            # swatchID = swref[item].get('swatchId')
-                                                            # swatchref = str(root['swatchref'])
                                         def createSwatch(isGrime):
                                             node_tree1 = bpy.data.node_groups.new(swatchRef+'_swatch', 'ShaderNodeTree')
 
