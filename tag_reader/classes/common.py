@@ -36,10 +36,6 @@ def tagref(data: Dict[str, Any]):
     TagGroupRev = value.get('TagGroupRev', '')
     try:
         with open(f"D:/OlympusDev/tags/{TagGroupRev}/{ref_id_str}.json",'r') as f:
-            if TagGroupRev == 'cmsw':
-                swatch = cmsw.CMSW.from_dict(json.load(f))
-                return swatch
-            else:
                 return json.load(f)
     except:
         return "{}"

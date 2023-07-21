@@ -3,6 +3,7 @@ from dataclasses_json import DataClassJsonMixin,config
 import json
 from typing import Any, Dict, List
 from .common import value_field_to_bool, scratch_flag_to_bool, color_variant, tagref, getvalue, getmmh3
+from .tagloader import gettag
 
 
 """
@@ -15,7 +16,7 @@ DATACLASSES FOR RUCY
 class Swatch(DataClassJsonMixin):
     elementID: int = field(metadata=config(decoder=getvalue))
     Description: str = field(metadata=config(decoder=getmmh3))
-    Swatch: str = field(metadata=config(decoder=tagref))
+    Swatch: str = field(metadata=config(decoder=gettag))
     gradientColorFlag: bool = field(metadata=config(decoder=scratch_flag_to_bool))
     gradientTopColor: List[float] = field(metadata=config(decoder=color_variant))
     gradientMidColor: List[float] = field(metadata=config(decoder=color_variant))
